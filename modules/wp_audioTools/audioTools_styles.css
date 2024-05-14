@@ -1,0 +1,267 @@
+
+#songManagerTab_active{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/songManager_icon_active.svg');
+    background-size: 150%;
+}
+#songManagerTab_inactive{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/songManager_icon_inactive.svg');
+    background-size: 150%;
+}
+#songManagerTab_inactive:hover{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/songManager_icon_hover.svg');
+    background-size: 150%;
+}
+#soundFxManagerTab_active{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/sfxManager_icon_active.svg');
+    background-size: 150%;
+}
+#soundFxManagerTab_inactive{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/sfxManager_icon_inactive.svg');
+    background-size: 150%;
+}
+#soundFxManagerTab_inactive:hover{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/sfxManager_icon_hover.svg');
+    background-size: 150%;
+}
+.musicIcon{
+    display: flex;
+    width: 30px;
+    height: 100%;
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/songManager_icon_active.svg');
+    background-size: 150%;
+    background-position: left;
+    background-repeat: no-repeat;
+    margin: 0px 6px 0px 0px;
+}
+.sfxIcon{
+    display: flex;
+    width: 30px;
+    height: 100%;
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/sfxManager_icon_active.svg');
+    background-size: 150%;
+    background-position: left;
+    background-repeat: no-repeat;
+    margin: 0px 6px 0px 0px;
+}
+.audioPreviewIcon{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/preview_icon.svg");
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background-position: 40%;
+    z-index: 1;
+    transform: skew(15deg);
+}
+.trackListDiv
+{
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    width: 370px;
+    border: none;
+    border-radius: 8px;
+    background: hsl(0, 0%, 8%);
+    padding: 6px;
+    transition: 0.4s;
+    transition-timing-function: cubic-bezier(0.25, 0, 0, 1);
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+.trackListItem
+{
+    font-family :Arial, Helvetica, sans-serif;
+    font-size : 15px;
+    color : hsl(0, 0%, 75%);
+    padding: 5px 15px;
+    background : transparent;
+    cursor: pointer;
+    border-radius: 5px;
+    /* border-width: 1px 0px; */
+    border-style: none;
+    border-color: hsl(0, 0%, 13%);
+}
+.trackListItem_active
+{
+    font-family : Arial, Helvetica, sans-serif;
+    font-size : 15px;
+    color : white;
+    padding: 5px 15px;
+    background : hsl(0, 0%, 40%);
+    /* border-width: 1px 0px; */
+    border-style: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.trackListItem:hover
+{
+    background: hsl(0, 0%, 30%)
+}
+.audioPlayer
+{
+    display: flex;
+    /* flex-direction: row; */
+    flex-shrink: 0;
+    height: 30px;
+    width: 97.5%;
+    position: relative;
+    background : hsl(0, 0%, 8%);
+    cursor: pointer;
+    /* border-radius: 15px; */
+    margin: 0px 0px 10px 0px;
+    outline: none;
+}
+audio::-webkit-media-controls-panel {
+    background-color: hsl(0, 0%, 80%);    
+    overflow: visible;
+  }
+.playButton
+{
+    position: relative;
+}
+.statusAlert
+{
+    display: flex;
+    align-self: center;
+    padding: 10px;
+    opacity: 0;
+    transition: 0.75s;
+}
+.audioPlayerBody{
+    display: flex;
+    border-radius: 12px;
+    width: 100%;
+    height: 50px;
+    margin-bottom: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+    background-color: hsl(0, 0%, 20%);
+    /* box-shadow: 0px 0px 12px 3px hsl(0, 0%, 25%); */
+}
+.playButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    height: 100%;
+    width: 50px;
+    transition: 0.5s;
+    background-image: linear-gradient(to top, rgba(31, 96, 161, 0), rgba(44, 190, 215, 0));
+}
+.playButton:hover{
+    background-image: linear-gradient(to top, rgba(31, 96, 161, 1), rgba(44, 190, 215, 1));
+    /* background-color: hsl(210, 68%, 47%); */
+    
+}
+.playIcon {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.83 26.36"%3E%3Cdefs%3E%3ClinearGradient id="gradient" gradientTransform="rotate(90)"%3E%3Cstop offset="0%" stop-color="rgba(44, 190, 215, 1)"%3E%3C/stop%3E%3Cstop offset="100%" stop-color="rgba(31, 96, 161, 1)"%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon fill="url(%23gradient)" points="22.83 13.18 0 0 0 26.36 22.83 13.18"/%3E%3C/svg%3E');
+    background-position: center;
+    background-size: 35%;
+    background-repeat: no-repeat;
+    /* transition: 0.5s; */
+}
+.playButton:hover .playIcon{
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 22.83 26.36"%3E%3Cpolygon fill="%23fff" points="22.83 13.18 0 0 0 26.36 22.83 13.18"/%3E%3C/svg%3E');
+    /* box-shadow: 10px 10px 5px 10px white; */
+    /* background-image: linear-gradient(to top, rgb(240, 240, 240), rgb(240, 240, 240)); */
+    /* background-color: hsl(0, 0%, 90%); */
+}
+.pauseIcon{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.32 20"%3E%3Cdefs%3E%3ClinearGradient id="gradient" gradientTransform="rotate(90)"%3E%3Cstop offset="0%" stop-color="rgba(44, 190, 215, 1)"%3E%3C/stop%3E%3Cstop offset="100%" stop-color="rgba(31, 96, 161, 1)"%3E%3C/stop%3E%3C/linearGradient%3E%3C/defs%3E%3Crect fill="url(%23gradient)" class="cls-1" width="5.85" height="17"/%3E%3Crect fill="url(%23gradient)" class="cls-1" x="9.47" width="5.85" height="17"/%3E%3C/svg%3E');
+    background-position: center;
+    background-size: 35%;
+    background-repeat: no-repeat;
+}
+.playButton:hover .pauseIcon{
+    background-image: url('data:image/svg+xml;charset=utf-8,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 15.32 20"%3E%3Crect fill="%23fff" width="5.85" height="17"/%3E%3Crect fill="%23fff" x="9.47" width="5.85" height="17"/%3E%3C/svg%3E');
+}
+.timeBar{
+    /* background-color: hsl(0, 0%, 8%); */
+    position: relative;
+    display: flex;
+    place-content: center;
+    align-items: center;
+    flex-grow: 7;
+    cursor: pointer;
+    height: 100%;
+    margin-top: auto;
+}
+.timeBar h2{
+    font-family: 'Lato', sans-serif;
+    font-weight: 400;
+    color: hsl(0, 0%, 90%);
+    font-size: 15px;
+    z-index: 1;
+    overflow: hidden;
+}
+.progressBar{
+    position: absolute;
+    left: 0px;
+    background-image: linear-gradient(to top, rgb(31, 96, 161), rgb(44, 190, 215));
+    width: 0;
+    height: 100%;
+    /* box-shadow: 1px 0px 6px rgb(44, 190, 215); */
+}
+.timeJumpBar{
+    position: absolute;
+    left: 0px;
+    height: 100%;
+    /* background-color: hsl(0, 0%, 90%); */
+    background-image: linear-gradient(to top, hsla(0, 0%, 90%, 0.18) 0, hsla(0, 0%, 90%,0.1 ));;
+    background-position: right;
+    background-repeat: no-repeat;
+}
+.playerVolume{
+    display: flex;
+    position: relative;
+    flex-direction: column-reverse;
+    /* background-color: hsl(0, 0%, 8%); */
+    width: 25px;
+    cursor: pointer;
+    background-position: center;
+}
+.playerVolume:hover .levelBar{
+    background-color: hsl(0, 0%, 50%);
+}
+.levelBar{
+    background-image: linear-gradient(to top, rgba(31, 96, 161, 1), rgba(44, 190, 215, 1));
+    background-color: hsl(0, 0%, 25%);
+    width: 100%; 
+    height: 50%;
+}
+.volumeIcon{
+    display: flex;
+    width: 100%;
+    height: 100%;
+    background-image: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/volumeBar_icon.svg");
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* align-self: center;
+    justify-self: center; */
+    background-size: 50%;
+    background-position: center;
+    /* background-color: hsl(0, 0%, 90%); */
+    background-repeat: no-repeat;
+}
+.songData{
+    display: flex;
+    flex-direction: column;
+    place-content: center;
+    align-content: center;
+    justify-content: center;
+    text-align: center;
+    text-justify: center;
+}
+#songName{
+    pointer-events: none;
+    margin-bottom: 4px;
+}

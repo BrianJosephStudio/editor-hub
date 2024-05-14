@@ -1,0 +1,62 @@
+#ingameFootageTab_active{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/ingameFootage_icon_active.svg');
+    background-size: 150%;
+}
+#ingameFootageTab_inactive{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/ingameFootage_icon_inactive.svg');
+    background-size: 150%;
+}
+#ingameFootageTab_inactive:hover{
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/ingameFootage_icon_hover.svg');
+    background-size: 150%;
+}
+.mediaBrowser{
+    color: hsl(0, 0%, 8%);
+    border-radius: 8px;
+    width: 100px;
+    height: 100px;
+
+}
+.videoPlayerBody{
+    width: 100%;
+    height: 230px;
+    top: 0;
+    background-color: transparent;
+    outline: none;
+    flex-shrink: 0;
+    border-radius: 12px;
+}
+.videoPlaceHolder{
+    display: flex;
+    /* align-self: center; */
+    /* background-color: red; */
+    position: absolute;
+    height: 180px;
+    width: 100%;
+    max-width : 410px;
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/wp_videoGallery_inactive.svg');
+    background-repeat: no-repeat;
+    /* background-size: 200%; */
+    background-position: center;
+}
+.videoIcon{
+    display: flex;
+    width: 30px;
+    height: 100%;
+    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/ingameFootage_icon_active.svg');
+    background-size: 150%;
+    background-position: left;
+    background-repeat: no-repeat;
+    margin: 0px 6px 0px 0px;
+}
+.videoPreviewIcon{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    background: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/videoPreview_icon.svg");
+    background-repeat: no-repeat;
+    background-size: 15px 15px;
+    background-position: 40%;
+    z-index: 1;
+    transform: skew(15deg);
+}

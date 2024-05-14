@@ -1,0 +1,181 @@
+
+<header>
+    <div>
+        <img src="https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/headerLogo.png" alt="The image could not be loaded"></img>
+    </div>
+    <div style="margin-left: auto;">
+        <h3>v-1.2.1</h3>
+    </div>
+</header>
+<!--Workspace Tab Bar-->
+<div id="app" class="app">
+    <div id="tutorialViewer" class="tutorialViewer"></div>
+    <div class="tabPanel">
+        <!-- Worskpace Tabs -->
+        <button id="wp_videoGalleryTab" class="wp_tab" onClick="ui.change_wpTab(event)">
+            <div class="select_glow"></div>
+            <div title="Video Gallery" class = "tab videoGallery"></div>
+        </button>
+
+        <button  id="wp_audioToolsTab" class="wp_tab" onClick="ui.change_wpTab(event)">
+            <div class="select_glow"></div>
+            <div title="Audio Tools" class = "tab audioTools"></div>
+        </button>
+
+        <button id="wp_infoTab" class="wp_tab" onClick="ui.change_wpTab(event)">
+            <div class="select_glow select_glow_active"></div>
+            <div class="tab info info_active" title="Info"></div>
+        </button>
+
+        <div id="selectGlow" class="select_glow"></div>
+        <div id="separator"></div>
+    </div>
+    
+    <!--Workspace Panels-->
+
+    <div id="wp_videoGallery" class="wp_container" data-workspace="videoGallery">
+        <!-- Video Gallery Tabs Panel -->
+        <div class="innerTabsBody">
+            <div id="videoGalleryTabs" class="innerTabs">
+                <div id="ingameFootageTab_active" title="In-game Footage" class="innerTab innerTab_active" onclick="ui.handleClick(event,global.dir.tutorial.editorHub.ingameFootage,ui.changeInnerTab)" data-tab="ingameFootage"></div>
+                <div id="videoSettingsTab_inactive" title="Video Gallery Settings" class="innerTab" style="flex-grow: 1;" onclick="ui.handleClick(event,undefined,ui.changeInnerTab)" data-tab="settings"></div>
+            </div>
+            <!-- Video Gallery Containers -->
+            <div id="videoGalleryContainers" class="innerContainers">
+                <video controls id="videoPlayer" class="videoPlayerBody"></video>
+                <div id="videoPlaceHolder" class="videoPlaceHolder"></div>
+                <!-- In-game Footage -->
+                <div id="ingameFootageContainer" class="innerContainer" style="display: flex;" data-tab="ingameFootage"></div>
+                <!-- Video Gallery Settings -->
+                <div id="videoSettingsContainer" class="innerContainer" data-settings-group="videoGallery" data-tab="settings"></div>
+            </div>
+        </div>
+
+    </div>
+    
+    <div id="wp_audioTools" class="wp_container" data-workspace="audioTools">
+        <!-- Audio Tools Tab Panel -->
+        <div class="innerTabsBody">
+            <div id="audioToolTabs" class="innerTabs">
+                <div id="songManagerTab_active" title="Song Manager" class="innerTab innerTab_active" onclick="global.ui.handleClick(event,global.dir.tutorial.editorHub.songManager,global.ui.changeInnerTab)" data-tab="songManager"></div>
+                <div id="soundFxManagerTab_inactive" title="SFX Manager" class="innerTab" onclick="global.ui.handleClick(event,global.dir.tutorial.editorHub.sfxManager,global.ui.changeInnerTab)" data-tab="sfxManager"></div>
+                <div id="audioSettingsTab_inactive" title="Audio Tools Settings" class="innerTab" style="flex-grow: 1;" onclick="global.ui.handleClick(event,global.dir.tutorial.editorHub.audioToolSettings,global.ui.changeInnerTab)" data-tab="settings"></div>
+            </div>
+            <!---->
+            <!-- Audio Tool Containers -->
+            <div id="audioToolContainers" class="innerContainers">
+                <div id="audioPlayer" class="audioPlayerBody"></div>
+                <!-- Song Manager -->
+                <div id="songManagerContainer" class="innerContainer" style="display: flex" data-tab="songManager"></div>
+                <!-- SFX Manager -->
+                <div id="soundFxManagerContainer" class="innerContainer" data-tab="sfxManager"></div>
+                <!-- Audio Tools Settings -->
+                <div id="audioSettingsContainer" class="innerContainer" data-settings-group="audioTools" data-tab="settings"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="wp_info" class="wp_container" data-workspace="info">
+        <div class="patchNotes">
+            <h1>Patch <span style="color: #2772CC">Notes</span> :</h1>
+            <!--  -->
+            <div style="display:flex;flex-direction: row;align-items: baseline;">
+                <h1 style="font-weight: 400;">v-1.2</h1>
+                <h3 style="margin-left: 5px;">August 2023</h3>
+            </div>
+
+            <div class="changeTitle">
+                <h2><span style="font-style: italic;color: #2772CC">new</span> - Video Gallery</h2>
+            </div>
+            <p>There's a new workspace; the <a href="#" data-link="videoGalleryTab">Video Gallery</a>. This workspace is meant to provide access to an array of different video assets in our database.</p>
+            
+        
+            <div class="changeTitle">
+                <h2><span style="font-style: italic;color: #2772CC">new</span> - In-Game Footage tab</h2>
+            </div>
+            <p>The <a href="#" data-link="ingameFootageTab">In-Game Footage</a> tab provides access to all of our In-Game Footage Library content.</p>
+            <p><a href="#" onclick="ui.openTutorial(event.currentTarget,event,global.dir.tutorial.editorHub.ingameFootage)" data-tab="patchNotes">In-Game Footage Tutorial</a></p>
+            
+            <div class="changeTitle">
+                <h2><span style="font-style: italic;color: #2772CC">new</span> - Tag System</h2>
+            </div>
+            <p>The new <a href="#" data-link="tagSystem">Tag System</a> allows you to perform highly detailed clip searches in our new In-Game Footage tab. The Tag System offers a vasat amount of different tags you can use to describe what you need to find. This eliminates the need to preview a bunch of clips to find what you need, as you would filter search results by tags and it should be immediately clear whether our library has something that matches your needs or not. For a more detailed explanation of the usage please watch the tutorial.</p>
+            <p><a href="#" onclick="ui.openTutorial(event.currentTarget,event,global.dir.tutorial.editorHub.ingameFootage)" data-tab="patchNotes">Tag System Tutorial</a></p>
+            <!--  -->
+            <div style="display:flex;flex-direction: row;align-items: baseline;">
+                <h1 style="font-weight: 400;">v-1.1</h1>
+                <h3 style="margin-left: 5px;">June 2023</h3>
+            </div>
+
+            <div class="changeTitle">
+                <h2>- Audio Player</h2>
+            </div>
+            <p>The Audio Player has got a new and improved look, you can now use the space bar to play or pause your current file</p>
+            <p>The Audio Player's default volume was 100%, which resulted in uncomfortably loud previews and forcing the user to change volume levels while previewing. <br/> The default volume is now set at 30%, which should make it more pleasant to interact with.</p>
+            
+        
+            <div class="changeTitle">
+                <h2>- Song Manager</h2>
+            </div>
+            <p>The <a href="#" data-link="songManagerTab">Song Manager</a> tab has been reworked and it should be more comfortable to interact with this tool.</p>
+            <p>Each item has 2 buttons that can be revealed by hovering on the right edge of the item box. These buttons allow you to preview or import the file.</p>
+            <p><a href="#" onclick="ui.openTutorial(event.currentTarget,event,global.dir.tutorial.editorHub.songManager)" data-tab="patchNotes">Song Manager Tutorial</a></p>
+            
+            <div class="changeTitle">
+                <h2>- SFX Manager</h2>
+            </div>
+            <p>The new <a href="#" data-link="sfxManagerTab">SFX Manager</a> tab has been added in the Audio Tools workspace. It works identically to the newly reworked Song Manager tab</p>
+            <p><a href="#" onclick="ui.openTutorial(event.currentTarget,event,global.dir.tutorial.editorHub.sfxManager)" data-tab="patchNotes">SFX Manager Tutorial</a></p>
+            
+            <div class="changeTitle">
+                <h2>- Place Action</h2>
+            </div>
+            <p>Now, in addition to being able to preview and import, you also have the option to place a file directly on the timeline.</p>
+            <p>The files are placed on tracks that are created and managed by the Editor Hub, you can customize these track options in the new <a href="#" data-link="audioToolSettingsTab">Settings</a> tab to give different names or set custom key binds for different tracks.</p>
+            <p>Refer to the tutorial for a more in depth explanation.</p>
+            
+            <div class="changeTitle">
+                <h2>- Audio Tool Settings Tab</h2>
+            </div>
+            <p>The Editor Hub interacts with Adobe Premiere in dynamic and complex ways. This opens up a need for customization.</p>
+            <p>In the new <a href="#" data-link="audioToolSettingsTab">Settings</a> tab within the Audio Tools workspace you'll be able to customize settings such as the default audio player volume, default track names, where to download your imports custom keybinds to operate your actions and more.</p>
+            <p><a href="#" onclick="ui.openTutorial(event.currentTarget,event,global.dir.tutorial.editorHub.audioToolSettings)" data-tab="patchNotes">Audio Tool Settings Tutorial</a></p>
+            
+            <div class="changeTitle">
+                <h2>- Keyboard Shortcuts</h2>
+            </div>
+            <p>While fetching song tracks or sfx audio files, you can now make use of keyboard shortcuts to preview, import, or place your file directly on the timeline</p>
+            <p>Go to the <a href="#" data-link="audioToolSettingsTab">Settings</a> Tab in the Audio Tools workspace to customize any of these Key Binds</p>
+            
+            <div style="display:flex;flex-direction: row;align-items: baseline;">
+                <h1 style="font-weight: 400;">v-1.0</h1>
+                <h3 style="margin-left: 5px">Jan 2023</h3>
+            </div>
+            <!-- <h3 style="display:inline">Jan 2023</h3> -->
+            <div class="changeTitle">
+                <h2>- Editor Hub</h2>
+            </div>
+            <p>The Editor Hub is a Premiere extension developed to help Skill Capped piecers and editors automate repetitive and technically tedious tasks as well as to standardize editing frameworks, workflows and asset libraries.</p>
+            <div class="changeTitle">
+                <h2>- Audio Tools Workspace</h2>
+            </div>
+            <p>The Audio Tools workspace is meant to host a variety of audio related tools such as dealing with background music, SFX and even audio processing effects such as EQ, compression, etc.
+                <br>The only tool available on v-1.0.0 is the 'Song Manager'.
+            </p>
+            <div class="changeTitle">
+                <h2>- Song Manager</h2>
+            </div>
+            <p>The song Manager allows users to preview tracks without having to import them into the project, giving them access to the official updated list of tracks.
+                <br>Once you like a track you can download it to the project in order to add it to the timeline. For more details click on the 'Song Manager' tab to the left while holding down 'alt' to open the tutorial for this tool.
+            </p>
+        </div>
+    </div>
+<!-- 
+    <div id="wp_agentTemplates" class="wp_container">
+        <iframe width="336" height="189" src="https://www.youtube.com/embed/vRBHV0GbgH4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div> 
+-->
+
+    <!-- <div id="separator"></div> -->
+    <!--    <h3>v1.0.0</h3> -->
+</div>
