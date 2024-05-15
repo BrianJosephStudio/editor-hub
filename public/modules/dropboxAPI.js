@@ -257,27 +257,28 @@ async function getFiles(dropboxPath) {
         .catch((e) => global.hubException(e));
     });
 }
+const root = '/BrianJosephStudio.github.io/Editor_Hub'
 const dropboxPath = {
   editorHub: {
     folder: {
       modules: {
-        root: `/BrianJosephStudio.github.io/Editor_Hub/modules`,
-        wp_audioTools: `/BrianJosephStudio.github.io/Editor_Hub/modules/wp_audioTools`,
-        wp_videoGallery: `/BrianJosephStudio.github.io/Editor_Hub/modules/wp_videoGallery`,
-        wp_patchNotes: `/BrianJosephStudio.github.io/Editor_Hub/modules/wp_patchNotes`,
+        root: `${root}/modules`,
+        wp_audioTools: `${root}/modules/wp_audioTools`,
+        wp_videoGallery: `${root}/modules/wp_videoGallery`,
+        wp_patchNotes: `${root}/modules/wp_patchNotes`,
       },
-      jsonFiles: `/BrianJosephStudio.github.io/Editor_Hub/jsonFiles`,
-      stats: `/BrianJosephStudio.github.io/Editor_Hub/stats`,
-      templates: `/BrianJosephStudio.github.io/Editor_Hub/templates`,
+      jsonFiles: `${root}/jsonFiles`,
+      stats: `${root}/stats`,
+      templates: `${root}/templates`,
       resources: {
-        root: `/BrianJosephStudio.github.io/Editor_Hub/resources`,
-        image: `/BrianJosephStudio.github.io/Editor_Hub/resources/image`,
-        video: `/BrianJosephStudio.github.io/Editor_Hub/resources/video`,
-        music: `/BrianJosephStudio.github.io/Editor_Hub/resources/music`,
-        sfx: `/BrianJosephStudio.github.io/Editor_Hub/resources/sfx`,
-        ui: `/BrianJosephStudio.github.io/Editor_Hub/resources/ui`,
+        root: `${root}/resources`,
+        image: `${root}/resources/image`,
+        video: `${root}/resources/video`,
+        music: `${root}/resources/music`,
+        sfx: `${root}/resources/sfx`,
+        ui: `${root}/resources/ui`,
       },
-      styles: `/BrianJosephStudio.github.io/Editor_Hub/modules/styles`,
+      styles: `${root}/modules/styles`,
     },
   },
 };

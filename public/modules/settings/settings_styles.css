@@ -176,27 +176,27 @@
     background-color: hsl(210, 68%, 47%);
 }
 #videoSettingsTab_active{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_active.svg');
     background-size: 150%;
 }
 #videoSettingsTab_inactive{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_inactive.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_inactive.svg');
     background-size: 150%;
 }
 #videoSettingsTab_inactive:hover{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_hover.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_hover.svg');
     background-size: 150%;
 }
 #audioSettingsTab_active{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_active.svg');
     background-size: 150%;
 }
 #audioSettingsTab_inactive{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_inactive.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_inactive.svg');
     background-size: 150%;
 }
 #audioSettingsTab_inactive:hover{
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/settings_icon_hover.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/settings_icon_hover.svg');
     background-size: 150%;
 }
 .layoutList{

@@ -125,7 +125,7 @@ async function resolveDataFile(uri, forceDownload) {
     .then(async (exists) => {
       if (!exists || forceDownload) {
         return await fetch(
-          `https://brianjosephstudio.github.io/Editor_Hub/${
+          `https://editor-hub.brianure.com//${
             uri.split("Editor Hub/")[1]
           }`
         );
@@ -196,7 +196,7 @@ async function downloadModule(module) {
   mkdir(path.dirname(module), { recursive: true });
   let url = module.split("modules")[1];
   return await fetch(
-    `https://brianjosephstudio.github.io/Editor_Hub/modules${url}`
+    `https://editor-hub.brianure.com//modules${url}`
   )
     .then((res) => res.text())
     .then(async (mod) => await writeFile(module, mod))

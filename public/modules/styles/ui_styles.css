@@ -3,7 +3,7 @@
     display: flex;
     width: 30px;
     height: 100%;
-    background-image: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/folder_icon.svg');
+    background-image: url('https://editor-hub.brianure.com//Resources/ui/folder_icon.svg');
     background-size: 50%;
     background-position: left;
     background-repeat: no-repeat;
@@ -158,7 +158,7 @@
     width: 15px;
     left: 12px;
     height: 100%;
-    background: url('https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/import_icon.svg');
+    background: url('https://editor-hub.brianure.com//Resources/ui/import_icon.svg');
     background-position:  center;
     background-repeat: no-repeat;
     background-size: 15px 15px;
@@ -272,7 +272,7 @@
 .tagSwitch{
     display: flex;
     flex-shrink: 0;
-    background: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/tagSwitch_icon_inactive.svg");
+    background: url("https://editor-hub.brianure.com//Resources/ui/tagSwitch_icon_inactive.svg");
     background-repeat: no-repeat;
     height: 24px;
     width: 24px;
@@ -286,11 +286,11 @@
     transition: 1.5s ease;
 }
 .tagSwitch:hover{
-    background: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/tagSwitch_icon_hover.svg");
+    background: url("https://editor-hub.brianure.com//Resources/ui/tagSwitch_icon_hover.svg");
 
 }
 .tagSwitch_on{
-    background: url("https://brianjosephstudio.github.io/Editor_Hub/Resources/ui/tagSwitch_icon_active.svg");
+    background: url("https://editor-hub.brianure.com//Resources/ui/tagSwitch_icon_active.svg");
 }
 .tagMatchesBox{
     padding: 6px;
