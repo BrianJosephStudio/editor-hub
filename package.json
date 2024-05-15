@@ -1,0 +1,23 @@
+{
+  "name": "editor-hub",
+  "module": "src/server.html",
+  "type": "module",
+  "scripts": {
+    "start": "bun src/server.ts",
+    "deploy": ""
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/cors": "^2.8.17",
+    "@types/express": "^4.17.21",
+    "ts-node": "^10.9.2"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2"
+  }
+}
