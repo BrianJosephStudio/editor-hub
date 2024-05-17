@@ -256,7 +256,6 @@ async function previewAudio(event) {
     null;
   }
   // Fetch song from Dropbox
-  await dropbox.AccessToken();
   await dropbox
     .streamAudio(audioContext, dropboxPath)
     .then((bufferObject) => {

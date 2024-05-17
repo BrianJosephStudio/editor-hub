@@ -108,7 +108,6 @@ async function buildUI() {
   // Update Access Token
   let audioPlayer = document.getElementById("audioPlayer");
   await audioTools.renderAudioPlayer(audioPlayer);
-  await dropbox.AccessToken();
 
   // VIDEO GALLERY WORKSPACE
   videoGallery.initVideoPlayer();

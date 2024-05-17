@@ -622,7 +622,6 @@ async function importFile(event, target, isPlace) {
   }
   let resource = new resourceAPI.Resource(dropboxPath);
 
-  await dropbox.AccessToken();
   let wp_container = target.closest(".wp_container");
   let settingsContainer = wp_container.querySelector("[data-settings-group]");
   let settingsGroupName = settingsContainer.dataset.settingsGroup;
@@ -764,7 +763,7 @@ function collapseFolderItem(event) {
   }
 }
 async function resolveTempLinks(listBody) {
-  dropbox.AccessToken();
+  // dropbox.AccessToken();
   let items;
   if (Array.isArray(listBody)) {
     items = listBody;

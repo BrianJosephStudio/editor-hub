@@ -68,7 +68,6 @@ async function previewVideo(event) {
     }
   }
   if (!found) {
-    await dropbox.AccessToken();
     console.log("downloading buffer for first time | videoGallery.js:70");
     const resource = new resourceAPI.Resource(dropboxPath);
     dropbox.download(resource.uri, dropboxPath, true).then((buffer) => {
@@ -127,7 +126,6 @@ async function previewVideo(event) {
   //     return;
   //   }
   // }
-  await dropbox.AccessToken();
   await dropbox
     .temporaryLink(dropboxPath)
     .then(async (link) => {
