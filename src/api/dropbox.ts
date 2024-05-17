@@ -7,41 +7,8 @@ import {
 } from "../types/Dropbox";
 import axios from 'axios';
 
-let abortController: AbortController;
-
-const root = '/BrianJosephStudio.github.io/Editor_Hub'
-export const dropboxPath = {
-    editorHub: {
-        folder: {
-            modules: {
-                root: `${root}/modules`,
-                wp_audioTools: `${root}/modules/wp_audioTools`,
-                wp_videoGallery: `${root}/modules/wp_videoGallery`,
-                wp_patchNotes: `${root}/modules/wp_patchNotes`,
-            },
-            jsonFiles: `${root}/jsonFiles`,
-            stats: `${root}/stats`,
-            templates: `${root}/templates`,
-            resources: {
-                root: `${root}/resources`,
-                image: `${root}/resources/image`,
-                video: `${root}/resources/video`,
-                music: `${root}/resources/music`,
-                sfx: `${root}/resources/sfx`,
-                ui: `${root}/resources/ui`,
-            },
-            styles: `${root}/modules/styles`,
-        },
-    },
-}
-
 export const download = async (dropboxPath: string): Promise<DropboxFile> => {
     try {
-        if (abortController) {
-            abortController.abort();
-        }
-        abortController = new AbortController();
-        const { signal } = abortController;
 
         const { access_token } = await getAccessToken();
 
@@ -51,7 +18,7 @@ export const download = async (dropboxPath: string): Promise<DropboxFile> => {
             "Dropbox-API-Arg": `{"path":"${dropboxPath}"}`,
         }
 
-        const { data } = await axios.post<DropboxFile>(url, body, { signal })
+        const { data } = await axios.post<DropboxFile>(url, body)
 
         return data
     } catch (e) {
@@ -83,36 +50,29 @@ export const temporaryLink = async (dropboxPath: string): Promise<string> => {
     };
 }
 
-export const streamAudio = async (dropboxPath: string): Promise<ArrayBuffer> => {
-    try {
-        if (abortController) {
-            abortController.abort();
-        }
-        abortController = new AbortController();
-        const { signal } = abortController;
+// export const streamAudio = async (dropboxPath: string): Promise<ArrayBuffer> => {
+//     try {
+//         const { access_token } = await getAccessToken()
 
-        const { access_token } = await getAccessToken()
+//         const url = "https://content.dropboxapi.com/2/files/download";
+//         const headers = {
+//             Authorization: `Bearer ${access_token}`,
+//             "Dropbox-API-Arg": JSON.stringify({
+//                 path: dropboxPath
+//             }),
+//         };
 
-        const url = "https://content.dropboxapi.com/2/files/download";
-        const headers = {
-            Authorization: `Bearer ${access_token}`,
-            "Dropbox-API-Arg": JSON.stringify({
-                path: dropboxPath
-            }),
-        };
+//         const { data } = await axios.post<ArrayBuffer>(url, null, {
+//             headers: headers,
+//             responseType: 'arraybuffer'
+//         });
 
-        const { data } = await axios.post<ArrayBuffer>(url, null, {
-            headers: headers,
-            responseType: 'arraybuffer',
-            signal: signal,
-        });
-
-        return data;
-    } catch (e) {
-        console.error(e);
-        throw e;
-    }
-}
+//         return data;
+//     } catch (e) {
+//         console.error(e);
+//         throw e;
+//     }
+// }
 
 export const getFiles = async (dropboxPath: string): Promise<DropboxFile[]> => {
     try {
@@ -149,7 +109,7 @@ export const getFiles = async (dropboxPath: string): Promise<DropboxFile[]> => {
     }
 }
 
-export const upload = async (fileData: unknown, dropboxPath: string) => {
+export const upload = async (fileData: unknown, dropboxPath: string): Promise<void> => {
     try {
         const { access_token } = await getAccessToken()
 
@@ -165,7 +125,7 @@ export const upload = async (fileData: unknown, dropboxPath: string) => {
             }),
         }
 
-        return await axios.post(url, fileData, { headers });
+        await axios.post(url, fileData, { headers });
     } catch (e) {
         console.error(e);
         throw e;
