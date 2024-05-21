@@ -9,21 +9,21 @@ import axios from 'axios';
 
 export const download = async (dropboxPath: string): Promise<DropboxFile> => {
     try {
-
         const { access_token } = await getAccessToken();
 
         const url = "https://content.dropboxapi.com/2/files/download"
         const headers = {
             Authorization: `Bearer ${access_token}`,
+            "Content-Type": "text/plain; charset=utf-8",
             "Dropbox-API-Arg": `{"path":"${dropboxPath}"}`,
         }
 
         const { data } = await axios.post<DropboxFile>(url, undefined, { headers })
 
         return data
-    } catch (e) {
-        console.error(e)
-        throw e
+    } catch (e: any) {
+        console.error(e.response.data)
+        throw e.response.data
     }
 }
 
@@ -44,8 +44,8 @@ export const temporaryLink = async (dropboxPath: string): Promise<string> => {
 
         return link;
 
-    } catch (e) {
-        console.error(e);
+    } catch (e: any) {
+        console.error(e.response.data);
         throw e;
     };
 }
@@ -79,8 +79,8 @@ export const getFiles = async (dropboxPath: string): Promise<DropboxFile[]> => {
         });
 
         return entries;
-    } catch (e) {
-        console.error(e)
+    } catch (e: any) {
+        console.error(e.response.data)
         throw e
     }
 }
@@ -102,8 +102,8 @@ export const upload = async (fileData: unknown, dropboxPath: string): Promise<vo
         }
 
         await axios.post(url, fileData, { headers });
-    } catch (e) {
-        console.error(e);
+    } catch (e: any) {
+        console.error(e.response.data);
         throw e;
     }
 }
@@ -124,8 +124,8 @@ export const getTags = async (dropboxPaths: string[]) => {
         const { data: { paths_to_tags } } = await axios.post<GetTagsResponse>(url, body, { headers })
 
         return paths_to_tags
-    } catch (e) {
-        console.error(e)
+    } catch (e: any) {
+        console.error(e.response.data)
         throw e
     }
 };
