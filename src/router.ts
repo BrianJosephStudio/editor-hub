@@ -27,7 +27,7 @@ router.post('/temporary_Link', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/get_files', async (req: Request, res: Response) => {
+router.post('/list_folder', async (req: Request, res: Response) => {
     try {
         const { dropboxPath } = req.body;
         const result = await getFiles(dropboxPath);
@@ -49,7 +49,7 @@ router.post('/upload', async (req: Request, res: Response) => {
     }
 });
 
-router.post('/get_ags', async (req: Request, res: Response) => {
+router.post('/get_tags', async (req: Request, res: Response) => {
     try {
         const { dropboxPaths } = req.body;
         const result = await getTags(dropboxPaths);
@@ -60,4 +60,4 @@ router.post('/get_ags', async (req: Request, res: Response) => {
     }
 });
 
-module.exports = router;
+export {router}

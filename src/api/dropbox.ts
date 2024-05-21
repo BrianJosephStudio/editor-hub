@@ -13,12 +13,12 @@ export const download = async (dropboxPath: string): Promise<DropboxFile> => {
         const { access_token } = await getAccessToken();
 
         const url = "https://content.dropboxapi.com/2/files/download"
-        const body = {
+        const headers = {
             Authorization: `Bearer ${access_token}`,
             "Dropbox-API-Arg": `{"path":"${dropboxPath}"}`,
         }
 
-        const { data } = await axios.post<DropboxFile>(url, body)
+        const { data } = await axios.post<DropboxFile>(url, undefined, { headers })
 
         return data
     } catch (e) {
@@ -49,30 +49,6 @@ export const temporaryLink = async (dropboxPath: string): Promise<string> => {
         throw e;
     };
 }
-
-// export const streamAudio = async (dropboxPath: string): Promise<ArrayBuffer> => {
-//     try {
-//         const { access_token } = await getAccessToken()
-
-//         const url = "https://content.dropboxapi.com/2/files/download";
-//         const headers = {
-//             Authorization: `Bearer ${access_token}`,
-//             "Dropbox-API-Arg": JSON.stringify({
-//                 path: dropboxPath
-//             }),
-//         };
-
-//         const { data } = await axios.post<ArrayBuffer>(url, null, {
-//             headers: headers,
-//             responseType: 'arraybuffer'
-//         });
-
-//         return data;
-//     } catch (e) {
-//         console.error(e);
-//         throw e;
-//     }
-// }
 
 export const getFiles = async (dropboxPath: string): Promise<DropboxFile[]> => {
     try {

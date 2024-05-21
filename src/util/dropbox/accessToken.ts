@@ -6,7 +6,7 @@ export interface AccessToken {
   access_token: string
   token_type: string
   expires_in: number
-  refresh_token: string
+  refresh_token?: string
   scope: string
 }
 
@@ -35,6 +35,8 @@ export const AccessToken = async (): Promise<void> => {
       await generateToken()
     )
 
+    console.log(accessToken)
+
     await writeFile(accessTokenPath, accessToken);
   } catch (e) {
     console.error(e)
@@ -53,6 +55,7 @@ export const generateToken = async (): Promise<AccessToken> => {
 
     const url = `https://api.dropbox.com/oauth2/token`
     const { data } = await axios.post(url, body)
+    console.log("generateToken response", data)
     //TODO:validate AccessToken format
     return data
   } catch (e) {
@@ -61,24 +64,47 @@ export const generateToken = async (): Promise<AccessToken> => {
   }
 }
 
-const checkAccessToken = async () => {
-  try {
-    const fileStats = await stat(accessTokenPath);
-    const currentTime = new Date().getTime();
-    const fileModifiedTime = fileStats.mtime.getTime();
-    const timeDifference = currentTime - fileModifiedTime;
-    const hoursDifference = timeDifference / (1000 * 60 * 60); // Convert milliseconds to hours
+const isValidAccessToken = (obj: any): obj is AccessToken => {
+  return (
+    typeof obj.access_token === 'string' &&
+    typeof obj.token_type === 'string' &&
+    typeof obj.expires_in === 'number'
+  );
+};
 
-    return hoursDifference < 3;
+// Function to check the access token
+const checkAccessToken = async (): Promise<boolean> => {
+  try {
+    // Read the file content
+    const fileContent = await readFile(accessTokenPath, 'utf-8');
+    // Parse the JSON
+    const accessToken: any = JSON.parse(fileContent);
+
+    // Validate the JSON against the AccessToken interface
+    if (!isValidAccessToken(accessToken)) {
+      throw new Error('Invalid access token format');
+    }
+
+    // Check if the token is expired
+    const currentTime = Math.floor(new Date().getTime() / 1000); // current time in seconds
+    const fileStats = await stat(accessTokenPath);
+    const fileModifiedTime = Math.floor(fileStats.mtime.getTime() / 1000); // file modified time in seconds
+
+    const tokenAge = currentTime - fileModifiedTime; // age of the token in seconds
+
+    return tokenAge < accessToken.expires_in;
   } catch (e) {
+    console.error(e);
     return false;
   }
-}
+};
 
 export const getAccessToken = async (): Promise<AccessToken> => {
+  await AccessToken()
   const fileData = await readFile(accessTokenPath, {
     encoding: "utf-8",
   })
+
   return JSON.parse(fileData);
 }
 
