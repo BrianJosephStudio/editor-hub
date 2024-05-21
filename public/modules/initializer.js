@@ -4,7 +4,7 @@
 const homedir = require("os").homedir().replace(/\\/g, "/");
 const path = require("path");
 const { writeFile, mkdir, stat, rm } = require("fs/promises");
-const { readFileSync, writeFileSync, statSync, mkdirSync } = require("fs");
+const { readFileSync, writeFileSync, statSync, mkdirSync, accessSync } = require("fs");
 const { spawnSync } = require("child_process");
 const cs = new CSInterface();
 global.isAdmin = false;
@@ -13,6 +13,22 @@ global.runJSXFunction = async (script) => {
     cs.evalScript(script, resolve);
   });
 };
+
+const appSettingsPath = path.resolve(__dirname, '..', 'appSettings.json').replace(/\\/g,"/")
+try {
+  accessSync(appSettingsPath, constants.F_OK)
+
+  const appSettings = require(appSettingsPath)
+
+  if (appSettings.isDev === true) {
+    global.appBackendUrl = appSettings.devBackend
+  } else {
+    global.appBackendUrl = appSettings.productionBackend
+  }
+
+} catch (e) {
+  global.appBackendUrl = `https://editor-hub.brianure.com`
+}
 
 /*
  *VERSION CHECK/RESOLVE MODULES
@@ -68,7 +84,7 @@ async function hubInit() {
     if (JSON.parse(isAdmin).isAdmin) {
       global.isAdmin = true;
     }
-  } catch (e) {}
+  } catch (e) { }
   initAdminTools();
   await resolveDataFile(dir.editorHub.jsonFiles.tagSystem, true);
   //
@@ -87,12 +103,12 @@ async function hubInit() {
     }
   };
 
-  const resourceUpdates = require(global.dir.editorHub.module.resourceUpdates);
+  // const resourceUpdates = require(global.dir.editorHub.module.resourceUpdates);
   cs.evalScript(`$.evalFile('${global.dir.editorHub.module.JSON}')`);
-  resourceUpdates.updateResources().catch((e) => global.hubException(e));
+  // resourceUpdates.updateResources().catch((e) => global.hubException(e));
   const settings = require(global.dir.editorHub.module.settings);
   await settings.resolveSettings();
-  stats.resolveLogPosts();
+  // stats.resolveLogPosts();
 
   try {
     const specialDate = new Date(2023, 5, 22);
@@ -102,7 +118,7 @@ async function hubInit() {
         await rm(global.dir.editorHub.jsonFiles.accTk);
       }
     });
-  } catch (e) {}
+  } catch (e) { }
 
   /**
    * BUILD UI
@@ -125,8 +141,7 @@ async function resolveDataFile(uri, forceDownload) {
     .then(async (exists) => {
       if (!exists || forceDownload) {
         return await fetch(
-          `https://editor-hub.brianure.com//${
-            uri.split("Editor Hub/")[1]
+          `${appBackendUrl}/${uri.split("Editor Hub/")[1]
           }`
         );
       }
@@ -196,7 +211,7 @@ async function downloadModule(module) {
   mkdir(path.dirname(module), { recursive: true });
   let url = module.split("modules")[1];
   return await fetch(
-    `https://editor-hub.brianure.com//modules${url}`
+    `${appBackendUrl}/modules/${url}`
   )
     .then((res) => res.text())
     .then(async (mod) => await writeFile(module, mod))

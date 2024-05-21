@@ -2,7 +2,7 @@ const { readFile, writeFile, stat } = require("fs/promises");
 
 let abortController;
 
-const backendApiUrl = 'https://editor-hub.brianure.com/api'
+const backendApiUrl = `${global.appBackendUrl}/api`
 
 const root = '/BrianJosephStudio.github.io/Editor_Hub'
 const dropboxPath = {
@@ -41,13 +41,16 @@ async function download(uri, dropboxPath, returnBuffer) {
     const url = `${backendApiUrl}/download`
     const request = {
       method: "post",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ dropboxPath })
     }
 
     const response = await fetch(url, request, {signal})
 
     if (!response.ok) {
-      const body = response.json()
+      const body = await response.json()
       throw new Error(
         `Dropbox download request failed: ${body.error_summary}`
       );
@@ -65,6 +68,7 @@ async function download(uri, dropboxPath, returnBuffer) {
     global.hubException(e);
   }
 }
+
 /*
 async function temporaryLink(dropboxPath) {
   if (abortController) {
@@ -104,16 +108,20 @@ async function temporaryLink(dropboxPath) {
     });
 }
 */
+
 async function temporaryLink(dropboxPath) {
   try {
     const url = `${backendApiUrl}/get_temporary_link`
     const request = {
       method: "post",
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ dropboxPath })
     }
     const response = await fetch(url, request)
 
-    const body = response.json()
+    const body = await response.json()
 
     if (
       response.status !== 200 ||
@@ -141,7 +149,10 @@ async function streamAudio(audioContext, dropboxPath) {
     const url = `${backendApiUrl}/download`
     const request = {
       method: "post",
-      body: { dropboxPath },
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ dropboxPath }),
       signal: signal,
     }
 
@@ -150,7 +161,7 @@ async function streamAudio(audioContext, dropboxPath) {
       throw new Error("something went wrong.");
     }
 
-    const arrayBuffer = response.arrayBuffer()
+    const arrayBuffer = await response.arrayBuffer()
 
     let arrayBufferCopy = arrayBuffer.slice();
     let fileBuffer = Buffer.from(arrayBuffer);
@@ -173,21 +184,26 @@ async function streamAudio(audioContext, dropboxPath) {
 
 async function getFiles(dropboxPath) {
   try {
-
     const url = `${backendApiUrl}/list_folder`
+    console.log(url)
     const request = {
       method: "post",
-      body: { dropboxPath }
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ dropboxPath })
     }
     const response = await fetch(url, request)
-    const entries = response.json()
+    const entries = await response.json()
+
+    console.log(JSON.stringify(entries[0]))
 
     entries.sort((a, b) => {
       const fileNameA = a.path_display.split("/").pop();
       const fileNameB = b.path_display.split("/").pop();
       return fileNameA.localeCompare(fileNameB);
     });
-    return jsbodyn.entries;
+    return entries;
   } catch (e) {
     global.hubException(e);
   }
@@ -198,10 +214,14 @@ async function upload(fileData, dropboxPath) {
     const url = `${backendApiUrl}/upload`
     const request = {
       method: "post",
-      body: { fileData, dropboxPath },
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ fileData, dropboxPath }),
     }
     await fetch(url, request)
   } catch (e) {
+    console.log("catch block",e)
     global.hubException(e);
     return false;
   }
@@ -213,11 +233,10 @@ async function getTags(dropboxPaths) {
     const request = {
       method: "post",
       headers: {
-        Authorization: `Bearer ${accTk}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        paths: dropboxPaths,
+        dropboxPaths
       }),
     }
 
@@ -228,7 +247,7 @@ async function getTags(dropboxPaths) {
       throw new Error(text);
     }
 
-    const paths_to_tags = response.json()
+    const paths_to_tags = await response.json()
     return paths_to_tags
   } catch (e) {
     hubException(e);
