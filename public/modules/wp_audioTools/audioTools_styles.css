@@ -1,33 +1,33 @@
 
 #songManagerTab_active{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/songManager_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/songManager_icon_active.svg');
     background-size: 150%;
 }
 #songManagerTab_inactive{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/songManager_icon_inactive.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/songManager_icon_inactive.svg');
     background-size: 150%;
 }
 #songManagerTab_inactive:hover{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/songManager_icon_hover.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/songManager_icon_hover.svg');
     background-size: 150%;
 }
 #soundFxManagerTab_active{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/sfxManager_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/sfxManager_icon_active.svg');
     background-size: 150%;
 }
 #soundFxManagerTab_inactive{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/sfxManager_icon_inactive.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/sfxManager_icon_inactive.svg');
     background-size: 150%;
 }
 #soundFxManagerTab_inactive:hover{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/sfxManager_icon_hover.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/sfxManager_icon_hover.svg');
     background-size: 150%;
 }
 .musicIcon{
     display: flex;
     width: 30px;
     height: 100%;
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/songManager_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/songManager_icon_active.svg');
     background-size: 150%;
     background-position: left;
     background-repeat: no-repeat;
@@ -37,7 +37,7 @@
     display: flex;
     width: 30px;
     height: 100%;
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/sfxManager_icon_active.svg');
+    background-image: url('https://editor-hub.brianure.com/resources/ui/sfxManager_icon_active.svg');
     background-size: 150%;
     background-position: left;
     background-repeat: no-repeat;
@@ -47,7 +47,7 @@
     height: 100%;
     width: 100%;
     display: flex;
-    background: url("https://editor-hub.brianure.com//Resources/ui/preview_icon.svg");
+    background: url("https://editor-hub.brianure.com/resources/ui/preview_icon.svg");
     background-repeat: no-repeat;
     background-size: 15px 15px;
     background-position: 40%;
@@ -240,7 +240,7 @@ audio::-webkit-media-controls-panel {
     display: flex;
     width: 100%;
     height: 100%;
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/volumeBar_icon.svg");
+    background-image: url("https://editor-hub.brianure.com/resources/ui/volumeBar_icon.svg");
     position: absolute;
     top: 50%;
     left: 50%;

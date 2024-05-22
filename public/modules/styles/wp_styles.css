@@ -141,43 +141,43 @@
 }
 /*    Footage Manager  */
 .videoGallery{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_videoGallery_inactive.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_videoGallery_inactive.svg");
 }
 .videoGallery:hover{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_videoGallery_roll.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_videoGallery_roll.svg");
 }
 .videoGallery_active{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_videoGallery_active.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_videoGallery_active.svg");
 }
 .videoGallery_active:hover{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_videoGallery_active.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_videoGallery_active.svg");
 }
 
 /*    Audio Tools  */
 .audioTools{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_audioTools_inactive.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_audioTools_inactive.svg");
 }
 .audioTools:hover{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_audioTools_roll.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_audioTools_roll.svg");
 }
 .audioTools_active{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_audioTools_active.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_audioTools_active.svg");
 }
 .audioTools_active:hover{
-    background-image: url("https://editor-hub.brianure.com//Resources/ui/wp_audioTools_active.svg");
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/wp_audioTools_active.svg");
 }
 /* Info */
 .info{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/info_icon_inactive.svg');
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/info_icon_inactive.svg");
 }
 .info:hover{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/info_icon_hover.svg');
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/info_icon_hover.svg");
 }
 .info_active{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/info_icon_active.svg');
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/info_icon_active.svg");
 }
 .info_active:hover{
-    background-image: url('https://editor-hub.brianure.com//Resources/ui/info_icon_active.svg');
+    background-image: url("https://editor-hub.brianure.com/Resources/ui/info_icon_active.svg");
 }
 #wp_info{
     display: block;
