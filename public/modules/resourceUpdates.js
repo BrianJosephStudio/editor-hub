@@ -20,7 +20,7 @@ async function getUpdateLogs(){
     })
 }
 async function getUpdateSheet(){
-    return await fetch(`https://editor-hub.brianure.com//jsonFiles/resourceUpdates.json`)
+    return await fetch(`${global.appBackendUrl}/jsonFiles/resourceUpdates.json`)
     .then( content => { return content.json()} )
     .catch( e => global.hubException(e))
 }
