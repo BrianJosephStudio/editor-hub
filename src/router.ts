@@ -1,20 +1,11 @@
-import express, {Request, Response} from 'express'
+import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
 import { download, temporaryLink, getFiles, upload, getTags } from './api/dropbox'
 
 const router = express.Router();
 router.use(bodyParser.json());
 
-router.post('/download', async (req: Request, res: Response) => {
-    try {
-        const { dropboxPath } = req.body;
-        const result = await download(dropboxPath);
-        res.json(result);
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+router.post('/download', download.headersMiddleware, await download.proxyMiddleware());
 
 router.post('/temporary_Link', async (req: Request, res: Response) => {
     try {
@@ -60,4 +51,4 @@ router.post('/get_tags', async (req: Request, res: Response) => {
     }
 });
 
-export {router}
+export { router }
