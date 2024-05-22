@@ -42,9 +42,9 @@ async function download(uri, dropboxPath, returnBuffer) {
     const request = {
       method: "post",
       headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ dropboxPath })
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Dropbox-API-Arg': JSON.stringify({ path: dropboxPath })
+      }
     }
 
     const response = await fetch(url, request, {signal})

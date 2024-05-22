@@ -1,9 +1,6 @@
 POST http://localhost:5100/api/download
-Content-Type: application/json
-
-{
-  "dropboxPath": "/BrianJosephStudio.github.io/README.md"
-}
+Content-Type: text/plain; charset=utf-8
+Dropbox-API-Arg: {"path": "/BrianJosephStudio.github.io/README.md"}
 
 ###
 
