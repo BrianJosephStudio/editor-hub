@@ -1,0 +1,10 @@
+POST http://localhost:5100/api/download
+Content-Type: application/json
+
+{
+  "dropboxPath": "/BrianJosephStudio.github.io/README.md"
+}
+
+###
+
+GET http://localhost:5100/health
