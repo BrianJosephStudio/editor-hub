@@ -67,11 +67,7 @@ async function hubInit() {
   /**
    * RESOLVE MODULES / UPDATE
    */
-  if (global.updateRequired == true) {
-    await updateModules(modules);
-  } else if (global.updateRequired == false) {
-    await resolveModules(modules);
-  }
+  await updateModules(modules);
 
   /**
    * IMPORT EDITOR HUB MODULES AND SETTINGS
@@ -195,18 +191,11 @@ async function resolveFolder(folder) {
 }
 async function updateModules(modules) {
   for (let i = 0; i < modules.length; i++) {
-    await downloadModule(modules[i]);
+    downloadModule(modules[i]);
   }
   return true;
 }
-async function resolveModules(modules) {
-  for (let i = 0; i < modules.length; i++) {
-    await resolveModule(modules[i]).catch((e) => {
-      throw e;
-    });
-  }
-  return true;
-}
+
 async function downloadModule(module) {
   mkdir(path.dirname(module), { recursive: true });
   let url = module.split("modules/")[1];
