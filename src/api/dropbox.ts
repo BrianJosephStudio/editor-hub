@@ -6,24 +6,32 @@ import {
     GetTemporaryLinkResponse
 } from "../types/Dropbox";
 import axios from 'axios';
+import { createDropboxProxy } from '../util/middleware/dropboxProxy'
+import { Request, Response, NextFunction } from "express";
 
-export const download = async (dropboxPath: string): Promise<DropboxFile> => {
-    try {
+export const download = {
+    headersMiddleware: async (req: Request, _res: Response, next: NextFunction) => {
         const { access_token } = await getAccessToken();
+        const { dropboxPath } = req.body;
+    
+        req.headers['Authorization'] = `Bearer ${access_token}`
+        req.headers['Dropbox-API-Arg'] = JSON.stringify({
+            path: dropboxPath
+        })
+        req.headers['content-type'] = 'text/plain; charset=utf-8'
+        
+        next()
+    },
+    proxyMiddleware: async () => {
+        try {
+            const proxyMiddleware = createDropboxProxy(
+                "https://content.dropboxapi.com/2/files"
+            )
 
-        const url = "https://content.dropboxapi.com/2/files/download"
-        const headers = {
-            Authorization: `Bearer ${access_token}`,
-            "Content-Type": "text/plain; charset=utf-8",
-            "Dropbox-API-Arg": `{"path":"${dropboxPath}"}`,
+            return proxyMiddleware
+        } catch (e: any) {
+            throw e
         }
-
-        const { data } = await axios.post<DropboxFile>(url, undefined, { headers })
-
-        return data
-    } catch (e: any) {
-        console.error(e.response.data)
-        throw e.response.data
     }
 }
 
