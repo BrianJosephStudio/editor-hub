@@ -4,4 +4,47 @@ Dropbox-API-Arg: {"path": "/BrianJosephStudio.github.io/README.md"}
 
 ###
 
+POST http://localhost:5100/api/get_temporary_link
+Content-Type: application/json
+
+{
+  "path": "/BrianJosephStudio.github.io/README.md"
+}
+
+###
+
+POST http://localhost:5100/api/list_folder
+Content-Type: application/json
+
+{
+        "path": "/BrianJosephStudio.github.io",
+        "include_deleted": false,
+        "include_has_explicit_shared_members": false,
+        "include_media_info": false,
+        "include_mounted_folders": true,
+        "include_non_downloadable_files": false,
+        "recursive": false
+}
+
+###
+
+POST http://localhost:5100/api/upload
+Content-Type: application/octet-stream
+Dropbox-API-Arg: {"autorename":false,"mode":"overwrite","mute":false,"path":"/BrianJosephStudio.github.io/test.txt","strict_conflict":false}
+
+< test.txt
+
+###
+
+POST http://localhost:5100/api/tags/get
+Content-Type: application/json
+
+{
+  "paths": [
+    "/BrianJosephStudio.github.io/test.txt"
+  ]
+}
+
+###
+
 GET http://localhost:5100/health
