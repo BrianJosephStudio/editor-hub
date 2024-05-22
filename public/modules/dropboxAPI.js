@@ -34,9 +34,9 @@ async function download(uri, dropboxPath, returnBuffer) {
   try {
     if (abortController) {
       abortController.abort();
-  }
-  abortController = new AbortController();
-  const { signal } = abortController;
+    }
+    abortController = new AbortController();
+    const { signal } = abortController;
 
     const url = `${backendApiUrl}/download`
     const request = {
@@ -47,7 +47,7 @@ async function download(uri, dropboxPath, returnBuffer) {
       }
     }
 
-    const response = await fetch(url, request, {signal})
+    const response = await fetch(url, request, { signal })
 
     if (!response.ok) {
       const body = await response.json()
@@ -191,7 +191,15 @@ async function getFiles(dropboxPath) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ dropboxPath })
+      body: JSON.stringify({
+        path: dropboxPath,
+        include_deleted: false,
+        include_has_explicit_shared_members: false,
+        include_media_info: false,
+        include_mounted_folders: true,
+        include_non_downloadable_files: false,
+        recursive: false,
+      })
     }
     const response = await fetch(url, request)
     const entries = await response.json()
@@ -215,13 +223,19 @@ async function upload(fileData, dropboxPath) {
     const request = {
       method: "post",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/octet-stream',
+        "Dropbox-API-Arg": JSON.stringify({
+          path: dropboxPath,
+          mode: "add",
+          autorename: false,
+          mute: false,
+        }),
       },
-      body: JSON.stringify({ fileData, dropboxPath }),
+      body: fileData
     }
     await fetch(url, request)
   } catch (e) {
-    console.log("catch block",e)
+    console.log("catch block", e)
     global.hubException(e);
     return false;
   }
