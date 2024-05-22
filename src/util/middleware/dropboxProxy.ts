@@ -14,7 +14,6 @@ const handleProxyErrors = (err: any, req: Request, res: Response | any) => {
 export const createDropboxProxy = (target: string,) => createProxyMiddleware({
   target: target,
   changeOrigin: true,
-  selfHandleResponse: true,
   on: {
     error: handleProxyErrors
   },
