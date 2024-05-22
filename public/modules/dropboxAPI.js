@@ -56,7 +56,7 @@ async function download(uri, dropboxPath, returnBuffer) {
       );
     }
 
-    const arrayBuffer = res.arrayBuffer();
+    const arrayBuffer = await response.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
     if (returnBuffer) {
@@ -69,46 +69,6 @@ async function download(uri, dropboxPath, returnBuffer) {
   }
 }
 
-/*
-async function temporaryLink(dropboxPath) {
-  if (abortController) {
-    abortController.abort();
-  }
-  abortController = new AbortController();
-  const { signal } = abortController;
-  return await readFile(global.dir.editorHub.jsonFiles.accTk, {
-    encoding: "utf-8",
-  })
-    .then(async (accTk) => {
-      accTk = JSON.parse(accTk).access_token;
-      return await fetch("https://content.dropboxapi.com/2/files/download", {
-        method: "post",
-        headers: {
-          Authorization: `Bearer ${accTk}`,
-          "Dropbox-API-Arg": JSON.stringify({ path: dropboxPath }),
-        },
-        signal: signal,
-      });
-    })
-    .then((res) => {
-      abortController == null;
-      if (!res.ok) {
-        throw new Error("something went wrong.");
-      }
-      return res.blob();
-    })
-    .catch((e) => {
-      if (e.name == "AbortError") {
-        abortController == null;
-        return null;
-      } else {
-        console.log(e.message, true);
-        global.hubException(e);
-      }
-    });
-}
-*/
-
 async function temporaryLink(dropboxPath) {
   try {
     const url = `${backendApiUrl}/get_temporary_link`
@@ -117,7 +77,7 @@ async function temporaryLink(dropboxPath) {
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ dropboxPath })
+      body: JSON.stringify({ path: dropboxPath })
     }
     const response = await fetch(url, request)
 
@@ -150,9 +110,9 @@ async function streamAudio(audioContext, dropboxPath) {
     const request = {
       method: "post",
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'text/plain; charset=utf-8',
+        'Dropbox-API-Arg': JSON.stringify({ path: dropboxPath })
       },
-      body: JSON.stringify({ dropboxPath }),
       signal: signal,
     }
 
@@ -202,7 +162,7 @@ async function getFiles(dropboxPath) {
       })
     }
     const response = await fetch(url, request)
-    const entries = await response.json()
+    const { entries } = await response.json()
 
     console.log(JSON.stringify(entries[0]))
 
@@ -243,14 +203,14 @@ async function upload(fileData, dropboxPath) {
 
 async function getTags(dropboxPaths) {
   try {
-    const url = `${backendApiUrl}/get_tags`
+    const url = `${backendApiUrl}/tags/get`
     const request = {
       method: "post",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        dropboxPaths
+        paths: dropboxPaths
       }),
     }
 
@@ -261,7 +221,7 @@ async function getTags(dropboxPaths) {
       throw new Error(text);
     }
 
-    const paths_to_tags = await response.json()
+    const { paths_to_tags } = await response.json()
     return paths_to_tags
   } catch (e) {
     hubException(e);
