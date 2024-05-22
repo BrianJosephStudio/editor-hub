@@ -5,8 +5,6 @@ import { Request, Response, NextFunction } from "express";
 export const addAuthorizationHeader = async (req: Request, _res: Response, next: NextFunction) => {
     const { access_token } = await getAccessToken();
 
-    console.log("headers:", req.headers)
-
     req.headers['Authorization'] = `Bearer ${access_token}`
 
     next()
