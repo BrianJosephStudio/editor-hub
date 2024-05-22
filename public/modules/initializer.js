@@ -209,7 +209,7 @@ async function resolveModules(modules) {
 }
 async function downloadModule(module) {
   mkdir(path.dirname(module), { recursive: true });
-  let url = module.split("modules")[1];
+  let url = module.split("modules/")[1];
   return await fetch(
     `${appBackendUrl}/modules/${url}`
   )
