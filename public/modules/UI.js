@@ -105,14 +105,13 @@ async function buildUI() {
   body.innerHTML = bodyContent;
   console.addClear();
 
-  // Update Access Token
   let audioPlayer = document.getElementById("audioPlayer");
   await audioTools.renderAudioPlayer(audioPlayer);
 
   // VIDEO GALLERY WORKSPACE
   videoGallery.initVideoPlayer();
   //Create In-game Footage List
-  await itemList
+  itemList
     .createList(
       "ingameFootageContainer",
       `${dropbox.dropboxPath.editorHub.folder.resources.video}/ingameFootage`,
@@ -123,7 +122,7 @@ async function buildUI() {
 
   // AUDIO TOOLS WORKSPACE
   //POPULATE SONG MANAGER
-  await itemList
+  itemList
     .createList(
       "songManagerContainer",
       `${dropbox.dropboxPath.editorHub.folder.resources.music}`,
@@ -132,7 +131,7 @@ async function buildUI() {
     )
     .catch((e) => global.hubException(e));
   //Populate SFX Lists
-  await itemList
+  itemList
     .createList(
       "soundFxManagerContainer",
       `${dropbox.dropboxPath.editorHub.folder.resources.sfx}`,

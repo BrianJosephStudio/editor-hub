@@ -305,7 +305,7 @@ async function createList(parentID, folderPath, type, createTagSystem) {
   noResults.style.margin = "8px 0px 0px 8px";
   noResults.style.display = "none";
 
-  await populateList(listDiv, folderPath, type, listDiv);
+  populateList(listDiv, folderPath, type, listDiv);
 }
 /**
  *
@@ -314,7 +314,7 @@ async function createList(parentID, folderPath, type, createTagSystem) {
  * @param {Object} type An object containing data for the type of items in the list, it contains the svg icons as well as settings on how to preview the item.
  */
 async function populateList(listBody, folderPath, type, listCanvas) {
-  return await dropbox
+  return dropbox
     .getFiles(folderPath)
     .then(async (folderContent) => {
       folderContent.sort((a, b) => {
@@ -984,7 +984,7 @@ function createSettingsPanel(settingsObject) {
     let trackObjects = settingsObject.currentArray;
     let layoutList = document.createElement("div");
     layoutList.className = "layoutList";
-    renderSettingsTracks(layoutList, trackObjects, undefined);
+    settings.renderSettingsTracks(layoutList, trackObjects, undefined);
     setting.appendChild(layoutList);
     panel.setAttribute("data-type", "trackLayout");
   }
@@ -995,179 +995,7 @@ function createSettingsPanel(settingsObject) {
 
   return panel;
 }
-function renderSettingsTracks(layoutList, trackObjects, range) {
-  //iterating through the tracks
-  trackObjects.sort((a, b) => {
-    return a.trackNumber - b.trackNumber;
-  });
-  let trackDivs = layoutList.children;
-  let empty = false;
-  if (trackDivs.length == 0) {
-    empty = true;
-  }
-  for (let trackObject of trackObjects) {
-    //checking the track is within range
-    let i = trackObjects.indexOf(trackObject);
-    if (range && (i < range[0] || i > range[1])) {
-      continue;
-    }
-    //Defining the track div
-    let trackDiv;
-    if (empty) {
-      trackDiv = document.createElement("div");
-      trackDiv.setAttribute("class", "trackDiv");
-    } else {
-      trackDiv = trackDivs[i];
-    }
-    //Define props
-    const { trackId, trackName, trackTitle, keyBind, trackNumber } =
-      trackObject;
-    let trackTitleH2, trackNameInput, keyBindTitle, keyBindDiv, actionsBox;
-    trackDiv.dataset.trackId = trackId;
-    let trackProps = trackDiv.querySelectorAll("[data-track-property]");
-    if (trackProps.length == 4) {
-      trackTitleH2 = trackDiv.querySelector(
-        `[data-track-property="trackTitle"]`
-      );
-      trackTitleH2.textContent = trackTitle;
-      trackNameInput = trackDiv.querySelector(
-        `[data-track-property="trackName"]`
-      );
-      trackNameInput.value = trackName;
-      keyBindTitle = trackDiv.children[2];
-      keyBindDiv = trackDiv.querySelector(`[data-track-property="keyBind"]`);
-      keyBindDiv.children[0].textContent = settings.getKeyBindText(keyBind);
-      actionsBox = trackDiv.querySelector(
-        `[data-track-property="trackNumber"]`
-      );
-      actionsBox.dataset.trackNumber = trackNumber;
-    } else {
-      trackDiv.innerHTML = "";
 
-      trackTitleH2 = document.createElement("h2");
-      trackTitleH2.style.minWidth = "35px";
-      trackTitleH2.title = "track type";
-      trackTitleH2.dataset.trackProperty = "trackTitle";
-      trackTitleH2.appendChild(document.createTextNode(trackTitle));
-
-      trackNameInput = document.createElement("input");
-      trackNameInput.type = "text";
-      trackNameInput.value = trackName;
-      trackNameInput.className = "inputBox";
-      trackNameInput.title = "track's default name";
-      trackNameInput.dataset.trackProperty = "trackName";
-      trackNameInput.addEventListener("input", async (event) => {
-        settings.cacheSettings(event.currentTarget, event.currentTarget.value);
-      });
-
-      keyBindTitle = document.createElement("h2");
-      keyBindTitle.style.marginRight = "auto";
-      keyBindTitle.title = "keybind to place on this track";
-      keyBindTitle.appendChild(document.createTextNode("keybind"));
-
-      let kbText = settings.getKeyBindText(keyBind);
-      let keyBindH2 = document.createElement("h2");
-      keyBindH2.appendChild(document.createTextNode(kbText));
-
-      keyBindDiv = document.createElement("div");
-      keyBindDiv.appendChild(keyBindH2);
-      keyBindDiv.className = "trackKeyBind";
-      keyBindDiv.title = "click to change";
-      keyBindDiv.dataset.trackProperty = "keyBind";
-      keyBindDiv.addEventListener("click", (event) => {
-        event.stopPropagation();
-        let target = event.currentTarget;
-        let targetText = target.children[0];
-        let currentKeybind = targetText.textContent;
-        function captureKeyBind(event) {
-          let keyBindText = settings.captureKeyBind(event, target);
-          if (keyBindText) {
-            targetText.textContent = keyBindText;
-          } else if (keyBindText == false) {
-            targetText.textContent = currentKeybind;
-          } else if (!keyBindText) {
-            return null;
-          }
-          targetText.removeAttribute("style");
-          document.removeEventListener("keydown", captureKeyBind);
-        }
-        document.addEventListener("keydown", captureKeyBind);
-        targetText.textContent = "...";
-        targetText.style.color = "hsl(45, 00%, 90%)";
-      });
-      let upArrow = document.createElement("div");
-      upArrow.className = "upArrow";
-      upArrow.title = "move track up";
-      upArrow.addEventListener("click", async (event) => {
-        let target = event.currentTarget;
-        let trackDiv = target.closest(".trackDiv");
-        let layoutList = trackDiv.parentElement;
-        if ([...layoutList.children].indexOf(trackDiv) <= 1) {
-          return;
-        }
-        let referenceElement;
-        for (let i = 0; i < layoutList.children.length; i++) {
-          let child = layoutList.children[i];
-          if (child == target.closest(".trackDiv")) {
-            referenceElement = layoutList.children[i - 1];
-          }
-        }
-        await settings.cacheSettings(target.parentElement, -1);
-        layoutList.insertBefore(trackDiv, referenceElement);
-      });
-      let downArrow = document.createElement("div");
-      downArrow.className = "downArrow";
-      downArrow.title = "move track down";
-      downArrow.addEventListener("click", async (event) => {
-        let target = event.currentTarget;
-        let trackDiv = target.closest(".trackDiv");
-        let layoutList = trackDiv.parentElement;
-        if (layoutList.lastChild === trackDiv) {
-          return;
-        }
-        let referenceElement;
-        for (let i = 0; i < layoutList.children.length; i++) {
-          let child = layoutList.children[i];
-          if (child == target.closest(".trackDiv")) {
-            referenceElement = layoutList.children[i + 1];
-            break;
-          }
-        }
-        await settings.cacheSettings(target.parentElement, 1);
-        if (layoutList.lastChild === referenceElement) {
-          layoutList.appendChild(trackDiv);
-        } else {
-          layoutList.insertBefore(referenceElement, trackDiv);
-        }
-      });
-
-      actionsBox = document.createElement("div");
-      actionsBox.className = "actionBox";
-      actionsBox.dataset.trackProperty = "trackNumber";
-      actionsBox.dataset.trackNumber = trackNumber;
-      actionsBox.appendChild(upArrow);
-      actionsBox.appendChild(downArrow);
-
-      trackDiv.appendChild(trackTitleH2);
-      trackDiv.appendChild(trackNameInput);
-      trackDiv.appendChild(keyBindTitle);
-      trackDiv.appendChild(keyBindDiv);
-      trackDiv.appendChild(actionsBox);
-    }
-    if (!keyBind.key) {
-      keyBindTitle.style.display = "none";
-      keyBindDiv.style.display = "none";
-      actionsBox.style.display = "none";
-    } else {
-      keyBindTitle.style.display = "flex";
-      keyBindDiv.removeAttribute("style");
-      actionsBox.removeAttribute("style");
-    }
-    if (empty) {
-      layoutList.appendChild(trackDiv);
-    }
-  }
-}
 /**
  * Searches for tags in the tag system json and outputs an array of matches
  */
@@ -1237,7 +1065,6 @@ module.exports = {
   handleClick,
   collapseFolderItem,
   placeFile,
-  renderSettingsTracks,
   createList,
   createSettingsList,
   searchTag,

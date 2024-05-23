@@ -1,11 +1,7 @@
-/**
- * DEPENDENCIES
- */
 const homedir = require("os").homedir().replace(/\\/g, "/");
 const path = require("path");
 const { writeFile, mkdir, stat, rm } = require("fs/promises");
-const { readFileSync, writeFileSync, statSync, mkdirSync, accessSync } = require("fs");
-const { spawnSync } = require("child_process");
+const { readFileSync, statSync, mkdirSync, accessSync } = require("fs");
 const cs = new CSInterface();
 global.isAdmin = false;
 global.runJSXFunction = async (script) => {
@@ -77,6 +73,7 @@ async function hubInit() {
   //Display Admin Tools
   try {
     let isAdmin = readFileSync(`${dir.editorHub.folder.jsonFiles}/admin.json`);
+    accessSync(dir.console)
     if (JSON.parse(isAdmin).isAdmin) {
       global.isAdmin = true;
     }
@@ -98,7 +95,6 @@ async function hubInit() {
       console.log(stack);
     }
   };
-
   // const resourceUpdates = require(global.dir.editorHub.module.resourceUpdates);
   cs.evalScript(`$.evalFile('${global.dir.editorHub.module.JSON}')`);
   // resourceUpdates.updateResources().catch((e) => global.hubException(e));
@@ -106,20 +102,20 @@ async function hubInit() {
   await settings.resolveSettings();
   // stats.resolveLogPosts();
 
-  try {
-    const specialDate = new Date(2023, 5, 22);
-    await stat(global.dir.editorHub.jsonFiles.accTk).then(async (fileStat) => {
-      let modificationDate = fileStat.mtime;
-      if (modificationDate < specialDate) {
-        await rm(global.dir.editorHub.jsonFiles.accTk);
-      }
-    });
-  } catch (e) { }
+  // try {
+  //   const specialDate = new Date(2023, 5, 22);
+  //   await stat(global.dir.editorHub.jsonFiles.accTk).then(async (fileStat) => {
+  //     let modificationDate = fileStat.mtime;
+  //     if (modificationDate < specialDate) {
+  //       await rm(global.dir.editorHub.jsonFiles.accTk);
+  //     }
+  //   });
+  // } catch (e) { }
 
   /**
    * BUILD UI
    */
-  await ui.buildUI();
+await ui.buildUI();
 }
 /**
  *  FUNCTIONS
