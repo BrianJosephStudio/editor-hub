@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "start": "bun src/server.ts",
-    "deploy": ""
+    "deploy": "docker compose up --build -d"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",
