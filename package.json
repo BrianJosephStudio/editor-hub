@@ -2,6 +2,7 @@
   "name": "editor-hub",
   "module": "src/server.html",
   "type": "module",
+  "version": "1.0.0",
   "scripts": {
     "start": "bun src/server.ts",
     "deploy": "docker compose up --build -d"
