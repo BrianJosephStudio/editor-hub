@@ -8,3 +8,5 @@ services:
       - "5100:5100"
     restart: always
     working_dir: /app
+    volumes:
+      - ./public:/app/public
