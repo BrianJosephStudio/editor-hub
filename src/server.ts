@@ -1,8 +1,9 @@
 require("dotenv").config()
 import express from 'express'
-import { router } from './router'
+import { router as apiRoutes } from './router'
 import cors from 'cors'
 import path from 'path'
+import { router as projectManagerRoutes } from './routes/projectManager.routes'
 
 const app = express()
 
@@ -13,7 +14,8 @@ app.use("/",( req, _res, next) => {
     next()
 })
 
-app.use("/api", router)
+app.use("/api", apiRoutes)
+app.use("/project-manager", projectManagerRoutes)
 app.get("/health",(req,res)=> res.send("ok"))
 app.use(express.static(path.resolve(__dirname, "..", "public")))
 
