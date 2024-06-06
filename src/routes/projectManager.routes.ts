@@ -1,6 +1,7 @@
 import express from 'express'
 import bodyParser from 'body-parser';
-import { addAuthorizationHeader, createProjectFolder } from '../api/dropbox';
+import { addAuthorizationHeader } from '../api/dropbox';
+import { createProjectFolder } from '../api/projectManager';
 
 const router = express.Router();
 
