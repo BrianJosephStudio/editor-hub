@@ -10,7 +10,7 @@ enum ProjectType {
 
 interface ProjectData {
   projectType: number
-  projectNumber: number
+  projectNumber: string
   projectName: string
 }
 
@@ -22,10 +22,10 @@ interface CreatedProjectData {
 const ProjectForm: React.FC = () => {
   const [jobFinished, setJobFinished] = useState(false)
   const [projectType, setProjectType] = useState<number>(ProjectType.GUIDE);
-  const [projectNumber, setProjectNumber] = useState<number>(0);
+  const [projectNumber, setProjectNumber] = useState<string>('');
   const [projectName, setProjectName] = useState<string>("");
-  const [projectFolderLink, setProjectFolderLink] = useState<string>('Bitch');
-  const [filesRequestLink, setFilesRequestLink] = useState<string>('Yeah babyyy');
+  const [projectFolderLink, setProjectFolderLink] = useState<string>('');
+  const [filesRequestLink, setFilesRequestLink] = useState<string>('');
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     try {
@@ -44,11 +44,10 @@ const ProjectForm: React.FC = () => {
       }
 
       setJobFinished(true)
-      return
       
       const { data: { projectLink, uploadLink } } = await axios.post<CreatedProjectData>(url, body)
-      
-      setProjectFolderLink(projectFolderLink)
+
+      setProjectFolderLink(projectLink)
       setFilesRequestLink(uploadLink)
     } catch (e) {
       console.error(e)
@@ -60,7 +59,7 @@ const ProjectForm: React.FC = () => {
   };
 
   const handleProjectNumberChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setProjectNumber(Number(e.target.value));
+    setProjectNumber(e.target.value);
   };
 
   const handleProjectNameChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +106,7 @@ const ProjectForm: React.FC = () => {
       }
       {
         jobFinished &&
-        <div className='formGroup'>
+        <div>
           <URLDisplay
           title='Project Url'
           url={projectFolderLink}

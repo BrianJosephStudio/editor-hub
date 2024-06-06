@@ -20,25 +20,28 @@ export const URLDisplay: React.FC<URLDisplayProps> = ({ title, url }) => {
     <div style={{
       display: 'grid',
       gridTemplateColumns: 'repeat(3, auto)',
-      alignItems: 'center'
+      alignItems: 'center',
+      justifyContent:'end',
+      gridGap: '1rem',
+      margin: '1rem'
     }}>
-      <h2>{title}</h2>
+      <label>{title}</label>
       <input
         type="text"
         ref={projectLinkRef}
         value={url}
         readOnly
-        style={{ marginRight: '10px' }}
+        style={{ width: '24rem' }}
       />
       <div
         onClick={copyToClipboard}
         style={{
           display: 'inline-block',
-          padding: '5px 10px',
+          padding: '0.3rem 0.6rem',
           backgroundColor: '#007bff',
           color: '#fff',
           cursor: 'pointer',
-          borderRadius: '5px',
+          borderRadius: '0.3rem',
           userSelect: 'none',
         }}
       >
