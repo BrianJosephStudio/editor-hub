@@ -1,1 +1,8 @@
-POST 
+POST /2/files/create_folder_v2
+Host: https://api.dropboxapi.com
+Authorization: Bearer sl.B1zIy9b05ACfM3DDpnvkYBon8qlGdO_bnZ6Cro4YRT_zHmwQckKHw2e_2QmZWQUBQe3jvkcvK6ONlX3TlGKVBMbrA-44TPSPEuEkjDbzE1dKSREDlzmYTmelOAm7YjYmxJlS01bY
+Content-Type: application/json
+
+{
+    "path": ""
+}
