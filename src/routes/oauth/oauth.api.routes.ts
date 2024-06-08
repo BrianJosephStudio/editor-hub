@@ -1,6 +1,6 @@
 import axios from 'axios'
 import express, { Request, Response } from 'express'
-import { writeFile } from 'fs/promises'
+import { writeFile, mkdir } from 'fs/promises'
 import path from 'path'
 
 const { EDITOR_HUB_APP_KEY, EDITOR_HUB_APP_SECRET, REDIRECT_URL  } = process.env
@@ -13,9 +13,12 @@ router.get('/redirect', async (req: Request, res: Response) => {
     try {
         console.log(req.query)
         const now = Date.now()
+        const authCodeFolder = path.resolve(__dirname, "..", "..", "..", "authCode")
+
+        await mkdir(authCodeFolder, { recursive: true });
 
         await writeFile(
-            path.resolve(__dirname, "..", "..", "..", "authCode", `auth_code_${now}.json`),
+            path.resolve(authCodeFolder, `auth_code_${now}.json`),
             JSON.stringify(req.query, null, 2)
         )
 
@@ -39,7 +42,7 @@ router.get('/redirect', async (req: Request, res: Response) => {
         console.log("data", data)
 
         await writeFile(
-            path.resolve(__dirname, "..", "..", "..", "authCode", `token_${now}.json`),
+            path.resolve(authCodeFolder, `token_${now}.json`),
             JSON.stringify(data, null, 2)
         )
 
