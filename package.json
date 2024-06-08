@@ -4,8 +4,9 @@
   "type": "module",
   "version": "1.0.0",
   "scripts": {
-    "start": "bun src/server.ts",
-    "deploy": "docker compose up --build -d"
+    "dev": "NODE_ENV=development bun src/server.ts",
+    "serve": "NODE_ENV=production bun src/server.ts",
+    "deploy": "NODE_ENV=production docker compose up --build -d"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

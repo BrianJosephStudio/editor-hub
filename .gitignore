@@ -149,7 +149,7 @@ dist
 .fusebox/
 
 # DynamoDB Local files
-
+authCode
 .dynamodb/
 
 # TernJS port file

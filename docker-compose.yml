@@ -10,3 +10,14 @@ services:
     working_dir: /app
     volumes:
       - ./public:/app/public
+      - auth-app:/app/apps/authorization/dist
+    depends_on:
+      - authorization
+  authorization:
+    container_name: authorization
+    build: ./apps/authorization
+    working_dir: /app
+    volumes:
+      - auth-app:/app/dist
+volumes:
+  auth-app:

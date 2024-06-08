@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { dropboxApiProxy, dropboxContentProxy, addAuthorizationHeader } from './api/dropbox'
+import { dropboxApiProxy, dropboxContentProxy, addAuthorizationHeader } from '../../../api/dropbox'
 
 const router = express.Router();
 

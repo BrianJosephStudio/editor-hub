@@ -6,6 +6,4 @@ COPY . .
 
 RUN bun i
 
-EXPOSE 5100
-
-CMD ["bun", "run", "serve"]
+CMD ["bun", "run", "build"]

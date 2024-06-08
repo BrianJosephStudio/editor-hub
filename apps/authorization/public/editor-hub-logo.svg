@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-56ebde65-8a98-4d27-8e14-41a973c4e40d" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
+  <defs>
+    <style>
+      .uuid-090d5d43-49bd-4bdc-8cd8-df387a7da9be {
+        font-family: UniversLTStd-BoldCn, 'Univers LT Std';
+        font-size: 17.2px;
+        letter-spacing: -.05em;
+      }
+
+      .uuid-090d5d43-49bd-4bdc-8cd8-df387a7da9be, .uuid-bf33ca86-4620-4864-a1d2-5b55c1c70e57 {
+        font-weight: 700;
+      }
+
+      .uuid-bf33ca86-4620-4864-a1d2-5b55c1c70e57 {
+        font-family: SegoeScript-Bold, 'Segoe Script';
+        font-size: 12px;
+        letter-spacing: -.05em;
+      }
+
+      .uuid-bf33ca86-4620-4864-a1d2-5b55c1c70e57, .uuid-ad4875a5-ebe2-4880-ac8c-26da3d8a90d1 {
+        fill: #e5e5e5;
+      }
+
+      .uuid-802ea763-5439-4da3-8ccf-2a177398cc48 {
+        fill: #2772cc;
+      }
+    </style>
+  </defs>
+  <text class="uuid-090d5d43-49bd-4bdc-8cd8-df387a7da9be" transform="translate(7.37 24.99)"><tspan class="uuid-ad4875a5-ebe2-4880-ac8c-26da3d8a90d1" x="0" y="0">SKILL-</tspan><tspan class="uuid-802ea763-5439-4da3-8ccf-2a177398cc48" x="39.75" y="0">CAPPED</tspan></text>
+  <text class="uuid-bf33ca86-4620-4864-a1d2-5b55c1c70e57" transform="translate(105.97 24)"><tspan x="0" y="0">Editor Hub</tspan></text>
+</svg>
