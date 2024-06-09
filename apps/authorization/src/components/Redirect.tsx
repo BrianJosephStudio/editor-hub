@@ -1,3 +1,4 @@
+import './startAuth.css'
 import logo from '../../public/editor-hub-logo.svg'
 
 export const Redirect = () => {

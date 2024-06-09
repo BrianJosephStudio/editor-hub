@@ -1,5 +1,7 @@
 body{
   background-image: url('../public/background.png') !important;
+  background-repeat: no-repeat;
+  background-size: 100%;
   }
 
 :root {
