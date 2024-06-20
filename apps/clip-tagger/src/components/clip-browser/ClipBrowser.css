@@ -1,0 +1,23 @@
+.container {
+  display: grid;
+  height: 100%;
+  overflow: hidden;
+  grid-gap: 0.6rem;
+  grid-template-rows: 3rem auto;
+}
+
+.filesViewport {
+  display: flex;
+  flex-direction: column;
+  background-color: hsl(0, 0%, 12%);
+  border-radius: 0 0 1rem 0;
+  width: 32rem;
+  overflow-y: auto;
+  /* padding: 2rem; */
+  align-content: start;
+  flex-grow: 1;
+}
+
+.filesViewport:focus {
+  outline: none;
+}
