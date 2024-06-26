@@ -1,0 +1,235 @@
+{
+    "agents": {
+        "tags": [
+            {"tag":"astra","displayName":"","description":"Player ias playing Astra", "keybind": ""},
+            {"tag":"brimstone","displayName":"","description":"Player is playing Brimstone", "keybind": ""},
+            {"tag":"breach","displayName":"","description":"Player is playing Breach", "keybind": ""},
+            {"tag":"chamber","displayName":"","description":"Player is playing Chamber", "keybind": ""},
+            {"tag":"cypher","displayName":"","description":"Player is playing Cypher", "keybind": ""},
+            {"tag":"deadlock","displayName":"","description":"Player is playing Deadlock", "keybind": ""},
+            {"tag":"fade","displayName":"","description":"Player is playing Fade", "keybind": ""},
+            {"tag":"gekko","displayName":"","description":"Player is playing Gekko", "keybind": ""},
+            {"tag":"harbor","displayName":"","description":"Player is playing Harbor", "keybind": ""},
+            {"tag":"iso","displayName":"","description":"Player is playing Iso", "keybind": ""},
+            {"tag":"jett","displayName":"","description":"Player is playing Jett", "keybind": ""},
+            {"tag":"kayo","displayName":"","description":"Player is playing KAY/O", "keybind": ""},
+            {"tag":"killjoy","displayName":"","description":"Player is playing Killjoy", "keybind": ""},
+            {"tag":"neon","displayName":"","description":"Player is playing Neon", "keybind": ""},
+            {"tag":"omen","displayName":"","description":"Player is playing Omen", "keybind": ""},
+            {"tag":"phoenix","displayName":"","description":"Player is playing Phoenix", "keybind": ""},
+            {"tag":"raze","displayName":"","description":"Player is playing Raze", "keybind": ""},
+            {"tag":"reyna","displayName":"","description":"Player is playing Reyna", "keybind": ""},
+            {"tag":"sage","displayName":"","description":"Player is playing Sage", "keybind": ""},
+            {"tag":"skye","displayName":"","description":"Player is playing Skye", "keybind": ""},
+            {"tag":"sova","displayName":"","description":"Player is playing Sova", "keybind": ""},
+            {"tag":"viper","displayName":"","description":"Player is playing Viper", "keybind": ""},
+            {"tag":"yoru","displayName":"","description":"Player is playing Yoru", "keybind": ""}
+        ],
+        "keybindGroup": "a",
+        "unique": true,
+        "iterable": true
+    },
+    "maps":{
+        "tags": [
+            {"tag":"abyss","displayName":"","description":"Clip takes place on Abyss", "keybind": ""},
+            {"tag":"ascent","displayName":"","description":"Clip takes place on Ascent", "keybind": ""},
+            {"tag":"bind","displayName":"","description":"Clip takes place on Bind", "keybind": ""},
+            {"tag":"breeze","displayName":"","description":"Clip takes place on Breeze", "keybind": ""},
+            {"tag":"fracture","displayName":"","description":"Clip takes place on Fracture", "keybind": ""},
+            {"tag":"haven","displayName":"","description":"Clip takes place on Haven", "keybind": ""},
+            {"tag":"icebox","displayName":"","description":"Clip takes place on Icebox", "keybind": ""},
+            {"tag":"lotus","displayName":"","description":"Clip takes place on Lotus", "keybind": ""},
+            {"tag":"pearl","displayName":"","description":"Clip takes place on Pearl", "keybind": ""},
+            {"tag":"split","displayName":"","description":"Clip takes place on Split", "keybind": ""},
+            {"tag":"sunset","displayName":"","description":"Clip takes place on Sunset", "keybind": ""}
+        ],
+    "keybindGroup": "m",
+    "unique": true,
+    "iterable": true
+    },
+    "guns":{
+        "tags": [
+            {"tag":"ares","displayName":"","description":"Player gets a kill with the Ares", "keybind": ""},
+            {"tag":"bucky","displayName":"","description":"Player gets a kill with the Bucky", "keybind": ""},
+            {"tag":"bulldog","displayName":"","description":"Player gets a kill with the Bulldog", "keybind": ""},
+            {"tag":"classic","displayName":"","description":"Player gets a kill with the Classic", "keybind": ""},
+            {"tag":"frenzy","displayName":"","description":"Player gets a kill with the Frenzy", "keybind": ""},
+            {"tag":"ghost","displayName":"","description":"Player gets a kill with the Ghost", "keybind": ""},
+            {"tag":"guardian","displayName":"","description":"Player gets a kill with the Guardian", "keybind": ""},
+            {"tag":"judge","displayName":"","description":"Player gets a kill with the Judge", "keybind": ""},
+            {"tag":"marshal","displayName":"","description":"Player gets a kill with the Marshal", "keybind": ""},
+            {"tag":"operator","displayName":"","description":"Player gets a kill with the Operator", "keybind": ""},
+            {"tag":"odin","displayName":"","description":"Player gets a kill with the Odin", "keybind": ""},
+            {"tag":"phantom","displayName":"","description":"Player gets a kill with the Phantom", "keybind": ""},
+            {"tag":"sheriff","displayName":"","description":"Player gets a kill with the Sheriff", "keybind": ""},
+            {"tag":"shorty","displayName":"","description":"Player gets a kill with the Shorty", "keybind": ""},
+            {"tag":"spectre","displayName":"","description":"Player gets a kill with the Spectre", "keybind": ""},
+            {"tag":"stinger","displayName":"","description":"Player gets a kill with the Stinger", "keybind": ""},
+            {"tag":"vandal","displayName":"","description":"Player gets a kill with the Vandal", "keybind": ""},
+            {"tag":"knife","displayName":"","description":"Player gets a kill with the their Knife", "keybind": ""}
+        ],
+        "keybindGroup": "g",
+        "unique": false,
+        "iterable": false
+    },
+    "statusEffects":{
+        "tags": [
+            {"tag":"nearsighted","displayName":"near-sighted","description":"Player gets near-sighted", "keybind": ""},
+            {"tag":"blinded","displayName":"","description":"Player gets blinded", "keybind": ""},
+            {"tag":"stunned","displayName":"","description":"Player gets stunned", "keybind": ""},
+            {"tag":"deafened","displayName":"","description":"player gets deafened", "keybind": ""},
+            {"tag":"decayed","displayName":"","description":"Player gets decayed", "keybind": ""},
+            {"tag":"trailed","displayName":"","description":"player gets trailed", "keybind": ""},
+            {"tag":"supressed","displayName":"","description":"Player is supressed", "keybind": ""},
+            {"tag":"detained","displayName":"","description":"Player is detained", "keybind": ""},
+            {"tag":"healed","displayName":"","description":"Player gets healing from an ally", "keybind": ""},
+            {"tag":"pinged","displayName":"","description":"Player gets pinged", "keybind": ""},
+            {"tag":"slowed","displayName":"","description":"Player is slowed", "keybind": ""},
+            {"tag":"revived","displayName":"","description":"Player revives", "keybind": ""},
+            {"tag":"vulnerable","displayName":"","description":"Player get vulnerable", "keybind": ""},
+            {"tag":"displaced","displayName":"","description":"Player is displaced", "keybind": ""},
+            {"tag":"stimmed","displayName":"","description":"Player is stimmed", "keybind": ""}
+        ],
+        "keybindGroup": "s",
+        "unique": false,
+        "iterable": false
+    },
+    "clipType":{
+        "tags": [
+            {"tag":"cclip","displayName":"custom-clip","description":"Clip is a custom clip", "keybind": "c"},
+            {"tag":"igclip","displayName":"in-game-clip","description":"Clip showcases a real game", "keybind": "i"},
+            {"tag":"deathmatch","displayName":"","description":"Clip comes from a deathmatch", "keybind": "d"}
+        ],
+        "keybindGroup": "c",
+        "unique": true,
+        "iterable": false
+    },
+    "abilities":{
+        "tags": [
+            {"tag":"ult","displayName":"ultimate","description":"Player casted their ultimate", "keybind": ""},
+            {"tag":"ckey","displayName":"c-key","description":"Player casted their C ability", "keybind": ""},
+            {"tag":"qkey","displayName":"q-key","description":"Player casted their Q ability", "keybind": ""},
+            {"tag":"ekey","displayName":"e-key","description":"Player casted their E ability", "keybind": ""},
+            {"tag":"molly","displayName":"","description":"Player casted a molly ability", "keybind": ""},
+            {"tag":"smoke","displayName":"","description":"Player casted a smoke ability", "keybind": ""},
+            {"tag":"wall","displayName":"","description":"Player casted a walling ability", "keybind": ""},
+            {"tag":"flash","displayName":"","description":"Player casted a flashing or near-sighting ability", "keybind": ""}
+        ],
+        "keybindGroup": "a",
+        "unique": false,
+        "iterable": false
+    },
+    "kda":{
+        "tags": [
+            {"tag":"kill","displayName":"","description":"Player got a kill", "keybind": "k"},
+            {"tag":"death","displayName":"","description":"Player gets killed", "keybind": "d"},
+            {"tag":"mk","displayName":"multi-kill","description":"Player gets a multi-kill", "keybind": ""},
+            {"tag":"2k","displayName":"double-kill","description":"Player gets a double-kill", "keybind": ""},
+            {"tag":"3k","displayName":"triple-kill","description":"Player gets a triple-kill", "keybind": ""},
+            {"tag":"4k","displayName":"quadra-kill","description":"Player gets a quadra-kill", "keybind": ""},
+            {"tag":"ace","displayName":"","description":"Player gets an ace", "keybind": ""},
+            {"tag":"opd","displayName":"opped","description":"Player got killed by an Operator", "keybind": ""},
+            {"tag":"kba","displayName":"kill-by-ability","description":"Player gets a kill with the one of their abilities", "keybind": ""}
+        ],
+        "keybindGroup": "k",
+        "unique": false,
+        "iterable": false
+    },
+    "playerSide":{
+        "tags": [
+            {"tag":"attk","displayName":"attacker","description":"Player is an attacker", "keybind": ""},
+            {"tag":"def","displayName":"defender","description":"Player is a defender", "keybind": ""}
+        ],
+        "keybindGroup": "s",
+        "unique": true,
+        "iterable": false
+    },
+    "mapAreas":{
+        "tags": [
+            {"tag":"asite","displayName":"a-site","description":"Important action occurs at or near A Site", "keybind": ""},
+            {"tag":"bsite","displayName":"b-site","description":"Important action occurs at or near B Site", "keybind": ""},
+            {"tag":"csite","displayName":"c-site","description":"Important action occurs at or near C Site", "keybind": ""},
+            {"tag":"mid","displayName":"","description":"Important action occurs at or near mid", "keybind": ""},
+            {"tag":"aspawn","displayName":"attacker-spawn","description":"Important action occurs at or near Attacker Spawn", "keybind": ""},
+            {"tag":"dspawn","displayName":"defender-spawn","description":"Important action occurs at or near Defender Spawn", "keybind": ""},
+            {"tag":"aside","displayName":"a-side","description":"Important action occurs on the A half of the map", "keybind": ""},
+            {"tag":"bside","displayName":"b-side","description":"Important action occurs on the B half of the map", "keybind": ""},
+            {"tag":"hell","displayName":"","description":"Important action occurs on 'hell'"},
+            {"tag":"heaven","displayName":"","description":"Important action occurs on 'heaven", "keybind": ""},
+            {"tag":"garage","displayName":"","description":"Important action occurs on 'garage", "keybind": ""}
+        ],
+        "keybindGroup": "m",
+        "unique": false,
+        "iterable": false
+    },
+    "roles":{
+        "tags": [
+            {"tag":"duelist","displayName":"","description":"Player is playing a duelist", "keybind": ""},
+            {"tag":"controller","displayName":"","description":"Player is playing a controller", "keybind": ""},
+            {"tag":"sentinel","displayName":"","description":"Player is playing a sentinel", "keybind": ""},
+            {"tag":"initiator","displayName":"","description":"Player is playing an initiator", "keybind": ""}
+        ],
+        "keybindGroup": "r",
+        "unique": true,
+        "iterable": false
+    },
+    "mechanics":{
+        "tags": [
+            {"tag":"jigglepeak","displayName":"jiggle-peak","description":"Player jiggle peeks at some point", "keybind": ""},
+            {"tag":"headshot","displayName":"","description":"Player gets a headshot kill", "keybind": ""},
+            {"tag":"swing","displayName":"","description":"Player wide-swings an angle", "keybind": ""},
+            {"tag":"trade","displayName":"","description":"Player got a kill by trading an ally", "keybind": ""},
+            {"tag":"wb","displayName":"wall-bang","description":"Player got a kill by shooting through an obstacle", "keybind": ""},
+            {"tag":"bk","displayName":"blind-kill","description":"Player got a kill without vision of the enemy", "keybind": ""}
+        ],
+        "keybindGroup": "m",
+        "unique": false,
+        "iterable": false
+    },
+    "gameObjects":{
+        "tags": [
+        {"tag":"ultorb","displayName":"ult-orb","description":"Player acquired an ultimate orb", "keybind": ""}
+        ],
+        "keybindGroup": "o",
+        "unique": false,
+        "iterable": false
+    },
+    "gameEvents":{
+        "tags": [
+            {"tag":"spikeplant","displayName":"spike-plant","description":"Player planted the spike", "keybind": ""},
+            {"tag":"spikedefuse","displayName":"spike-defuse","description":"Player defused the spike", "keybind": ""},
+            {"tag":"clutch","displayName":"","description":"Player clutched the round", "keybind": ""},
+            {"tag":"spikeblow","displayName":"spike-blow","description":"Spike goes off during the clip", "keybind": ""},
+            {"tag":"tp","displayName":"teleportation","description":"Player teleported using an ability or going through a teleporter", "keybind": ""},
+            {"tag":"thrifty","displayName":"","description":"Player's team won round where their team were on a resource disadvantage", "keybind": ""},
+            {"tag":"1v1","displayName":"","description":"Player won a round where they were the last man standing against 1 opponent", "keybind": ""},
+            {"tag":"1v2","displayName":"","description":"Player won a round where they were the last man standing against 2 opponents", "keybind": ""},
+            {"tag":"1v3","displayName":"","description":"Player won a round where they were the last man standing against 3 opponents", "keybind": ""},
+            {"tag":"1v4","displayName":"","description":"Player won a round where they were the last man standing against 4 opponents", "keybind": ""},
+            {"tag":"1v5","displayName":"","description":"Player won a round where they were the last man standing against 5 opponents", "keybind": ""},
+            {"tag":"flawless","displayName":"","description":"Player's team won round with no casualty", "keybind": ""},
+            {"tag":"won","displayName":"","description":"Player's team won the match on this round", "keybind": ""},
+            {"tag":"defeat","displayName":"","description":"Player's team lost the match on this round", "keybind": ""},
+            {"tag":"winround","displayName":"won-round","description":"Player's team won this round", "keybind": ""},
+            {"tag":"lostround","displayName":"lost-round","description":"Player's team lost this round", "keybind": ""}
+        ],
+        "keybindGroup": "e",
+        "unique": false,
+        "iterable": false
+    },
+    "gameTactics":{
+        "tags": [
+            {"tag":"anchor","displayName":"","description":"Player was defending a site from inside", "keybind": ""},
+            {"tag":"execute","displayName":"","description":"Player's team coordinate to rush into a site", "keybind": ""},
+            {"tag":"rotation","displayName":"","description":"Player rotates to another site", "keybind": ""},
+            {"tag":"lurker","displayName":"","description":"Player is lurking", "keybind": ""},
+            {"tag":"teamplay","displayName":"team-play","description":"Clip showcases a successful team play", "keybind": ""},
+            {"tag":"retake","displayName":"","description":"Player attempts to retake a site where the spike has been planted", "keybind": ""},
+            {"tag":"pplant","displayName":"post-plant","description":"Important action occurs while planted spike counts down", "keybind": ""},
+            {"tag":"lineup","displayName":"line-up","description":"Player performs a line-up ability cast", "keybind": ""}
+        ],
+        "keybindGroup": "t",
+        "unique": false,
+        "iterable": false
+    }
+}
