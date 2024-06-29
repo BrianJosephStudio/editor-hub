@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <title>FILM</title>
+  <g>
+    <rect x="19" y="19" width="90" height="90" fill="#40bad5"/>
+    <rect x="39.07" y="38.255" width="49.859" height="51.49" rx="4.387" fill="#fcbf1e"/>
+    <g>
+      <path d="M84.543,99.07H43.457a4.387,4.387,0,0,0-4.387,4.387V109H88.93v-5.543A4.387,4.387,0,0,0,84.543,99.07Z" fill="#fcbf1e"/>
+      <path d="M84.543,28.93H43.457a4.387,4.387,0,0,1-4.387-4.387V19H88.93v5.543A4.387,4.387,0,0,1,84.543,28.93Z" fill="#fcbf1e"/>
+    </g>
+    <path d="M75.553,62.1l-18.41-10.63a2.2,2.2,0,0,0-3.293,1.9V74.63a2.2,2.2,0,0,0,3.293,1.9L75.553,65.9A2.195,2.195,0,0,0,75.553,62.1Z" fill="#fff3dc"/>
+    <g>
+      <rect x="25.25" y="24.75" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="25.25" y="38.917" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="25.25" y="53.083" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="25.25" y="67.25" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="25.25" y="81.417" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="25.25" y="95.583" width="7.667" height="7.667" fill="#fff3dc"/>
+    </g>
+    <g>
+      <rect x="95.083" y="24.75" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="95.083" y="38.917" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="95.083" y="53.083" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="95.083" y="67.25" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="95.083" y="81.417" width="7.667" height="7.667" fill="#fff3dc"/>
+      <rect x="95.083" y="95.583" width="7.667" height="7.667" fill="#fff3dc"/>
+    </g>
+  </g>
+</svg>

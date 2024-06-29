@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import "./PathNav.css";
 import backArrowIcon from "../../../../assets/double-arrow-up.svg";
 import { useFolderNavigation } from "../../../../context/FolderNavigationContext";
+import { Box } from "@mui/material";
 
 export const PathNav = ({ path }: { path: string }) => {
+  const pathContainer = useRef<HTMLDivElement>()
   const {
     handleBackNavigation,
     pathSegments,
@@ -18,6 +20,12 @@ export const PathNav = ({ path }: { path: string }) => {
     setPathSegments(segmentedPaths);
   }, [path]);
 
+  useEffect(() => {
+    if(!pathContainer.current) return 
+    const lastSegment = [...pathContainer.current.children].pop()
+    lastSegment?.scrollIntoView()
+  }, [pathSegments])
+
   return (
     <div className="pathNavContainer">
       <div className="backButton" onClick={() => handleBackNavigation(1)}>
@@ -29,7 +37,7 @@ export const PathNav = ({ path }: { path: string }) => {
           alt=""
         />
       </div>
-      <div className="segmentsContainer">
+      <Box ref={pathContainer} className="segmentsContainer">
         <div
           className="segment pathSegment"
           onClick={() => {
@@ -41,7 +49,7 @@ export const PathNav = ({ path }: { path: string }) => {
         </div>
         {pathSegments.length > 0 ? (
           pathSegments.map((pathSegment, index) => (
-            <>
+            <div style={{display: 'flex'}} key={index}>
               <div className="segment"> / </div>
               <div
                 className="segment pathSegment"
@@ -51,12 +59,12 @@ export const PathNav = ({ path }: { path: string }) => {
               >
                 {pathSegment}
               </div>
-            </>
+            </div>
           ))
         ) : (
           <div className="segment"> / </div>
         )}
-      </div>
+      </Box>
     </div>
   );
 };

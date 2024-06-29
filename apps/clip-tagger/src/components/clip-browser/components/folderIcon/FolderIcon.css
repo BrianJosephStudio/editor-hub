@@ -9,6 +9,7 @@
   grid-gap: 0.6rem;
   cursor: pointer;
   padding: 1rem 0;
+  user-select: none;
 }
 
 .folderContainer:focus{

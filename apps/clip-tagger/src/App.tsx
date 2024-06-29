@@ -3,24 +3,53 @@ import { ClipBrowser } from "./components/clip-browser/ClipBrowser";
 import { ClipViewer } from "./components/clip-viewer/ClipViewer";
 import { FolderNavigationProvider } from "./context/FolderNavigationContext";
 import { ClipViewerProvider } from "./context/ClipViewerContext";
+import { TagsProvider } from "./context/TagsContext";
+import { AppContext } from "./context/AppContext";
 import { Box } from "@mui/material";
+import { TagsManager } from "./components/tags-manager/TagsManager";
+import { useRef } from "react";
+import { KeybindProvider } from "./context/KeyBindContext";
+
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const currentPath = urlParams.get("path");
+  const AppRoot = useRef<HTMLDivElement>(null);
 
   return (
-    <ClipViewerProvider>
-      <FolderNavigationProvider currentPath={currentPath ?? ""}>
-        <Box sx={{
-          width: '100vw',
-          height: '100vh',
-          display: 'flex'
-        }}>
-          <ClipBrowser></ClipBrowser>
-          <ClipViewer></ClipViewer>
-        </Box>
-      </FolderNavigationProvider>
-    </ClipViewerProvider>
+    <AppContext.Provider value={{ AppRoot }}>
+      <KeybindProvider>
+        <TagsProvider>
+          <ClipViewerProvider>
+            <FolderNavigationProvider currentPath={currentPath ?? ""}>
+              <Box
+                ref={AppRoot}
+                sx={{
+                  margin: "0",
+                  padding: "0",
+                  display: "grid",
+                  gridTemplateColumns: "2fr 8fr",
+                  width: "100vw",
+                  height: "100vh",
+                }}
+              >
+                <ClipBrowser></ClipBrowser>
+                <Box
+                  sx={{
+                    display: "grid",
+                    gridTemplateColumns: "repeat(5, 1fr)",
+                    gridTemplateRows: "6fr 3fr",
+                    minHeight: "0",
+                  }}
+                >
+                  <ClipViewer></ClipViewer>
+                  <TagsManager></TagsManager>
+                </Box>
+              </Box>
+            </FolderNavigationProvider>
+          </ClipViewerProvider>
+        </TagsProvider>
+      </KeybindProvider>
+    </AppContext.Provider>
   );
 }
 

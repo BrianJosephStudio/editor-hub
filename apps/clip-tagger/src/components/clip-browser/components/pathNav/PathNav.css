@@ -20,7 +20,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     height: inherit;
-    max-width: 29rem;
+    /* max-width: 29rem; */
     display: flex;
     flex-wrap: nowrap;
     white-space: nowrap;
@@ -41,6 +41,7 @@
 .pathSegment {
     cursor: pointer;
     padding: 0 1rem;
+    user-select: none;
 }
 
 .pathSegment:hover {

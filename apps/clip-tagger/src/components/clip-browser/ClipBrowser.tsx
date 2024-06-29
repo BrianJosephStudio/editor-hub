@@ -26,7 +26,8 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     handleBackNavigation,
   } = useFolderNavigation();
 
-  const { setTargetClip, setTemporaryLink } = useClipViewer();
+  const { setCurrentVideoSource, nextVideoSource } = useClipViewer();
+
 
   const getCurrentFolderEntries = async () => {
     try {
@@ -87,6 +88,26 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     }
   };
 
+  const scrollContainerIfNeeded = (index: number | null) => {
+    if(!index) return
+    const container = filesViewport.current;
+    if (!container) return;
+
+    const selectedItem = container.children[index];
+    if (!selectedItem) return;
+
+    const containerRect = container.getBoundingClientRect();
+    const itemRect = selectedItem.getBoundingClientRect();
+
+    if (itemRect.top < containerRect.top) {
+      // Item is above the viewport
+      container.scrollBy(0, itemRect.top - containerRect.top);
+    } else if (itemRect.bottom > containerRect.bottom) {
+      // Item is below the viewport
+      container.scrollBy(0, itemRect.bottom - containerRect.bottom);
+    }
+  };
+
   useEffect(() => {
     if (filesViewport.current) {
       filesViewport.current.focus();
@@ -106,6 +127,10 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     );
   }, [currentFolder]);
 
+  useEffect(()=> {
+    scrollContainerIfNeeded(activeItem)
+  }, [activeItem])
+
   return (
     <>
       <div className="container">
@@ -118,15 +143,18 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
             const { key } = event;
             switch (key) {
               case "ArrowUp":
+                event.preventDefault()
                 focusPreviousItem();
                 break;
               case "ArrowDown":
+                event.preventDefault()
                 focusNextItem();
                 break;
               case "Backspace":
                 handleBackNavigation(1);
                 break;
               case "Enter":
+                console.log("holi", activeItem,currentFolderEntries[activeItem!][".tag"], nextVideoSource)
                 if (activeItem === null) break;
                 if (currentFolderEntries[activeItem][".tag"] === "folder") {
                   setCurrentFolder(
@@ -138,14 +166,14 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
                 } else if (
                   currentFolderEntries[activeItem][".tag"] === "file"
                 ) {
-                  //TODO: get temporary link
+                  setCurrentVideoSource(nextVideoSource)
                 }
             }
           }}
         >
           {!loadingContent &&
             currentFolderEntries.map((entry, index) => (
-              <>
+              <div key={index}>
                 {entry[".tag"] === "folder" && (
                   <FolderIcon
                     name={entry.name}
@@ -167,18 +195,16 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
                 {entry[".tag"] === "file" && (
                   <FileIcon
+                    itemIndex={index}
                     name={entry.name}
                     path={entry.path_lower}
                     id={entry.id}
                     key={index}
                     active={activeItem === index}
                     clickCallback={() => setActiveItem(index)}
-                    openFileCallback={(temporaryLink: string) => {
-                      setTemporaryLink(temporaryLink);
-                    }}
                   ></FileIcon>
                 )}
-              </>
+              </div>
             ))}
 
           {loadingContent &&
