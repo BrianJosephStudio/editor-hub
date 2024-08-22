@@ -7,13 +7,13 @@ import {
 
 interface FolderNavigationContextProps {
   currentFolder: string;
-  setCurrentFolder: (path: string) => void;
+  setCurrentFolder: React.Dispatch<React.SetStateAction<string>>;
   currentFolderEntries: any[];
-  setCurrentFolderEntries: (entries: any[]) => void;
+  setCurrentFolderEntries: React.Dispatch<React.SetStateAction<any[]>>;
   activeItem: number | null;
-  setActiveItem: (index: number | null) => void;
+  setActiveItem: React.Dispatch<React.SetStateAction<number | null>>;
   pathSegments: string[];
-  setPathSegments: (index: string[]) => void;
+  setPathSegments: React.Dispatch<React.SetStateAction<string[]>>;
   handleBackNavigation: (count: number) => void;
 }
 

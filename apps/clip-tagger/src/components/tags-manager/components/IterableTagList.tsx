@@ -33,8 +33,8 @@ export const IterableTagList = ({
   });
 
   const setNextIterableTag = useRef((event: KeyboardEvent) => {
-      const tagList = iterableTagListId === "agent" ? AgentTags : MapTags;
-      if (event.key === "j") {
+    const tagList = iterableTagListId === "agent" ? AgentTags : MapTags;
+    if (event.key === "j") {
       setScrollPosition((currentPosition) => {
         const nextValue = currentPosition + 1;
         if (nextValue > tagList.length - 1) return 0;
@@ -44,8 +44,7 @@ export const IterableTagList = ({
   });
 
   const calculateItemTopPosition = (index: number) => {
-      const tagList = iterableTagListId === "agent" ? AgentTags : MapTags;
-      console.log(tagList.length);
+    const tagList = iterableTagListId === "agent" ? AgentTags : MapTags;
     let adjustment = listItemheight * tagList.length;
     const currentPosition =
       listItemheight * index + listItemheight * -scrollPosition;
@@ -58,15 +57,18 @@ export const IterableTagList = ({
     return currentPosition;
   };
 
+  const isVisible = (index: number): boolean => {
+    const topPosition = calculateItemTopPosition(index)
+    return topPosition >= 0 - 20 && topPosition < listContainerheight
+  }
+
   useEffect(() => {
     if (!AppRoot || !AppRoot.current) return;
-    console.log(targetIterableTagList);
 
     if (
       targetIterableTagList === iterableTagListId &&
       iterableTagListModifier
     ) {
-      console.log("adding", iterableTagListId, "listeners");
       AppRoot.current.addEventListener(
         "keydown",
         setPreviousIterableTag.current
@@ -74,7 +76,6 @@ export const IterableTagList = ({
 
       AppRoot.current.addEventListener("keydown", setNextIterableTag.current);
     } else {
-      console.log("removing", iterableTagListId, "listeners");
       AppRoot.current.removeEventListener(
         "keydown",
         setPreviousIterableTag.current
@@ -122,6 +123,8 @@ export const IterableTagList = ({
               minHeight: "6rem",
               placeContent: "center",
               height: `${listContainerheight / visibleItemsCount}px`,
+              opacity: isVisible(index) ? '1' : '0',
+              transition: 'top 0.1s, opacity 0s'
             }}
           >
             <Typography fontSize={"1.2rem"} fontWeight={"600"}>
@@ -135,21 +138,23 @@ export const IterableTagList = ({
           position: "absolute",
           height: `${listItemheight}px`,
           width: "100%",
-          border: 'solid hsl(0, 0%, 40%) 2px',
-          borderRadius: '1rem',
-          top: `${listItemheight * 3}px`
+          border: "solid hsl(0, 0%, 40%) 2px",
+          borderRadius: "1rem",
+          top: `${listItemheight * 3}px`,
         }}
       ></Box>
-      {iterableTagListId === targetIterableTagList && <Box
-        sx={{
-          position: "absolute",
-          height: `${listItemheight}px`,
-          width: "100%",
-          border: 'solid hsl(0, 0%, 90%) 2px',
-          borderRadius: '1rem',
-          top: `${listItemheight * 3}px`
-        }}
-      ></Box>}
+      {iterableTagListId === targetIterableTagList && (
+        <Box
+          sx={{
+            position: "absolute",
+            height: `${listItemheight}px`,
+            width: "100%",
+            border: "solid hsl(0, 0%, 90%) 2px",
+            borderRadius: "1rem",
+            top: `${listItemheight * 3}px`,
+          }}
+        ></Box>
+      )}
     </Box>
   );
 };

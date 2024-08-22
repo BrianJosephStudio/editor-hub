@@ -3,6 +3,7 @@ import {
     useContext,
     useState,
     ReactNode,
+    useRef,
   } from "react";
   
   interface ClipViewerContextProps {
@@ -12,6 +13,7 @@ import {
     setNextVideoSource: (path: string) => void;
     currentVideoSource: string;
     setCurrentVideoSource: (path: string) => void;
+    videoPlayer: React.RefObject<HTMLVideoElement>
   }
   
   const ClipViewerContext = createContext<
@@ -36,6 +38,7 @@ import {
   const [targetClip, setTargetClip] = useState<string>("");
   const [currentVideoSource, setCurrentVideoSource] = useState<string>("");
   const [nextVideoSource, setNextVideoSource] = useState<string>("");
+  const videoPlayer = useRef<HTMLVideoElement>(null)
   
     return (
       <ClipViewerContext.Provider
@@ -45,7 +48,8 @@ import {
           currentVideoSource,
           setCurrentVideoSource,
           nextVideoSource,
-          setNextVideoSource
+          setNextVideoSource,
+          videoPlayer
         }}
       >
         {children}

@@ -21,7 +21,7 @@ export const FileIcon = ({
   itemIndex: number;
   clickCallback: () => void;
 }) => {
-  const { setCurrentVideoSource, setNextVideoSource } = useClipViewer();
+  const { setCurrentVideoSource, setNextVideoSource, setTargetClip } = useClipViewer();
   const {
     activeItem,
   } = useFolderNavigation();
@@ -82,7 +82,8 @@ export const FileIcon = ({
       }`}
       onDoubleClick={(event) => {
         event.preventDefault();
-        setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
+            setTargetClip(path)
+            setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
       }}
       onClick={clickCallback}
     >

@@ -5,15 +5,23 @@ import { TagsGroup } from "./components/TagsGroup";
 import { IterableTagList } from "./components/IterableTagList.tsx";
 import { useKeybind } from "../../context/KeyBindContext.tsx";
 import { useAppContext } from "../../context/AppContext.tsx";
-import { IterableTagListId } from "../../types/tags";
+import { useClipViewer } from "../../context/ClipViewerContext.tsx";
+import { ApiClient } from "../../api/ApiClient.ts";
+import { useTags } from "../../context/TagsContext.tsx";
 
 export const TagsManager = () => {
   const { AppRoot } = useAppContext();
+  const { targetClip } = useClipViewer();
   const {
     blockGroupLevelListeners,
     setTargetIterableTagList,
     setIterableTagListModifier,
   } = useKeybind();
+
+  const {
+    tagReferenceMaster,
+    setTagReferenceMaster,
+  } = useTags();
 
   const switchIterableTagList = () =>
     setTargetIterableTagList((targetIterableTagList) =>
@@ -67,6 +75,15 @@ export const TagsManager = () => {
   useEffect(() => {
     addModifierEventListeners();
   }, []);
+
+  useEffect(() => {
+    const getMetadata = async () => {
+      const apiClient = new ApiClient();
+      const updatedTagReference = await apiClient.getMetadata(targetClip);
+      setTagReferenceMaster(updatedTagReference)
+    };
+    getMetadata();
+  }, [targetClip]);
 
   return (
     <>

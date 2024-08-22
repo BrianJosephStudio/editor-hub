@@ -24,6 +24,7 @@ const ProjectForm: React.FC = () => {
   const [projectType, setProjectType] = useState<number>(ProjectType.GUIDE);
   const [projectNumber, setProjectNumber] = useState<string>('');
   const [projectName, setProjectName] = useState<string>("");
+  const [projectFullName, setProjectFullName] = useState<string>("");
   const [projectFolderLink, setProjectFolderLink] = useState<string>('');
   const [filesRequestLink, setFilesRequestLink] = useState<string>('');
 
@@ -47,6 +48,8 @@ const ProjectForm: React.FC = () => {
       
       const { data: { projectLink, uploadLink } } = await axios.post<CreatedProjectData>(url, body)
 
+      const updatedProjectName = `${projectType === 2 ? "S" : ""}${projectNumber} - ${projectName}`
+      setProjectFullName(updatedProjectName)
       setProjectFolderLink(projectLink)
       setFilesRequestLink(uploadLink)
     } catch (e) {
@@ -107,6 +110,10 @@ const ProjectForm: React.FC = () => {
       {
         jobFinished &&
         <div>
+          <URLDisplay
+          title='Project Name'
+          url={projectFullName}
+          ></URLDisplay>
           <URLDisplay
           title='Project Url'
           url={projectFolderLink}

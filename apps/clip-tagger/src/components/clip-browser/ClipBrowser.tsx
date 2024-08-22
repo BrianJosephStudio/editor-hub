@@ -6,6 +6,9 @@ import { FileIcon } from "./components/fileIcon/FileIcon";
 import { PathNav } from "./components/pathNav/PathNav";
 import { useFolderNavigation } from "../../context/FolderNavigationContext";
 import { useClipViewer } from "../../context/ClipViewerContext";
+import { useAppContext } from "../../context/AppContext";
+import { useKeybind } from "../../context/KeyBindContext";
+import { useTags } from "../../context/TagsContext";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -13,8 +16,11 @@ const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 if (!clipsRootPath || !apiHost) throw new Error("Missing envs");
 
 export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
+  const { AppRoot } = useAppContext();
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
   const filesViewport = useRef<HTMLDivElement>(null);
+  const { clipBrowserModifier, setClipBrowserModifier, setBlockGroupLevelListeners } = useKeybind();
+  const { setSelectedTagGroup } = useTags();
 
   const {
     currentFolder,
@@ -26,8 +32,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     handleBackNavigation,
   } = useFolderNavigation();
 
-  const { setCurrentVideoSource, nextVideoSource } = useClipViewer();
-
+  const { setCurrentVideoSource, nextVideoSource, setTargetClip, videoPlayer } = useClipViewer();
 
   const getCurrentFolderEntries = async () => {
     try {
@@ -70,7 +75,12 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   const focusPreviousItem = () => {
     if (activeItem !== null && activeItem > 0) {
-      setActiveItem(activeItem - 1);
+      setActiveItem((activeItem) => {
+        if (activeItem !== null) {
+          return activeItem - 1;
+        }
+        return 0;
+      });
       return;
     }
     if (activeItem === null) {
@@ -80,7 +90,12 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   const focusNextItem = () => {
     if (activeItem !== null && activeItem < currentFolderEntries.length - 1) {
-      setActiveItem(activeItem + 1);
+      setActiveItem((activeItem) => {
+        if (activeItem !== null) {
+          return activeItem + 1;
+        }
+        return 0;
+      });
       return;
     }
     if (activeItem === null) {
@@ -89,7 +104,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   };
 
   const scrollContainerIfNeeded = (index: number | null) => {
-    if(!index) return
+    if (!index) return;
     const container = filesViewport.current;
     if (!container) return;
 
@@ -100,18 +115,13 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     const itemRect = selectedItem.getBoundingClientRect();
 
     if (itemRect.top < containerRect.top) {
-      // Item is above the viewport
       container.scrollBy(0, itemRect.top - containerRect.top);
     } else if (itemRect.bottom > containerRect.bottom) {
-      // Item is below the viewport
       container.scrollBy(0, itemRect.bottom - containerRect.bottom);
     }
   };
 
   useEffect(() => {
-    if (filesViewport.current) {
-      filesViewport.current.focus();
-    }
     setActiveItem(0);
     setCurrentFolderEntries([]);
     setLoadingContent(true);
@@ -127,50 +137,101 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     );
   }, [currentFolder]);
 
-  useEffect(()=> {
-    scrollContainerIfNeeded(activeItem)
-  }, [activeItem])
+  useEffect(() => {
+    if (!AppRoot || !AppRoot.current) return;
+
+    const eventHandler = (event: KeyboardEvent) => {
+      const { key } = event;
+      switch (key) {
+        case "ArrowUp":
+          event.preventDefault();
+          focusPreviousItem();
+          break;
+        case "ArrowDown":
+          event.preventDefault();
+          focusNextItem();
+          break;
+        case "Backspace":
+          handleBackNavigation(1);
+          break;
+        case "Enter":
+          if (activeItem === null) break;
+          if (currentFolderEntries[activeItem][".tag"] === "folder") {
+            setCurrentFolder(
+              currentFolderEntries[activeItem].path_lower.replace(
+                clipsRootPath.toLowerCase(),
+                ""
+              )
+            );
+          } else if (currentFolderEntries[activeItem][".tag"] === "file") {
+            setTargetClip(currentFolderEntries[activeItem].path_lower)
+            setCurrentVideoSource(nextVideoSource);
+          }
+          break;
+        case " ":
+          videoPlayer.current?.paused ? videoPlayer.current?.play() : videoPlayer.current?.pause()
+          break;
+        case "Escape":
+          // setSelectedTagGroup(null);
+          setBlockGroupLevelListeners(false);
+          break;
+      }
+    };
+    AppRoot.current?.addEventListener("keydown", eventHandler);
+
+    return () => AppRoot.current?.removeEventListener("keydown", eventHandler);
+  }, [activeItem, currentFolderEntries]);
+
+  useEffect(() => {
+    const keyDownHandler = (event: KeyboardEvent) => {
+      const { key } = event;
+      if (key === "Alt") {
+        event.preventDefault();
+        setClipBrowserModifier(true);
+      }
+    };
+    const keyUpHandler = (event: KeyboardEvent) => {
+      const { key } = event;
+      if (key === "Alt") {
+        event.preventDefault();
+        setClipBrowserModifier(false);
+      }
+    };
+    AppRoot?.current?.addEventListener("keydown", keyDownHandler);
+    AppRoot?.current?.addEventListener("keyup", keyUpHandler);
+  }, []);
+
+  useEffect(() => {
+    const eventHandler = (event: KeyboardEvent) => {
+      const { key } = event;
+      if (key === "j") {
+        focusNextItem();
+      }
+      if (key === "k") {
+        focusPreviousItem();
+      }
+    };
+    if (clipBrowserModifier) {
+      AppRoot?.current?.addEventListener("keydown", eventHandler);
+    }
+
+    return () => AppRoot?.current?.removeEventListener("keydown", eventHandler);
+  }, [clipBrowserModifier]);
+
+  useEffect(() => {
+    scrollContainerIfNeeded(activeItem);
+  }, [activeItem]);
+
+  useEffect(
+    () => console.log("change!", clipBrowserModifier),
+    [clipBrowserModifier]
+  );
 
   return (
     <>
       <div className="container">
         <PathNav path={currentFolder}></PathNav>
-        <div
-          ref={filesViewport}
-          className="filesViewport"
-          tabIndex={0}
-          onKeyDown={(event) => {
-            const { key } = event;
-            switch (key) {
-              case "ArrowUp":
-                event.preventDefault()
-                focusPreviousItem();
-                break;
-              case "ArrowDown":
-                event.preventDefault()
-                focusNextItem();
-                break;
-              case "Backspace":
-                handleBackNavigation(1);
-                break;
-              case "Enter":
-                console.log("holi", activeItem,currentFolderEntries[activeItem!][".tag"], nextVideoSource)
-                if (activeItem === null) break;
-                if (currentFolderEntries[activeItem][".tag"] === "folder") {
-                  setCurrentFolder(
-                    currentFolderEntries[activeItem].path_lower.replace(
-                      clipsRootPath.toLowerCase(),
-                      ""
-                    )
-                  );
-                } else if (
-                  currentFolderEntries[activeItem][".tag"] === "file"
-                ) {
-                  setCurrentVideoSource(nextVideoSource)
-                }
-            }
-          }}
-        >
+        <div ref={filesViewport} className="filesViewport">
           {!loadingContent &&
             currentFolderEntries.map((entry, index) => (
               <div key={index}>

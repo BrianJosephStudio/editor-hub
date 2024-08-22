@@ -5,11 +5,13 @@ import { useTags } from "../../../context/TagsContext";
 import { Box, Typography } from "@mui/material";
 import { Tag } from "./Tag";
 import { useKeybind } from "../../../context/KeyBindContext";
+import { useClipViewer } from "../../../context/ClipViewerContext";
 
 export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, groupName: string, key: number }) => {
   const { AppRoot } = useAppContext();
   const { selectedTagGroup, setSelectedTagGroup } = useTags();
-  const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier } = useKeybind();
+  const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier } = useKeybind();
+  const {currentVideoSource ,targetClip} = useClipViewer()
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
     if (event.key === tagsGroup.keybindGroup && !blockGroupLevelListeners && !iterableTagListModifier) {
@@ -30,17 +32,13 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
   };
 
   useEffect(() => {
-    addKeyBindGroupListener();
-    // return removeKeyBindGroupListener;
-  }, []);
-
-  useEffect(() => {
-    if(blockGroupLevelListeners || iterableTagListModifier){
+    if(blockGroupLevelListeners || iterableTagListModifier || clipBrowserModifier){
       removeKeyBindGroupListener()
     }else{
+      if(!currentVideoSource || !targetClip) return
       addKeyBindGroupListener()
     }
-  }, [blockGroupLevelListeners, iterableTagListModifier]);
+  }, [blockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier, currentVideoSource]);
 
   return (
     <>

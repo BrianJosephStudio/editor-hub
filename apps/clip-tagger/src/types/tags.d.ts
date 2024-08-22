@@ -20,3 +20,9 @@ export interface TagGroup {
 export interface ClipTags {
   tags: TagObject[];
 }
+
+type TimeCode = number
+
+export interface TagReference {
+  [tagId: string]: Timecode[]
+}
