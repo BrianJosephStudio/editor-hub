@@ -28,10 +28,22 @@ export const dropboxContentProxy = async () => {
     }
 }
 
-export const dropboxApiProxy = async () => {
+export const dropboxFilesProxy = async () => {
     try {
         const proxyMiddleware = createDropboxProxy(
             "https://api.dropboxapi.com/2/files"
+        )
+
+        return proxyMiddleware
+    } catch (e: any) {
+        throw e
+    }
+}
+
+export const dropboxFilePropertiesProxy = async () => {
+    try {
+        const proxyMiddleware = createDropboxProxy(
+            "https://api.dropboxapi.com/2/file_properties"
         )
 
         return proxyMiddleware
