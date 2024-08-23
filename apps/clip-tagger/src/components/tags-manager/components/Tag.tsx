@@ -7,7 +7,7 @@ import { useKeybind } from "../../../context/KeyBindContext";
 import { useClipViewer } from "../../../context/ClipViewerContext";
 import { ApiClient } from "../../../api/ApiClient";
 
-export const Tag = ({ tagObject }: { tagObject: TagObject }) => {
+export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, exclusiveTagIds: string[] | undefined }) => {
   const { AppRoot } = useAppContext();
   const { setSelectedTagGroup, setTagReferenceMaster } = useTags();
   const { blockGroupLevelListeners, setBlockGroupLevelListeners } =
@@ -23,7 +23,8 @@ export const Tag = ({ tagObject }: { tagObject: TagObject }) => {
       apiClient.updateFileProperties(
         targetClip,
         tagReferenceToAdd,
-        tagObject.unique
+        exclusiveTagIds,
+        tagObject.unique,
       ).then((updatedTagReference) => {
         setTagReferenceMaster(updatedTagReference);
       })

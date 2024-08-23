@@ -5,6 +5,7 @@ export interface TagObject {
   displayName: string;
   description: string;
   unique?: boolean;
+  exclusive?: boolean;
   keybind: string;
   id: string;
 }
@@ -12,7 +13,7 @@ export interface TagObject {
 export interface TagGroup {
   tags: TagObject[];
   keybindGroup: string;
-  unique: boolean;
+  exclusive: boolean
   iterable: boolean;
   id: string;
 }

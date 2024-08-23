@@ -13,6 +13,12 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
   const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier } = useKeybind();
   const {currentVideoSource ,targetClip} = useClipViewer()
 
+  const exclusiveTagIds = useRef<string[] | undefined>(undefined)
+
+  if(tagsGroup.exclusive){
+    exclusiveTagIds.current = tagsGroup.tags.map((tagObject) => tagObject.id)
+  }
+
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
     if (event.key === tagsGroup.keybindGroup && !blockGroupLevelListeners && !iterableTagListModifier) {
       setSelectedTagGroup(tagsGroup.id);
@@ -81,7 +87,7 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
               placeItems: 'center'
             }}
           >
-            <Tag tagObject={tag}/>
+            <Tag tagObject={tag} exclusiveTagIds={exclusiveTagIds.current}/>
           </Box>
         ))}
     </>
