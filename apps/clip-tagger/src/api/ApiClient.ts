@@ -58,13 +58,31 @@ export class ApiClient {
 
   public updateFileProperties = async (
     path: string,
-    tagReferenceEntry: TagReference
+    tagReferenceToAdd: TagReference,
+    unique?: boolean
   ): Promise<TagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
-    const updatedTagReference: TagReference = {
-      ...upToDateTagReference,
-      ...tagReferenceEntry,
-    };
+
+    const newTagReferenceKey = Object.keys(tagReferenceToAdd)[0];
+    
+    const referenceExistsInMaster = Array.isArray(
+      upToDateTagReference[newTagReferenceKey]
+    );
+
+    let updatedTagReference: TagReference = upToDateTagReference;
+
+    if (!unique && referenceExistsInMaster) {
+
+      updatedTagReference[newTagReferenceKey] = updatedTagReference[
+        newTagReferenceKey
+      ].concat(tagReferenceToAdd[newTagReferenceKey]);
+    } else {
+      updatedTagReference = {
+        ...upToDateTagReference,
+        ...tagReferenceToAdd,
+      };
+    }
+
 
     const url = `${this.apiHost}/properties/update`;
     const headers = {

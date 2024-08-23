@@ -22,7 +22,8 @@ export const Tag = ({ tagObject }: { tagObject: TagObject }) => {
       };
       apiClient.updateFileProperties(
         targetClip,
-        tagReferenceToAdd
+        tagReferenceToAdd,
+        tagObject.unique
       ).then((updatedTagReference) => {
         setTagReferenceMaster(updatedTagReference);
       })
