@@ -22,26 +22,26 @@ function App() {
           <ClipViewerProvider>
             <FolderNavigationProvider currentPath={currentPath ?? ""}>
               <Box
-              component={'div'}
-                ref={AppRoot}
-                tabIndex={0}
-                sx={{
-                  margin: "0",
-                  padding: "0",
-                  display: "grid",
-                  gridTemplateColumns: "2fr 8fr",
-                  width: "100vw",
-                  height: "100vh",
-                  outline: 'none'
-                }}
+                component={'div'}
+                  ref={AppRoot}
+                  tabIndex={0}
+                  sx={{
+                    margin: "0",
+                    padding: "0",
+                    display: "grid",
+                    gridTemplateColumns: "2fr 8fr",
+                    width: "100vw",
+                    height: "100vh",
+                    outline: 'none'
+                  }}
               >
                 <ClipBrowser></ClipBrowser>
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(5, 1fr)",
                     gridTemplateRows: "6fr 3fr",
                     minHeight: "0",
+                    minWidth: '0',
                   }}
                 >
                   <ClipViewer></ClipViewer>

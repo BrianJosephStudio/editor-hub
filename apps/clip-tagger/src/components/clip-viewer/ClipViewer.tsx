@@ -10,7 +10,7 @@ export const ClipViewer = () => {
   const { currentVideoSource, videoPlayer } = useClipViewer();
 
   return (
-    <Box sx={{ display: "flex", flexDirection: 'column', width: "100%", gridColumn: '1/4' }}>
+    <Box sx={{ display: "flex", flexDirection: 'column', minHeight: '0', placeContent: 'center' }}>
       <video
         autoPlay
         ref={videoPlayer}
@@ -18,9 +18,8 @@ export const ClipViewer = () => {
         preload="auto"
         src={currentVideoSource}
         style={{
-          // maxWidth: "60rem",
-          flexGrow: "1",
-          maxHeight: '100%',
+          minHeight: '0',
+          minWidth: '0',
           outline: 'none',
         }}
       ></video>

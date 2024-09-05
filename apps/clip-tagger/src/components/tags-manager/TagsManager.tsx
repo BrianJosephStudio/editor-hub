@@ -90,13 +90,9 @@ export const TagsManager = () => {
       <Box
         sx={{
           display: blockGroupLevelListeners ? "flex" : "grid",
-          placeContent: blockGroupLevelListeners ? "start" : "auto",
           gridGap: " 0.6rem",
           gridTemplateRows: "repeat(2, 1fr)",
           gridTemplateColumns: "repeat(6, 1fr)",
-          gridColumn: "1/6",
-          backgroundColor: "hsl(0, 0%, 12%)",
-          flexWrap: "wrap",
           padding: "0.6rem",
         }}
       >
@@ -109,7 +105,7 @@ export const TagsManager = () => {
         ))}
       </Box>
 
-      <IterableTagList
+      {/* <IterableTagList
         gridColumn="4/5"
         gridRow="1/2"
         iterableTagListId={"agent"}
@@ -119,7 +115,7 @@ export const TagsManager = () => {
         gridColumn="5/6"
         gridRow="1/2"
         iterableTagListId={"map"}
-      ></IterableTagList>
+      ></IterableTagList> */}
     </>
   );
 };

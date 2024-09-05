@@ -54,11 +54,12 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
           sx={{
             display: "flex",
             flexDirection: 'column',
-            backgroundColor: "hsla(210, 20%, 40%, 0.5)",
             borderRadius: "2rem",
             flexGrow: "1",
             placeItems: "center",
             cursor: "pointer",
+            height: '100%',
+            backgroundColor: 'black'
           }}
         >
           <Typography
@@ -84,7 +85,7 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
               width: "12rem",
               height: "6rem",
               borderRadius: '2rem',
-              placeItems: 'center'
+              placeItems: 'center',
             }}
           >
             <Tag tagObject={tag} exclusiveTagIds={exclusiveTagIds.current}/>
