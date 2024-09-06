@@ -60,12 +60,12 @@ export class ApiClient {
     path: string,
     tagReferenceToAdd: TagReference,
     exclusiveTagIds: string[] | undefined,
-    unique?: boolean,
+    unique?: boolean
   ): Promise<TagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
 
     const newTagReferenceId = Object.keys(tagReferenceToAdd)[0];
-    
+
     const referenceExistsInMaster = Array.isArray(
       upToDateTagReference[newTagReferenceId]
     );
@@ -73,7 +73,6 @@ export class ApiClient {
     let updatedTagReference: TagReference = upToDateTagReference;
 
     if (!unique && referenceExistsInMaster) {
-
       updatedTagReference[newTagReferenceId] = updatedTagReference[
         newTagReferenceId
       ].concat(tagReferenceToAdd[newTagReferenceId]);
@@ -84,12 +83,12 @@ export class ApiClient {
       };
     }
 
-    if(exclusiveTagIds){
+    if (exclusiveTagIds) {
       exclusiveTagIds.forEach((tagId) => {
-        if(tagId !== newTagReferenceId){
-          delete updatedTagReference[tagId]
+        if (tagId !== newTagReferenceId) {
+          delete updatedTagReference[tagId];
         }
-      })
+      });
     }
 
     const url = `${this.apiHost}/properties/update`;
@@ -156,5 +155,30 @@ export class ApiClient {
     }
 
     return JSON.parse(tagPropertyGroupField.value);
+  };
+
+  public setTrueNames = async (
+    entries: { from_path: string; to_path: string }[]
+  ) => {
+    try {
+      const url = `${this.apiHost}/move_batch_v2`;
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const body = {
+        allow_ownership_transfer: false,
+        autorename: false,
+        entries,
+      };
+
+      const {
+        data: { metadata: name },
+      } = await axios.post(url, body, { headers });
+
+      console.log("metadata.name", name);
+    } catch (e) {
+      console.log(e);
+    }
   };
 }

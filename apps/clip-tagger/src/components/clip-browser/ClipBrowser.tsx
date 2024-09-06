@@ -9,6 +9,8 @@ import { useClipViewer } from "../../context/ClipViewerContext";
 import { useAppContext } from "../../context/AppContext";
 import { useKeybind } from "../../context/KeyBindContext";
 import { useTags } from "../../context/TagsContext";
+import { Box, Button } from "@mui/material";
+import { DropboxFile } from "../../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -30,11 +32,15 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     activeItem,
     setActiveItem,
     handleBackNavigation,
+    getClipLevel,
+    setFolderEntryNames
   } = useFolderNavigation();
 
   const { setCurrentVideoSource, nextVideoSource, setTargetClip, videoPlayer } = useClipViewer();
 
-  const getCurrentFolderEntries = async () => {
+  const [clipLevel, setClipLevel] = useState<boolean>(false)
+
+  const getCurrentFolderEntries = async (): Promise<DropboxFile> => {
     try {
       const url = `${apiHost}/list_folder`;
       const headers = {
@@ -68,6 +74,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
       }
 
       setCurrentFolderEntries(entries);
+      return entries
     } catch (e) {
       console.error(e);
     }
@@ -121,20 +128,35 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     }
   };
 
-  useEffect(() => {
-    setActiveItem(0);
-    setCurrentFolderEntries([]);
-    setLoadingContent(true);
-    getCurrentFolderEntries();
-    setLoadingContent(false);
+  const autoRenameFolders = async () => {
+    await setFolderEntryNames(currentFolderEntries)
 
-    const urlParams = new URLSearchParams(window.location.search);
-    urlParams.set("path", currentFolder);
-    window.history.replaceState(
-      {},
-      "",
-      `${window.location.pathname}?${urlParams.toString()}`
-    );
+    // const apiClient = new ApiClient()
+
+
+    setCurrentFolder("")
+    setCurrentFolder(currentFolder)
+  }
+
+  useEffect(() => {
+    (async () => {
+      setActiveItem(0);
+      setCurrentFolderEntries([]);
+      setLoadingContent(true);
+      const currentEntries = await getCurrentFolderEntries();
+      setLoadingContent(false);
+
+      const isClipLevel = await getClipLevel(currentEntries)
+      setClipLevel(isClipLevel)
+  
+      const urlParams = new URLSearchParams(window.location.search);
+      urlParams.set("path", currentFolder);
+      window.history.replaceState(
+        {},
+        "",
+        `${window.location.pathname}?${urlParams.toString()}`
+      );
+    })()
   }, [currentFolder]);
 
   useEffect(() => {
@@ -229,9 +251,15 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   return (
     <>
-      <div className="container">
+      <Box sx={{
+        display: "grid",
+        gridGap: "0.6rem",
+        gridTemplateRows: "3rem auto",
+        minWidth: "24rem",
+        minHeight: "0",
+      }}>
         <PathNav path={currentFolder}></PathNav>
-        <div ref={filesViewport} className="filesViewport">
+        <Box ref={filesViewport} className="filesViewport">
           {!loadingContent &&
             currentFolderEntries.map((entry, index) => (
               <div key={index}>
@@ -281,9 +309,19 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
               ></FolderIcon>
             ))}
 
-          {loadingContent && <div>Hola!</div>}
-        </div>
-      </div>
+          {clipLevel &&
+            <Button
+            sx={{
+              marginTop: 'auto',
+              height: '3rem'
+            }}
+            onClick={autoRenameFolders}
+            >
+                Auto-name clips
+            </Button>
+          }
+        </Box>
+      </Box>
     </>
   );
 };

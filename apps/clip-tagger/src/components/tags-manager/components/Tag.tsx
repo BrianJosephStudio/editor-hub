@@ -26,6 +26,7 @@ export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, excl
         exclusiveTagIds,
         tagObject.unique,
       ).then((updatedTagReference) => {
+        console.log('Updated Tag Reference:',updatedTagReference)
         setTagReferenceMaster(updatedTagReference);
       })
       setBlockGroupLevelListeners(false);
