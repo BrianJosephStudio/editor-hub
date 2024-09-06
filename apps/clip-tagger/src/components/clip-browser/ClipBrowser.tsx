@@ -82,10 +82,10 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   };
 
   const focusPreviousItem = () => {
-    if (activeItem !== null && activeItem > 0) {
+    if (activeItem !== null) {
       setActiveItem((activeItem) => {
         if (activeItem !== null) {
-          return activeItem - 1;
+          return Math.max(activeItem - 1, 0);
         }
         return 0;
       });
@@ -97,10 +97,10 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   };
 
   const focusNextItem = () => {
-    if (activeItem !== null && activeItem < currentFolderEntries.length - 1) {
+    if (activeItem !== null) {
       setActiveItem((activeItem) => {
         if (activeItem !== null) {
-          return activeItem + 1;
+          return Math.min(activeItem + 1, currentFolderEntries.length - 1);
         }
         return 0;
       });
