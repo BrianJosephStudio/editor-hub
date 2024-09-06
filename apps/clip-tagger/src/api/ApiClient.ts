@@ -157,28 +157,60 @@ export class ApiClient {
     return JSON.parse(tagPropertyGroupField.value);
   };
 
-  public setTrueNames = async (
+  public setTrueNames = (
     entries: { from_path: string; to_path: string }[]
-  ) => {
-    try {
-      const url = `${this.apiHost}/move_batch_v2`;
-      const headers = {
-        "Content-Type": "application/json",
-      };
+  ): Promise<boolean> => {
+    return new Promise(async (resolve, _reject) => {
+      try {
+        const url = `${this.apiHost}/move_batch_v2`;
+        const headers = {
+          "Content-Type": "application/json",
+        };
 
-      const body = {
-        allow_ownership_transfer: false,
-        autorename: false,
-        entries,
-      };
+        const body = {
+          allow_ownership_transfer: false,
+          autorename: false,
+          entries,
+        };
 
-      const {
-        data: { metadata: name },
-      } = await axios.post(url, body, { headers });
+        const {
+          data: { async_job_id },
+        } = await axios.post(url, body, { headers });
 
-      console.log("metadata.name", name);
-    } catch (e) {
-      console.log(e);
+        let iterator = 0;
+        const limit = 100;
+        const intervalId = setInterval(async () => {
+          const jobComplete = await this.moveCheck(async_job_id);
+          if (jobComplete) {
+            clearInterval(intervalId);
+            resolve(true);
+          }
+          if (iterator > limit) {
+            resolve(false);
+          }
+          iterator++;
+        }, 500);
+      } catch (e) {
+        console.error(e);
+        resolve(false)
+      }
+    });
+  };
+
+  public moveCheck = async (async_job_id: string) => {
+    const url = `${this.apiHost}/move_batch/check_v2`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const body = {
+      async_job_id,
+    };
+    const { data } = await axios.post(url, body, { headers });
+
+    if (data[".tag"] === "complete") {
+      return true;
     }
+    return false;
   };
 }

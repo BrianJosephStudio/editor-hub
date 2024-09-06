@@ -9,7 +9,7 @@ import { useClipViewer } from "../../context/ClipViewerContext";
 import { useAppContext } from "../../context/AppContext";
 import { useKeybind } from "../../context/KeyBindContext";
 import { useTags } from "../../context/TagsContext";
-import { Box, Button } from "@mui/material";
+import { Box, Button, CircularProgress, Typography } from "@mui/material";
 import { DropboxFile } from "../../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
@@ -39,6 +39,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   const { setCurrentVideoSource, nextVideoSource, setTargetClip, videoPlayer } = useClipViewer();
 
   const [clipLevel, setClipLevel] = useState<boolean>(false)
+  const [isRenaming, setIsRenaming ] = useState<boolean>(false)
 
   const getCurrentFolderEntries = async (): Promise<DropboxFile> => {
     try {
@@ -129,13 +130,15 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   };
 
   const autoRenameFolders = async () => {
-    await setFolderEntryNames(currentFolderEntries)
-
-    // const apiClient = new ApiClient()
-
-
-    setCurrentFolder("")
-    setCurrentFolder(currentFolder)
+    setIsRenaming(true)
+    const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries)
+    if(!wasJobSuccessful){
+      setIsRenaming(false) 
+      return
+    }
+    const newEntries = await getCurrentFolderEntries()
+    setCurrentFolderEntries(newEntries)
+    setIsRenaming(false)
   }
 
   useEffect(() => {
@@ -143,6 +146,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
       setActiveItem(0);
       setCurrentFolderEntries([]);
       setLoadingContent(true);
+      setClipLevel(false)
       const currentEntries = await getCurrentFolderEntries();
       setLoadingContent(false);
 
@@ -260,41 +264,64 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
       }}>
         <PathNav path={currentFolder}></PathNav>
         <Box ref={filesViewport} className="filesViewport">
-          {!loadingContent &&
-            currentFolderEntries.map((entry, index) => (
-              <div key={index}>
-                {entry[".tag"] === "folder" && (
-                  <FolderIcon
-                    name={entry.name}
-                    path={entry.path_lower}
-                    id={entry.id}
-                    key={index}
-                    active={activeItem === index}
-                    clickCallback={() => setActiveItem(index)}
-                    openFolderCallback={() => {
-                      setCurrentFolder(
-                        entry.path_lower.replace(
-                          clipsRootPath.toLowerCase(),
-                          ""
-                        )
-                      );
-                    }}
-                  ></FolderIcon>
-                )}
+        {(clipLevel && !isRenaming) &&
+          <Button
+          sx={{
+            height: '2rem'
+          }}
+          onClick={autoRenameFolders}
+          >
+            Auto-name clips
+          </Button>
+        }
+        {(clipLevel && isRenaming) &&
+          <Box sx={{
+            display: 'flex',
+            gap: '0.4rem',
+            placeContent: 'center',
+            width: '100%',
+            paddingY: '0.4rem'
+          }}>
+            <CircularProgress size={24}></CircularProgress>
+            <Typography>
+              Renaming...
+            </Typography>
+          </Box>}
+        {!loadingContent &&
+          currentFolderEntries.map((entry, index) => (
+            <div key={index}>
+              {entry[".tag"] === "folder" && (
+                <FolderIcon
+                  name={entry.name}
+                  path={entry.path_lower}
+                  id={entry.id}
+                  key={index}
+                  active={activeItem === index}
+                  clickCallback={() => setActiveItem(index)}
+                  openFolderCallback={() => {
+                    setCurrentFolder(
+                      entry.path_lower.replace(
+                        clipsRootPath.toLowerCase(),
+                        ""
+                      )
+                    );
+                  }}
+                ></FolderIcon>
+              )}
 
-                {entry[".tag"] === "file" && (
-                  <FileIcon
-                    itemIndex={index}
-                    name={entry.name}
-                    path={entry.path_lower}
-                    id={entry.id}
-                    key={index}
-                    active={activeItem === index}
-                    clickCallback={() => setActiveItem(index)}
-                  ></FileIcon>
-                )}
-              </div>
-            ))}
+              {entry[".tag"] === "file" && (
+                <FileIcon
+                  itemIndex={index}
+                  name={entry.name}
+                  path={entry.path_lower}
+                  id={entry.id}
+                  key={index}
+                  active={activeItem === index}
+                  clickCallback={() => setActiveItem(index)}
+                ></FileIcon>
+              )}
+            </div>
+          ))}
 
           {loadingContent &&
             [0, 1, 3].map((entry, index) => (
@@ -308,18 +335,6 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
                 openFolderCallback={() => {}}
               ></FolderIcon>
             ))}
-
-          {clipLevel &&
-            <Button
-            sx={{
-              marginTop: 'auto',
-              height: '3rem'
-            }}
-            onClick={autoRenameFolders}
-            >
-                Auto-name clips
-            </Button>
-          }
         </Box>
       </Box>
     </>

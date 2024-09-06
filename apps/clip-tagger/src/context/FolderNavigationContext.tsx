@@ -66,7 +66,7 @@ interface FolderNavigationContextProps {
   setPathSegments: React.Dispatch<React.SetStateAction<string[]>>;
   handleBackNavigation: (count: number) => void;
   getClipLevel: (currentEntries: DropboxFile[]) => Promise<boolean>;
-  setFolderEntryNames: (folderEntries: DropboxFile[]) => Promise<void>;
+  setFolderEntryNames: (folderEntries: DropboxFile[]) => Promise<boolean>;
 }
 
 const FolderNavigationContext = createContext<
@@ -139,7 +139,7 @@ export const FolderNavigationProvider = ({
         );
 
         if (parsedFileName.isProperlyNamed) {
-          return null;
+          return false;
         }
         newCurrentIndex++
         return parsedFileName.getrenameObject();
@@ -147,9 +147,9 @@ export const FolderNavigationProvider = ({
       .filter((data) => !!data);
     
 
-    if(renameObjects.length === 0) return
+    if(renameObjects.length === 0) return false
     const apiClient = new ApiClient();
-    apiClient.setTrueNames(renameObjects);
+    return await apiClient.setTrueNames(renameObjects);
   };
 
   return (
