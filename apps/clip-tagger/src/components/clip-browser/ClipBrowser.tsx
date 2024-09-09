@@ -22,7 +22,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
   const filesViewport = useRef<HTMLDivElement>(null);
   const { clipBrowserModifier, setClipBrowserModifier, setBlockGroupLevelListeners } = useKeybind();
-  const { setSelectedTagGroup } = useTags();
+  const { setSelectedTagGroup, setTagReferenceMaster } = useTags();
 
   const {
     currentFolder,
@@ -131,6 +131,9 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   const autoRenameFolders = async () => {
     setIsRenaming(true)
+    setTargetClip("")
+    setCurrentVideoSource("")
+    setTagReferenceMaster({})
     const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries)
     if(!wasJobSuccessful){
       setIsRenaming(false) 
