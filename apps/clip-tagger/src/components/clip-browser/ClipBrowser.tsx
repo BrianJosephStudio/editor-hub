@@ -131,14 +131,14 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   const autoRenameFolders = async () => {
     setIsRenaming(true)
-    setTargetClip("")
-    setCurrentVideoSource("")
-    setTagReferenceMaster({})
     const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries)
     if(!wasJobSuccessful){
       setIsRenaming(false) 
       return
     }
+    setTargetClip("")
+    setCurrentVideoSource("")
+    setTagReferenceMaster({})
     const newEntries = await getCurrentFolderEntries()
     setCurrentFolderEntries(newEntries)
     setIsRenaming(false)

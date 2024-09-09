@@ -63,33 +63,32 @@ export class ApiClient {
     unique?: boolean
   ): Promise<TagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
-
-    const newTagReferenceId = Object.keys(tagReferenceToAdd)[0];
-
-    const referenceExistsInMaster = Array.isArray(
-      upToDateTagReference[newTagReferenceId]
-    );
-
     let updatedTagReference: TagReference = upToDateTagReference;
-
-    if (!unique && referenceExistsInMaster) {
-      updatedTagReference[newTagReferenceId] = updatedTagReference[
-        newTagReferenceId
-      ].concat(tagReferenceToAdd[newTagReferenceId]);
-    } else {
-      updatedTagReference = {
-        ...upToDateTagReference,
-        ...tagReferenceToAdd,
-      };
-    }
 
     if (exclusiveTagIds) {
       exclusiveTagIds.forEach((tagId) => {
-        if (tagId !== newTagReferenceId) {
+        if (upToDateTagReference[tagId]) {
           delete updatedTagReference[tagId];
         }
       });
     }
+
+    Object.keys(tagReferenceToAdd).map((newTagId) => {
+      const referenceExistsInMaster = Array.isArray(
+        upToDateTagReference[newTagId]
+      );
+  
+      if (!unique && referenceExistsInMaster) {
+        updatedTagReference[newTagId] = updatedTagReference[
+          newTagId
+        ].concat(tagReferenceToAdd[newTagId]);
+      } else {
+        updatedTagReference = {
+          ...upToDateTagReference,
+          ...tagReferenceToAdd,
+        };
+      }
+    })
 
     const url = `${this.apiHost}/properties/update`;
     const headers = {
