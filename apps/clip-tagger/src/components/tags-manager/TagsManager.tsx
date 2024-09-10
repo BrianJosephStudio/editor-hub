@@ -23,7 +23,7 @@ export const TagsManager = () => {
     const getMetadata = async () => {
       const apiClient = new ApiClient();
       const currentTagReference = await apiClient.getMetadata(targetClip);
-      let newTagReference = {};
+      let newTagReference = currentTagReference;
       if (Object.keys(currentTagReference).length === 0) {
         const currentFileParsed = new ParsedFileName(targetClip, 0);
         const currentMap = MapTags.find(
@@ -42,11 +42,9 @@ export const TagsManager = () => {
         };
 
         const mapTagIds = MapTags.map((mapTag) => {
-          console.log("mapTag", mapTag);
           return mapTag.id;
         });
         const agentTagIds = AgentTags.map((agentTag) => {
-          console.log("agentTag", agentTag);
           return agentTag.id;
         });
         const exclusiveTagIds = [...mapTagIds, ...agentTagIds];
@@ -56,6 +54,7 @@ export const TagsManager = () => {
           exclusiveTagIds,
           true
         );
+        console.log(newTagReference)
       }
       setTagReferenceMaster(newTagReference);
     };

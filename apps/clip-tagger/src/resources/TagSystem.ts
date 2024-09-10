@@ -44,24 +44,24 @@ export const MapTags: TagObject[] = [
 export const GenericTags: TagSystem = {
     guns: {
         tags: [
-            {tag:"ares",displayName:"",description:"Player gets a kill with the Ares", unique: true, keybind: "a", id: "g001"},
-            {tag:"bucky",displayName:"",description:"Player gets a kill with the Bucky", unique: true, keybind: "b", id: "g002"},
-            {tag:"bulldog",displayName:"",description:"Player gets a kill with the Bulldog", unique: true, keybind: "l", id: "g003"},
-            {tag:"classic",displayName:"",description:"Player gets a kill with the Classic", unique: true, keybind: "c", id: "g004"},
-            {tag:"frenzy",displayName:"",description:"Player gets a kill with the Frenzy", unique: true, keybind: "f", id: "g005"},
-            {tag:"ghost",displayName:"",description:"Player gets a kill with the Ghost", unique: true, keybind: "g", id: "g006"},
-            {tag:"guardian",displayName:"",description:"Player gets a kill with the Guardian", unique: true, keybind: "d", id: "g007"},
-            {tag:"judge",displayName:"",description:"Player gets a kill with the Judge", unique: true, keybind: "j", id: "g008"},
-            {tag:"marshal",displayName:"",description:"Player gets a kill with the Marshal", unique: true, keybind: "m", id: "g009"},
-            {tag:"operator",displayName:"",description:"Player gets a kill with the Operator", unique: true, keybind: "o", id: "g010"},
-            {tag:"odin",displayName:"",description:"Player gets a kill with the Odin", unique: true, keybind: "i", id: "g011"},
-            {tag:"phantom",displayName:"",description:"Player gets a kill with the Phantom", unique: true, keybind: "p", id: "g012"},
-            {tag:"sheriff",displayName:"",description:"Player gets a kill with the Sheriff", unique: true, keybind: "s", id: "g013"},
-            {tag:"shorty",displayName:"",description:"Player gets a kill with the Shorty", unique: true, keybind: "r", id: "g014"},
-            {tag:"spectre",displayName:"",description:"Player gets a kill with the Spectre", unique: true, keybind: "c", id: "g015"},
-            {tag:"stinger",displayName:"",description:"Player gets a kill with the Stinger", unique: true, keybind: "t", id: "g016"},
-            {tag:"vandal",displayName:"",description:"Player gets a kill with the Vandal", unique: true, keybind: "v", id: "g017"},
-            {tag:"knife",displayName:"",description:"Player gets a kill with their Knife", unique: true, keybind: "k", id: "g018"}
+            {tag:"ares",displayName:"Ares",description:"Player gets a kill with the Ares", unique: true, keybind: "a", id: "g001"},
+            {tag:"bucky",displayName:"Bucky",description:"Player gets a kill with the Bucky", unique: true, keybind: "b", id: "g002"},
+            {tag:"bulldog",displayName:"Bulldog",description:"Player gets a kill with the Bulldog", unique: true, keybind: "l", id: "g003"},
+            {tag:"classic",displayName:"Classic",description:"Player gets a kill with the Classic", unique: true, keybind: "c", id: "g004"},
+            {tag:"frenzy",displayName:"Frenzy",description:"Player gets a kill with the Frenzy", unique: true, keybind: "f", id: "g005"},
+            {tag:"ghost",displayName:"Ghost",description:"Player gets a kill with the Ghost", unique: true, keybind: "g", id: "g006"},
+            {tag:"guardian",displayName:"Guardian",description:"Player gets a kill with the Guardian", unique: true, keybind: "d", id: "g007"},
+            {tag:"judge",displayName:"Judge",description:"Player gets a kill with the Judge", unique: true, keybind: "j", id: "g008"},
+            {tag:"marshal",displayName:"Marshal",description:"Player gets a kill with the Marshal", unique: true, keybind: "m", id: "g009"},
+            {tag:"operator",displayName:"Operator",description:"Player gets a kill with the Operator", unique: true, keybind: "o", id: "g010"},
+            {tag:"odin",displayName:"Odin",description:"Player gets a kill with the Odin", unique: true, keybind: "i", id: "g011"},
+            {tag:"phantom",displayName:"Phantom",description:"Player gets a kill with the Phantom", unique: true, keybind: "p", id: "g012"},
+            {tag:"sheriff",displayName:"Sheriff",description:"Player gets a kill with the Sheriff", unique: true, keybind: "s", id: "g013"},
+            {tag:"shorty",displayName:"Shorty",description:"Player gets a kill with the Shorty", unique: true, keybind: "r", id: "g014"},
+            {tag:"spectre",displayName:"Spectre",description:"Player gets a kill with the Spectre", unique: true, keybind: "c", id: "g015"},
+            {tag:"stinger",displayName:"Stinger",description:"Player gets a kill with the Stinger", unique: true, keybind: "t", id: "g016"},
+            {tag:"vandal",displayName:"Vandal",description:"Player gets a kill with the Vandal", unique: true, keybind: "v", id: "g017"},
+            {tag:"knife",displayName:"Knife",description:"Player gets a kill with their Knife", unique: true, keybind: "k", id: "g018"}
         ],
         keybindGroup: "g",
         exclusive: false,
@@ -70,21 +70,21 @@ export const GenericTags: TagSystem = {
     },
     statusEffects:{
         tags: [
-            {tag:"nearsighted",displayName:"near-sighted",description:"Player gets near-sighted", unique: false, keybind: "n", id: "s001"},
-            {tag:"blinded",displayName:"",description:"Player gets blinded", unique: false, keybind: "b", id: "s002"},
-            {tag:"stunned",displayName:"",description:"Player gets stunned", unique: false, keybind: "s", id: "s003"},
-            {tag:"deafened",displayName:"",description:"player gets deafened", unique: false, keybind: "f", id: "s004"},
-            {tag:"decayed",displayName:"",description:"Player gets decayed", unique: false, keybind: "d", id: "s005"},
-            {tag:"trailed",displayName:"",description:"player gets trailed", unique: false, keybind: "t", id: "s006"},
-            {tag:"supressed",displayName:"",description:"Player is supressed", unique: false, keybind: "p", id: "s007"},
-            {tag:"detained",displayName:"",description:"Player is detained", unique: false, keybind: "n", id: "s008"},
-            {tag:"healed",displayName:"",description:"Player gets healing from an ally", unique: false, keybind: "h", id: "s009"},
-            {tag:"pinged",displayName:"",description:"Player gets pinged", unique: false, keybind: "g", id: "s010"},
-            {tag:"slowed",displayName:"",description:"Player is slowed", unique: false, keybind: "w", id: "s011"},
-            {tag:"revived",displayName:"",description:"Player revives", unique: false, keybind: "x", id: "s0012"},
-            {tag:"vulnerable",displayName:"",description:"Player get vulnerable", unique: false, keybind: "v", id: "s0013"},
-            {tag:"displaced",displayName:"",description:"Player is displaced", unique: false, keybind: "c", id: "s0014"},
-            {tag:"stimmed",displayName:"",description:"Player is stimmed", unique: false, keybind: "m", id: "s0015"}
+            {tag:"nearsighted",displayName:"Near-Sighted",description:"Player gets near-sighted", unique: false, keybind: "n", id: "s001"},
+            {tag:"blinded",displayName:"Blinded",description:"Player gets blinded", unique: false, keybind: "b", id: "s002"},
+            {tag:"stunned",displayName:"Stunned",description:"Player gets stunned", unique: false, keybind: "s", id: "s003"},
+            {tag:"deafened",displayName:"Deafened",description:"player gets deafened", unique: false, keybind: "f", id: "s004"},
+            {tag:"decayed",displayName:"Decayed",description:"Player gets decayed", unique: false, keybind: "d", id: "s005"},
+            {tag:"trailed",displayName:"Trailed",description:"player gets trailed", unique: false, keybind: "t", id: "s006"},
+            {tag:"supressed",displayName:"Supressed",description:"Player is supressed", unique: false, keybind: "p", id: "s007"},
+            {tag:"detained",displayName:"Detained",description:"Player is detained", unique: false, keybind: "n", id: "s008"},
+            {tag:"healed",displayName:"Healed",description:"Player gets healing from an ally", unique: false, keybind: "h", id: "s009"},
+            {tag:"pinged",displayName:"Pinged",description:"Player gets pinged", unique: false, keybind: "g", id: "s010"},
+            {tag:"slowed",displayName:"Slowed",description:"Player is slowed", unique: false, keybind: "w", id: "s011"},
+            {tag:"revived",displayName:"Revived",description:"Player revives", unique: false, keybind: "x", id: "s0012"},
+            {tag:"vulnerable",displayName:"Vulnerable",description:"Player get vulnerable", unique: false, keybind: "v", id: "s0013"},
+            {tag:"displaced",displayName:"Displaced",description:"Player is displaced", unique: false, keybind: "c", id: "s0014"},
+            {tag:"stimmed",displayName:"Stimmed",description:"Player is stimmed", unique: false, keybind: "m", id: "s0015"}
         ],
         keybindGroup: "s",
         exclusive: false,
@@ -93,9 +93,9 @@ export const GenericTags: TagSystem = {
     },
     clipType:{
         tags: [
-            {tag:"cclip",displayName:"custom-clip",description:"Clip is a custom clip", unique: true, keybind: "c", id: "c001"},
-            {tag:"igclip",displayName:"in-game-clip",description:"Clip showcases a real game", unique: true, keybind: "i", id: "c002"},
-            {tag:"deathmatch",displayName:"",description:"Clip comes from a deathmatch", unique: true, keybind: "d", id: "c004"}
+            {tag:"cclip",displayName:"Custom Clip",description:"Clip is a custom clip", unique: true, keybind: "c", id: "c001"},
+            {tag:"igclip",displayName:"In-Game Clip",description:"Clip showcases a real game", unique: true, keybind: "i", id: "c002"},
+            {tag:"deathmatch",displayName:"Death match",description:"Clip comes from a deathmatch", unique: true, keybind: "d", id: "c004"}
         ],
         keybindGroup: "c",
         exclusive: true,
@@ -104,10 +104,10 @@ export const GenericTags: TagSystem = {
     },
     abilities:{
         tags: [
-            {tag:"ult",displayName:"ultimate",description:"Player casted their ultimate", unique: true, keybind: "x", id: "a001"},
-            {tag:"ckey",displayName:"c-key",description:"Player casted their C ability", unique: false, keybind: "c", id: "a002"},
-            {tag:"qkey",displayName:"q-key",description:"Player casted their Q ability", unique: false, keybind: "q", id: "a003"},
-            {tag:"ekey",displayName:"e-key",description:"Player casted their E ability", unique: false, keybind: "e", id: "a004"},
+            {tag:"ult",displayName:"Ultimate",description:"Player casted their ultimate", unique: true, keybind: "x", id: "a001"},
+            {tag:"ckey",displayName:"C key",description:"Player casted their C ability", unique: false, keybind: "c", id: "a002"},
+            {tag:"qkey",displayName:"Q key",description:"Player casted their Q ability", unique: false, keybind: "q", id: "a003"},
+            {tag:"ekey",displayName:"E key",description:"Player casted their E ability", unique: false, keybind: "e", id: "a004"},
         ],
         keybindGroup: "a",
         exclusive: false,
@@ -116,11 +116,11 @@ export const GenericTags: TagSystem = {
     },
     kda:{                
         tags: [
-            {tag:"kill",displayName:"",description:"Player got a kill", unique: false, keybind: "k", id: "k001"},
-            {tag:"death",displayName:"",description:"Player gets killed", unique: false, keybind: "d", id: "k002"},
-            {tag:"ace",displayName:"",description:"Player gets an ace", unique: true, keybind: "x", id: "k007"},
-            {tag:"opd",displayName:"opped",description:"Player got killed by an Operator", unique: false, keybind: "o", id: "k008"},
-            {tag:"kba",displayName:"kill-by-ability",description:"Player gets a kill with the one of their abilities", unique: false, keybind: "a", id: "k009"}
+            {tag:"kill",displayName:"Kill",description:"Player got a kill", unique: false, keybind: "k", id: "k001"},
+            {tag:"death",displayName:"Death",description:"Player gets killed", unique: false, keybind: "d", id: "k002"},
+            {tag:"ace",displayName:"Ace",description:"Player gets an ace", unique: true, keybind: "x", id: "k007"},
+            {tag:"opd",displayName:"Ppped",description:"Player got killed by an Operator", unique: false, keybind: "o", id: "k008"},
+            {tag:"kba",displayName:"Kill by Ability",description:"Player gets a kill with the one of their abilities", unique: false, keybind: "a", id: "k009"}
         ],
         keybindGroup: "k",
         exclusive: false,
@@ -129,8 +129,8 @@ export const GenericTags: TagSystem = {
     },
     playerSide:{
         tags: [
-            {tag:"attk",displayName:"attacker",description:"Player is an attacker", unique: true, keybind: "a", id: "s001"},
-            {tag:"def",displayName:"defender",description:"Player is a defender", unique: true, keybind: "d", id: "s002"}
+            {tag:"attk",displayName:"Attacker",description:"Player is an attacker", unique: true, keybind: "a", id: "s001"},
+            {tag:"def",displayName:"Defender",description:"Player is a defender", unique: true, keybind: "d", id: "s002"}
         ],
         keybindGroup: "p",
         exclusive: true,
@@ -139,9 +139,9 @@ export const GenericTags: TagSystem = {
     },
     mapAreas:{
         tags: [
-            {tag:"asite",displayName:"a-site",description:"Important action occurs at or near A Site", unique: true, keybind: "a", id: "z001"},
-            {tag:"bsite",displayName:"b-site",description:"Important action occurs at or near B Site", unique: true, keybind: "b", id: "z002"},
-            {tag:"csite",displayName:"c-site",description:"Important action occurs at or near C Site", unique: true, keybind: "c", id: "z003"},
+            {tag:"asite",displayName:"A site",description:"Important action occurs at or near A Site", unique: true, keybind: "a", id: "z001"},
+            {tag:"bsite",displayName:"B site",description:"Important action occurs at or near B Site", unique: true, keybind: "b", id: "z002"},
+            {tag:"csite",displayName:"C site",description:"Important action occurs at or near C Site", unique: true, keybind: "c", id: "z003"},
             {tag:"mid",displayName:"",description:"Important action occurs at or near mid", unique: true, keybind: "m", id: "z004"},
             {tag:"aspawn",displayName:"attacker-spawn",description:"Important action occurs at or near Attacker Spawn", unique: true, keybind: "x", id: "z005"},
             {tag:"dspawn",displayName:"defender-spawn",description:"Important action occurs at or near Defender Spawn", unique: true, keybind: "o", id: "z006"},
@@ -195,11 +195,11 @@ export const GenericTags: TagSystem = {
     },
     fights:{
         tags: [
-            {tag:"1v1",displayName:"",description:"Player won a round where they were the last man standing against 1 opponent", unique: false, keybind: "1", id: "e007"},
-            {tag:"1v2",displayName:"",description:"Player won a round where they were the last man standing against 2 opponents", unique: false, keybind: "2", id: "e008"},
-            {tag:"1v3",displayName:"",description:"Player won a round where they were the last man standing against 3 opponents", unique: true, keybind: "3", id: "e009"},
-            {tag:"1v4",displayName:"",description:"Player won a round where they were the last man standing against 4 opponents", unique: true, keybind: "4", id: "e010"},
-            {tag:"1v5",displayName:"",description:"Player won a round where they were the last man standing against 5 opponents", unique: true, keybind: "5", id: "e011"},
+            {tag:"1v1",displayName:"1v1",description:"Player won a round where they were the last man standing against 1 opponent", unique: false, keybind: "1", id: "e007"},
+            {tag:"1v2",displayName:"1v2",description:"Player won a round where they were the last man standing against 2 opponents", unique: false, keybind: "2", id: "e008"},
+            {tag:"1v3",displayName:"1v3",description:"Player won a round where they were the last man standing against 3 opponents", unique: true, keybind: "3", id: "e009"},
+            {tag:"1v4",displayName:"1v4",description:"Player won a round where they were the last man standing against 4 opponents", unique: true, keybind: "4", id: "e010"},
+            {tag:"1v5",displayName:"1v5",description:"Player won a round where they were the last man standing against 5 opponents", unique: true, keybind: "5", id: "e011"},
         ],
         keybindGroup: "f",
         exclusive: false,
@@ -208,14 +208,14 @@ export const GenericTags: TagSystem = {
     },
     gameTactics:{
         tags: [
-            {tag:"anchor",displayName:"",description:"Player was defending a site from inside", unique: false, keybind: "a", id: "t001"},
-            {tag:"execute",displayName:"",description:"Player's team coordinate to rush into a site", unique: false, keybind: "x", id: "t002"},
-            {tag:"rotation",displayName:"",description:"Player rotates to another site", unique: false, keybind: "r", id: "t003"},
-            {tag:"lurker",displayName:"",description:"Player is lurking", unique: false, keybind: "l", id: "t004"},
-            {tag:"teamplay",displayName:"team-play",description:"Clip showcases a successful team play", unique: false, keybind: "t", id: "t005"},
-            {tag:"retake",displayName:"",description:"Player attempts to retake a site where the spike has been planted", unique: false, keybind: "g", id: "t006"},
-            {tag:"pplant",displayName:"post-plant",description:"Important action occurs while planted spike counts down", unique: true, keybind: "p", id: "t007"},
-            {tag:"lineup",displayName:"line-up",description:"Player performs a line-up ability cast", unique: false, keybind: "l", id: "t008"}
+            {tag:"anchor",displayName:"Anchor",description:"Player was defending a site from inside", unique: false, keybind: "a", id: "t001"},
+            {tag:"execute",displayName:"Execute",description:"Player's team coordinate to rush into a site", unique: false, keybind: "x", id: "t002"},
+            {tag:"rotation",displayName:"Rotation",description:"Player rotates to another site", unique: false, keybind: "r", id: "t003"},
+            {tag:"lurker",displayName:"Lurker",description:"Player is lurking", unique: false, keybind: "l", id: "t004"},
+            {tag:"teamplay",displayName:"Team Play",description:"Clip showcases a successful team play", unique: false, keybind: "t", id: "t005"},
+            {tag:"retake",displayName:"Retake",description:"Player attempts to retake a site where the spike has been planted", unique: false, keybind: "g", id: "t006"},
+            {tag:"pplant",displayName:"Post-Plant",description:"Important action occurs while planted spike counts down", unique: true, keybind: "p", id: "t007"},
+            {tag:"lineup",displayName:"Line-Up",description:"Player performs a line-up ability cast", unique: false, keybind: "l", id: "t008"}
         ],
         keybindGroup: "t",
         exclusive: false,
@@ -223,23 +223,22 @@ export const GenericTags: TagSystem = {
         id: "g15"
     }
 }
-
 export const privateTags: TagObject[] = [
-    {tag:"duelist",displayName:"",description:"Player is playing a duelist", unique: true, keybind: "d", id: "r001"},
-    {tag:"controller",displayName:"",description:"Player is playing a controller", unique: true, keybind: "c", id: "r002"},
-    {tag:"sentinel",displayName:"",description:"Player is playing a sentinel", unique: true, keybind: "s", id: "r003"},
-    {tag:"initiator",displayName:"",description:"Player is playing an initiator", unique: true, keybind: "i", id: "r004"},
-    {tag:"mk",displayName:"multi-kill",description:"Player gets a multi-kill", unique: true, keybind: "", id: "k003"},
-    {tag:"2k",displayName:"double-kill",description:"Player gets a double-kill", unique: true, keybind: "", id: "k004"},
-    {tag:"3k",displayName:"triple-kill",description:"Player gets a triple-kill", unique: true, keybind: "", id: "k005"},
-    {tag:"4k",displayName:"quadra-kill",description:"Player gets a quadra-kill", unique: true, keybind: "", id: "k006"},
-    {tag:"molly",displayName:"",description:"Player casted a molly ability", unique: false, keybind: "", id: "a005"},
-    {tag:"smoke",displayName:"",description:"Player casted a smoke ability", unique: false, keybind: "", id: "a006"},
-    {tag:"wall",displayName:"",description:"Player casted a walling ability", unique: false, keybind: "", id: "a007"},
-    {tag:"flash",displayName:"",description:"Player casted a flashing or near-sighting ability", unique: false, keybind: "", id: "a008"},
-    {tag:"aside",displayName:"a-side",description:"Important action occurs on the A half of the map", unique: true, keybind: "", id: "z007"},
-    {tag:"bside",displayName:"b-side",description:"Important action occurs on the B half of the map", unique: true, keybind: "", id: "z008"},
-    {tag:"hell",displayName:"",description:"Important action occurs on 'hell'", unique: true, keybind: "", id: "z009"},
-    {tag:"heaven",displayName:"",description:"Important action occurs on 'heaven", unique: true, keybind: "", id: "z010"},
-    {tag:"garage",displayName:"",description:"Important action occurs on 'garage", unique: true, keybind: "", id: "z011"}
+    {tag:"duelist",displayName:"Duelist",description:"Player is playing a duelist", unique: true, keybind: "d", id: "r001"},
+    {tag:"controller",displayName:"Controller",description:"Player is playing a controller", unique: true, keybind: "c", id: "r002"},
+    {tag:"sentinel",displayName:"Sentinel",description:"Player is playing a sentinel", unique: true, keybind: "s", id: "r003"},
+    {tag:"initiator",displayName:"Initiator",description:"Player is playing an initiator", unique: true, keybind: "i", id: "r004"},
+    {tag:"mk",displayName:"Multi Kill",description:"Player gets a multi-kill", unique: true, keybind: "", id: "k003"},
+    {tag:"2k",displayName:"Double kill",description:"Player gets a double-kill", unique: true, keybind: "", id: "k004"},
+    {tag:"3k",displayName:"Triple kill",description:"Player gets a triple-kill", unique: true, keybind: "", id: "k005"},
+    {tag:"4k",displayName:"Quadra kill",description:"Player gets a quadra-kill", unique: true, keybind: "", id: "k006"},
+    {tag:"molly",displayName:"Molly",description:"Player casted a molly ability", unique: false, keybind: "", id: "a005"},
+    {tag:"smoke",displayName:"Smoke",description:"Player casted a smoke ability", unique: false, keybind: "", id: "a006"},
+    {tag:"wall",displayName:"Wall",description:"Player casted a walling ability", unique: false, keybind: "", id: "a007"},
+    {tag:"flash",displayName:"Flash",description:"Player casted a flashing or near-sighting ability", unique: false, keybind: "", id: "a008"},
+    {tag:"aside",displayName:"A Side",description:"Important action occurs on the A half of the map", unique: true, keybind: "", id: "z007"},
+    {tag:"bside",displayName:"B Side",description:"Important action occurs on the B half of the map", unique: true, keybind: "", id: "z008"},
+    {tag:"hell",displayName:"Hell",description:"Important action occurs on 'hell'", unique: true, keybind: "", id: "z009"},
+    {tag:"heaven",displayName:"Heaven",description:"Important action occurs on 'heaven", unique: true, keybind: "", id: "z010"},
+    {tag:"garage",displayName:"Garage",description:"Important action occurs on 'garage", unique: true, keybind: "", id: "z011"}
 ]
