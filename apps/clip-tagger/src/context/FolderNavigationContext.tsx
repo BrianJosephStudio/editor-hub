@@ -52,7 +52,6 @@ export const FolderNavigationProvider = ({
     const newSegments = pathSegments;
 
     newSegments.splice(start, 10);
-    console.log(newSegments);
 
     const newPath = `/${newSegments.join("/")}`;
 
@@ -65,7 +64,7 @@ export const FolderNavigationProvider = ({
     });
   };
 
-  const setFolderEntryNames = async (folderEntries: DropboxFile[]) => {
+  const setFolderEntryNames = async (folderEntries: DropboxFile[]): Promise<boolean> => {
     const currentIndexes = folderEntries.map((folderEntry) => {
       const parsedFileName = new ParsedFileName(folderEntry.path_lower, 0);
 
@@ -79,7 +78,10 @@ export const FolderNavigationProvider = ({
 
     let newCurrentIndex = Math.max(-1, ...currentIndexes) +1;
 
-    const renameObjects = folderEntries
+    const dropboxFiles = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'file')
+    const dropboxFolders = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'folder')
+
+    const renameObjects = dropboxFiles
       .map((folderEntry) => {
         const parsedFileName = new ParsedFileName(
           folderEntry.path_lower,
@@ -94,10 +96,17 @@ export const FolderNavigationProvider = ({
       })
       .filter((data) => !!data);
     
-
-    if(renameObjects.length === 0) return false
     const apiClient = new ApiClient();
-    return await apiClient.setTrueNames(renameObjects);
+    const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
+
+    const folderPromises = dropboxFolders.map(async (dropboxFolder) =>{
+      const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower)
+      return await setFolderEntryNames(subFolderEntries)
+    })
+
+    const folderRenameSuccess = await Promise.all(folderPromises)
+
+    return fileRenameSuccess && folderRenameSuccess.some(success => !!success)
   };
 
   return (

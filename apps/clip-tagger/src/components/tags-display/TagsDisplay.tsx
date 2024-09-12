@@ -1,18 +1,20 @@
 import { Box, Typography } from "@mui/material";
 import { useTags } from "../../context/TagsContext";
-import { TagObject, TagReference } from "../../types/tags";
+import { TagObject } from "../../types/tags";
 import { AgentTags, GenericTags, MapTags } from "../../resources/TagSystem";
 import { useEffect, useState } from "react";
 import { useClipViewer } from "../../context/ClipViewerContext";
+import { TagDisplayItem } from "./components/TagDisplayItem";
 
 export const TagsDisplay = () => {
-  const { tagReferenceMaster, setTagReferenceMaster } = useTags();
+  const { tagReferenceMaster, tagDisplayList } =
+    useTags();
   const { videoPlayer } = useClipViewer();
   const [exclusiveTags, setExclusiveTags] = useState<
-    { tagObject: TagObject; timeData: number[] }[]
+    { tagObject: TagObject; time?: number }[]
   >([]);
   const [genericTags, setGenericTags] = useState<
-    { tagObject: TagObject; timeData: number[] }[]
+    { tagObject: TagObject; time?: number }[]
   >([]);
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
 
@@ -27,17 +29,14 @@ export const TagsDisplay = () => {
   );
 
   useEffect(() => {
-    console.log(videoPlayer.current!.duration);
-    console.log(videoPlayer.current!.currentTime);
-    const newExclusiveTags: { tagObject: TagObject; timeData: number[] }[] = [];
-    const newGenericTags: { tagObject: TagObject; timeData: number[] }[] = [];
+    const newExclusiveTags: { tagObject: TagObject; time?: number }[] = [];
+    const newGenericTags: { tagObject: TagObject; time?: number }[] = [];
 
     Object.keys(tagReferenceMaster).forEach((tagId) => {
       const mapTagObject = MapTags.find((mapTag) => mapTag.id === tagId);
       if (mapTagObject)
         return newExclusiveTags.push({
           tagObject: mapTagObject,
-          timeData: tagReferenceMaster[tagId],
         });
 
       const agentTagObject = AgentTags.find(
@@ -46,7 +45,6 @@ export const TagsDisplay = () => {
       if (agentTagObject)
         return newExclusiveTags.push({
           tagObject: agentTagObject,
-          timeData: tagReferenceMaster[tagId],
         });
 
       Object.values(GenericTags).find((tagGroup) => {
@@ -55,16 +53,26 @@ export const TagsDisplay = () => {
         );
 
         if (matchingTagObject) {
-          newGenericTags.push({
-            tagObject: matchingTagObject,
-            timeData: tagReferenceMaster[tagId],
-          });
+          const timeArray = tagReferenceMaster[tagId];
+          if (timeArray.length > 0) {
+            timeArray.forEach((time) =>
+              newGenericTags.push({
+                tagObject: matchingTagObject,
+                time,
+              })
+            );
+          } else {
+            newExclusiveTags.push({
+              tagObject: matchingTagObject,
+            });
+          }
           return true;
         }
         return false;
       });
     });
 
+    newGenericTags.sort((a, b) => a.time! - b.time!);
     setExclusiveTags(newExclusiveTags);
     setGenericTags(newGenericTags);
   }, [tagReferenceMaster]);
@@ -103,11 +111,14 @@ export const TagsDisplay = () => {
         ))}
       </Box>
       <Box
+        component={"div"}
         sx={{
           position: "relative",
           // backgroundColor: "red",
           width: "100%",
-          flexGrow: "1",
+          // paddingBottom: '10rem',
+          // flexGrow: "1",
+          height: '90%',
         }}
       >
         <Box
@@ -120,13 +131,15 @@ export const TagsDisplay = () => {
             height: `${currentTimePercentage}%`,
           }}
         ></Box>
-        {genericTags.map((genericTag) =>
-          genericTag.timeData.map((time) => (
-            <Box sx={{ position: "absolute", top: `${getPlaybackPercentage(time, videoPlayer.current!.duration)}%`, left: `${getPlaybackPercentage(time, videoPlayer.current!.duration)}%` }}>
-              <Typography>{genericTag.tagObject.displayName}</Typography>
-            </Box>
-          ))
-        )}
+        <Box ref={tagDisplayList}>
+          {genericTags.map((genericTag, index) => (
+            <TagDisplayItem
+              index={index}
+              tagObject={genericTag.tagObject}
+              time={genericTag.time!}
+            ></TagDisplayItem>
+          ))}
+        </Box>
       </Box>
     </Box>
   );

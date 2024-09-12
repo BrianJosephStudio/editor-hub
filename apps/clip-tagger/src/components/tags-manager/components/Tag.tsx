@@ -15,10 +15,12 @@ export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, excl
   const { videoPlayer, targetClip } = useClipViewer();
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
+    if(!videoPlayer.current) return
+    const currentTime = videoPlayer.current.currentTime - 0.2
     if (event.key === tagObject.keybind && blockGroupLevelListeners) {
       const apiClient = new ApiClient();
       const tagReferenceToAdd: TagReference = {
-        [tagObject.id]: [videoPlayer.current?.currentTime],
+        [tagObject.id]: [currentTime],
       };
       apiClient.updateFileProperties(
         targetClip,

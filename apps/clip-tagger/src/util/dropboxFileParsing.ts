@@ -1,4 +1,4 @@
-const fileNameRegex = /^\d+\.\d+_(astra|brimstone|breach|chamber|cypher|deadlock|fade|gekko|harbor|iso|jett|kayo|killjoy|neon|omen|phoenix|raze|reyna|sage|skye|sova|viper|yoru)_(abyss|ascent|bind|breeze|fracture|haven|icebox|lotus|pearl|split|sunset)_\d+\.\w+$/
+const fileNameRegex = /^\d+\.\d+_(astra|brimstone|breach|chamber|cypher|deadlock|fade|gekko|harbor|iso|jett|kayo|killjoy|neon|omen|phoenix|raze|reyna|sage|skye|sova|viper|vyse|yoru)_(abyss|ascent|bind|breeze|fracture|haven|icebox|lotus|pearl|split|sunset)_\d+\.\w+$/
 
 export class ParsedFileName {
     public isProperlyNamed: boolean = false;
@@ -32,8 +32,6 @@ export class ParsedFileName {
       if (typeof parsedIndex != "number") {
         throw new Error();
       }
-  
-      console.log("properly named", this.isProperlyNamed);
   
       if (this.isProperlyNamed) {
         this.index = parsedIndex;

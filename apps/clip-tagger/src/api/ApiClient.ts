@@ -1,5 +1,6 @@
 import axios from "axios";
 import { TagReference } from "../types/tags";
+import { DropboxFile } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -161,6 +162,7 @@ export class ApiClient {
   ): Promise<boolean> => {
     return new Promise(async (resolve, _reject) => {
       try {
+        if (entries.length === 0) return resolve(false)  
         const url = `${this.apiHost}/move_batch_v2`;
         const headers = {
           "Content-Type": "application/json",
@@ -211,5 +213,42 @@ export class ApiClient {
       return true;
     }
     return false;
+  };
+  public getCurrentFolderEntries = async (currentFolderPath: string): Promise<DropboxFile[]> => {
+    try {
+      const url = `${apiHost}/list_folder`;
+      const headers = {
+        "Content-Type": "application/json",
+      };
+  
+      const body = {
+        include_deleted: false,
+        include_has_explicit_shared_members: false,
+        include_media_info: false,
+        include_mounted_folders: true,
+        include_non_downloadable_files: true,
+        path: currentFolderPath,
+        recursive: false,
+      };
+  
+      let entries: any[] = [];
+      let hasMore = true;
+      let cursor = null;
+  
+      while (hasMore) {
+        //@ts-ignore
+        const { data } = await axios.post(url, cursor ? { cursor } : body, {
+          headers,
+        });
+  
+        entries = [...entries, ...data.entries];
+        hasMore = data.has_more;
+        cursor = data.cursor;
+      }
+  
+      return entries
+    } catch (e: any) {
+      throw new Error(e);
+    }
   };
 }

@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from "react";
 import "./ClipBrowser.css";
-import axios from "axios";
 import { FolderIcon } from "./components/folderIcon/FolderIcon";
 import { FileIcon } from "./components/fileIcon/FileIcon";
 import { PathNav } from "./components/pathNav/PathNav";
@@ -10,7 +9,7 @@ import { useAppContext } from "../../context/AppContext";
 import { useKeybind } from "../../context/KeyBindContext";
 import { useTags } from "../../context/TagsContext";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { DropboxFile } from "../../types/dropbox";
+import { ApiClient } from "../../api/ApiClient";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -32,8 +31,8 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     activeItem,
     setActiveItem,
     handleBackNavigation,
-    getClipLevel,
-    setFolderEntryNames
+    setFolderEntryNames,
+    pathSegments
   } = useFolderNavigation();
 
   const { setCurrentVideoSource, nextVideoSource, setTargetClip, videoPlayer } = useClipViewer();
@@ -41,45 +40,9 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   const [clipLevel, setClipLevel] = useState<boolean>(false)
   const [isRenaming, setIsRenaming ] = useState<boolean>(false)
 
-  const getCurrentFolderEntries = async (): Promise<DropboxFile> => {
-    try {
-      const url = `${apiHost}/list_folder`;
-      const headers = {
-        "Content-Type": "application/json",
-      };
-
-      const currentFolderFullPath = `${clipsRootPath}${currentFolder}`;
-      const body = {
-        include_deleted: false,
-        include_has_explicit_shared_members: false,
-        include_media_info: false,
-        include_mounted_folders: true,
-        include_non_downloadable_files: true,
-        path: currentFolderFullPath,
-        recursive: false,
-      };
-
-      let entries: any[] = [];
-      let hasMore = true;
-      let cursor = null;
-
-      while (hasMore) {
-        //@ts-ignore
-        const { data } = await axios.post(url, cursor ? { cursor } : body, {
-          headers,
-        });
-
-        entries = [...entries, ...data.entries];
-        hasMore = data.has_more;
-        cursor = data.cursor;
-      }
-
-      setCurrentFolderEntries(entries);
-      return entries
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  useEffect(() => {
+    setClipLevel(pathSegments.length > 0)
+  },[pathSegments])
 
   const focusPreviousItem = () => {
     if (activeItem !== null) {
@@ -139,7 +102,8 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     setTargetClip("")
     setCurrentVideoSource("")
     setTagReferenceMaster({})
-    const newEntries = await getCurrentFolderEntries()
+    const apiClient = new ApiClient()
+    const newEntries = await apiClient.getCurrentFolderEntries(`${clipsRootPath}/${currentFolder}`)
     setCurrentFolderEntries(newEntries)
     setIsRenaming(false)
   }
@@ -150,11 +114,10 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
       setCurrentFolderEntries([]);
       setLoadingContent(true);
       setClipLevel(false)
-      const currentEntries = await getCurrentFolderEntries();
+      const apiClient = new ApiClient()
+      const currentEntries = await apiClient.getCurrentFolderEntries(`${clipsRootPath}/${currentFolder}`);
+      setCurrentFolderEntries(currentEntries)
       setLoadingContent(false);
-
-      const isClipLevel = await getClipLevel(currentEntries)
-      setClipLevel(isClipLevel)
   
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.set("path", currentFolder);

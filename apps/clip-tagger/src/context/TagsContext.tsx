@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import { TagGroup, TagReference } from "../types/tags.d";
 
 interface TagsContextProps {
@@ -12,6 +12,7 @@ interface TagsContextProps {
   setSelectedTagGroup: React.Dispatch<React.SetStateAction<string | null>>;
   tagReferenceMaster: TagReference;
   setTagReferenceMaster: React.Dispatch<React.SetStateAction<TagReference>>;
+  tagDisplayList: React.RefObject<HTMLDivElement>
 }
 
 const TagsContext = createContext<TagsContextProps | undefined>(undefined);
@@ -30,6 +31,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
   const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>({});
+  const tagDisplayList = useRef<HTMLDivElement>(null);
   
   return (
     <TagsContext.Provider
@@ -44,6 +46,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         setSelectedTagGroup,
         tagReferenceMaster,
         setTagReferenceMaster,
+        tagDisplayList
       }}
     >
       {children}
