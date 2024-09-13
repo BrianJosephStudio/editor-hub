@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TagReference } from "../types/tags";
+import { TagReference, TimeCode } from "../types/tags";
 import { DropboxFile } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
@@ -250,5 +250,48 @@ export class ApiClient {
     } catch (e: any) {
       throw new Error(e);
     }
+  };
+
+  public removeTag = async (
+    path: string,
+    tagObjectId: string,
+    newTagEntry: TimeCode[]
+  ): Promise<TagReference> => {
+    const upToDateTagReference = await this.getMetadata(path);
+    let updatedTagReference: TagReference = upToDateTagReference
+    if(newTagEntry.length === 0){
+      delete updatedTagReference[tagObjectId]
+    }else{
+      updatedTagReference = {
+        ...upToDateTagReference,
+        [tagObjectId]: newTagEntry
+      }
+    }
+
+    console.log("tagReferenceMaster:", upToDateTagReference)
+    console.log("updatedTagReference:", updatedTagReference)
+
+    const url = `${this.apiHost}/properties/update`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const body = {
+      path,
+      update_property_groups: [
+        {
+          add_or_update_fields: [
+            {
+              name: "tagReference",
+              value: JSON.stringify(updatedTagReference),
+            },
+          ],
+          template_id: tagTemplateId,
+        },
+      ],
+    };
+
+    await axios.post(url, body, { headers });
+    return await this.getMetadata(path);
   };
 }

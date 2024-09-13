@@ -5,16 +5,17 @@ import { AgentTags, GenericTags, MapTags } from "../../resources/TagSystem";
 import { useEffect, useState } from "react";
 import { useClipViewer } from "../../context/ClipViewerContext";
 import { TagDisplayItem } from "./components/TagDisplayItem";
+import { labelTagReference } from "../../util/tagInstanceId";
 
 export const TagsDisplay = () => {
-  const { tagReferenceMaster, tagDisplayList } =
+  const { tagReferenceMaster, tagDisplayList, tagReferenceLabeled, setTagReferenceLabeled } =
     useTags();
   const { videoPlayer } = useClipViewer();
   const [exclusiveTags, setExclusiveTags] = useState<
     { tagObject: TagObject; time?: number }[]
   >([]);
   const [genericTags, setGenericTags] = useState<
-    { tagObject: TagObject; time?: number }[]
+    { tagObject: TagObject; time?: number, instanceId: string }[]
   >([]);
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
 
@@ -23,16 +24,18 @@ export const TagsDisplay = () => {
     return (currentTime / duration) * 100;
   }
 
-  useEffect(
-    () => console.log("change", tagReferenceMaster),
+  useEffect(() => {
+    const newLabeledTagReference = labelTagReference(tagReferenceMaster)
+    setTagReferenceLabeled(newLabeledTagReference)
+  },
     [tagReferenceMaster]
   );
 
   useEffect(() => {
     const newExclusiveTags: { tagObject: TagObject; time?: number }[] = [];
-    const newGenericTags: { tagObject: TagObject; time?: number }[] = [];
+    const newGenericTags: { tagObject: TagObject; time?: number, instanceId: string }[] = [];
 
-    Object.keys(tagReferenceMaster).forEach((tagId) => {
+    Object.keys(tagReferenceLabeled).forEach((tagId) => {
       const mapTagObject = MapTags.find((mapTag) => mapTag.id === tagId);
       if (mapTagObject)
         return newExclusiveTags.push({
@@ -53,12 +56,13 @@ export const TagsDisplay = () => {
         );
 
         if (matchingTagObject) {
-          const timeArray = tagReferenceMaster[tagId];
+          const timeArray = tagReferenceLabeled[tagId];
           if (timeArray.length > 0) {
-            timeArray.forEach((time) =>
+            timeArray.forEach((timeEntry) =>
               newGenericTags.push({
                 tagObject: matchingTagObject,
-                time,
+                time: timeEntry.time,
+                instanceId: timeEntry.instanceId
               })
             );
           } else {
@@ -75,7 +79,7 @@ export const TagsDisplay = () => {
     newGenericTags.sort((a, b) => a.time! - b.time!);
     setExclusiveTags(newExclusiveTags);
     setGenericTags(newGenericTags);
-  }, [tagReferenceMaster]);
+  }, [tagReferenceLabeled]);
 
   useEffect(() => {
     const handleTimeUpdate = () => {
@@ -114,10 +118,7 @@ export const TagsDisplay = () => {
         component={"div"}
         sx={{
           position: "relative",
-          // backgroundColor: "red",
           width: "100%",
-          // paddingBottom: '10rem',
-          // flexGrow: "1",
           height: '90%',
         }}
       >
@@ -135,6 +136,7 @@ export const TagsDisplay = () => {
           {genericTags.map((genericTag, index) => (
             <TagDisplayItem
               index={index}
+              instanceId={genericTag.instanceId}
               tagObject={genericTag.tagObject}
               time={genericTag.time!}
             ></TagDisplayItem>

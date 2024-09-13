@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
-import { TagGroup, TagReference } from "../types/tags.d";
+import { LabeledTagReference, TagGroup, TagReference } from "../types/tags.d";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -12,6 +12,8 @@ interface TagsContextProps {
   setSelectedTagGroup: React.Dispatch<React.SetStateAction<string | null>>;
   tagReferenceMaster: TagReference;
   setTagReferenceMaster: React.Dispatch<React.SetStateAction<TagReference>>;
+  tagReferenceLabeled: LabeledTagReference;
+  setTagReferenceLabeled: React.Dispatch<React.SetStateAction<LabeledTagReference>>;
   tagDisplayList: React.RefObject<HTMLDivElement>
 }
 
@@ -31,6 +33,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
   const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>({});
+  const [tagReferenceLabeled, setTagReferenceLabeled] = useState<LabeledTagReference>({});
   const tagDisplayList = useRef<HTMLDivElement>(null);
   
   return (
@@ -46,6 +49,8 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         setSelectedTagGroup,
         tagReferenceMaster,
         setTagReferenceMaster,
+        tagReferenceLabeled,
+        setTagReferenceLabeled,
         tagDisplayList
       }}
     >

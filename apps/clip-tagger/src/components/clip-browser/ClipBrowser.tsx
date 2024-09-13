@@ -21,7 +21,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
   const filesViewport = useRef<HTMLDivElement>(null);
   const { clipBrowserModifier, setClipBrowserModifier, setBlockGroupLevelListeners } = useKeybind();
-  const { setSelectedTagGroup, setTagReferenceMaster } = useTags();
+  const { setTagReferenceMaster } = useTags();
 
   const {
     currentFolder,
@@ -290,7 +290,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
           ))}
 
           {loadingContent &&
-            [0, 1, 3].map((entry, index) => (
+            [0, 1, 3].map((_entry, index) => (
               <FolderIcon
                 name={"..."}
                 path={""}
