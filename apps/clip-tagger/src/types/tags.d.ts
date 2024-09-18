@@ -5,6 +5,8 @@ export interface TagObject {
   displayName: string;
   description: string;
   unique?: boolean;
+  timeless: boolean;
+  protected: boolean;
   exclusive?: boolean;
   keybind: string;
   id: string;
@@ -30,7 +32,7 @@ export interface TagReference {
 
 export interface TimeEntry {
   time: TimeCode;
-  instanceId: string
+  instanceId: string;
 }
 
 export interface LabeledTagReference {

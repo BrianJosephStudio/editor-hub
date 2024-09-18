@@ -12,7 +12,7 @@ export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, excl
   const { setSelectedTagGroup, setTagReferenceMaster } = useTags();
   const { blockGroupLevelListeners, setBlockGroupLevelListeners } =
     useKeybind();
-  const { videoPlayer, targetClip } = useClipViewer();
+  const { videoPlayer, targetClip, setPauseOnInput } = useClipViewer();
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
     if(!videoPlayer.current) return
@@ -20,7 +20,7 @@ export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, excl
     if (event.key === tagObject.keybind && blockGroupLevelListeners) {
       const apiClient = new ApiClient();
       const tagReferenceToAdd: TagReference = {
-        [tagObject.id]: [currentTime],
+        [tagObject.id]: tagObject.timeless ? [] : [currentTime],
       };
       apiClient.updateFileProperties(
         targetClip,
@@ -32,6 +32,13 @@ export const Tag = ({ tagObject, exclusiveTagIds }: { tagObject: TagObject, excl
         setTagReferenceMaster(updatedTagReference);
       })
       setBlockGroupLevelListeners(false);
+      setPauseOnInput(currentValue => {
+        if (!videoPlayer.current) return currentValue
+        if(currentValue){
+          videoPlayer.current.play()
+        }
+        return currentValue
+      })
     }
   });
 

@@ -142,10 +142,6 @@ export class ApiClient {
       return {};
     }
 
-    if (!tagPropertyGroup) {
-      return {};
-    }
-
     const tagPropertyGroupField = tagPropertyGroup.fields.find(
       (field: any) => field.name === "tagReference"
     );

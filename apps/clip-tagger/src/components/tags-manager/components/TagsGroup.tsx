@@ -11,7 +11,7 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
   const { AppRoot } = useAppContext();
   const { selectedTagGroup, setSelectedTagGroup } = useTags();
   const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier } = useKeybind();
-  const {currentVideoSource ,targetClip} = useClipViewer()
+  const {currentVideoSource, targetClip, setPauseOnInput, videoPlayer} = useClipViewer()
 
   const exclusiveTagIds = useRef<string[] | undefined>(undefined)
 
@@ -21,7 +21,14 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
     if (event.key === tagsGroup.keybindGroup && !blockGroupLevelListeners && !iterableTagListModifier) {
-      setSelectedTagGroup(tagsGroup.id);
+      setPauseOnInput((currentValue) => {
+        if(!videoPlayer.current) return currentValue
+        if(currentValue){
+          videoPlayer.current.pause()
+        }
+        return currentValue
+      })
+      setSelectedTagGroup(tagsGroup.id)
       setBlockGroupLevelListeners(true)
       return
     }

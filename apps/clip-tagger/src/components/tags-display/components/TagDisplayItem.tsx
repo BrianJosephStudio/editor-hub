@@ -1,6 +1,6 @@
 import { Box, Typography } from "@mui/material";
 import { useClipViewer } from "../../../context/ClipViewerContext";
-import { TagObject, TagReference, TimeCode } from "../../../types/tags";
+import { TagObject, TimeCode } from "../../../types/tags";
 import { useEffect, useRef, useState } from "react";
 import { useTags } from "../../../context/TagsContext";
 import { Clear } from "@mui/icons-material";
@@ -11,11 +11,15 @@ export const TagDisplayItem = ({
   instanceId,
   tagObject,
   time,
+  mouseEnterCallback,
+  mouseLeaveCallback
 }: {
   index: number;
   instanceId: string
   tagObject: TagObject;
   time: number;
+  mouseEnterCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  mouseLeaveCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
   const { videoPlayer, targetClip } = useClipViewer();
   const { tagDisplayList, tagReferenceMaster, setTagReferenceMaster, tagReferenceLabeled } = useTags();
@@ -77,6 +81,7 @@ export const TagDisplayItem = ({
         }}
       ></Box>
       <Box
+        component={'div'}
         sx={{
           height: "1.6rem",
           backgroundColor: "black",
@@ -89,9 +94,18 @@ export const TagDisplayItem = ({
           cursor: "pointer",
           left: `${left}px`,
           zIndex: 2,
+          '&:hover': {
+            backgroundColor: '#283cbd'
+          }
+        }}
+        onMouseEnter={(e) => {
+          mouseEnterCallback(e)
+        }}
+        onMouseLeave={(e) => {
+          mouseLeaveCallback(e)
         }}
         onClick={() => {
-          console.log("click 2!")
+          videoPlayer.current!.currentTime = time
         }}
       >
         <Typography>{tagObject.displayName}</Typography>

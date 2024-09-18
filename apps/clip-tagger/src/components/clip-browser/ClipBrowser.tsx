@@ -97,6 +97,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries)
     if(!wasJobSuccessful){
       setIsRenaming(false) 
+      window.location.reload()
       return
     }
     setTargetClip("")

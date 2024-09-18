@@ -33,12 +33,14 @@ export const TagsManager = () => {
           (agentTag) =>
             agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
         );
-        if (!currentMap || !currentAgent)
-          throw new Error("Map or Agent name are wrong in resource path");
+        const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+        if (!currentMap || !currentAgent || !inGameClipTag)
+          throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
 
         const tagReferenceToAdd: TagReference = {
           [currentAgent.id]: [],
           [currentMap.id]: [],
+          [inGameClipTag.id]: [],
         };
 
         const mapTagIds = MapTags.map((mapTag) => {
