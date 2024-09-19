@@ -6,7 +6,6 @@ import { useKeybind } from "../../context/KeyBindContext.tsx";
 import { useClipViewer } from "../../context/ClipViewerContext.tsx";
 import { ApiClient } from "../../api/ApiClient.ts";
 import { useTags } from "../../context/TagsContext.tsx";
-import { TagReference } from "../../types/tags";
 import { ParsedFileName } from "../../util/dropboxFileParsing";
 import { MapTags } from "../../resources/TagSystem.ts";
 import { AgentTags } from "../../resources/TagSystem.ts";
@@ -17,13 +16,14 @@ export const TagsManager = () => {
     blockGroupLevelListeners,
   } = useKeybind();
 
-  const { setTagReferenceMaster } = useTags();
+  const { addTags, setTagReferenceMaster } = useTags();
 
   useEffect(() => {
+    setTagReferenceMaster({})
     const getMetadata = async () => {
       const apiClient = new ApiClient();
       const currentTagReference = await apiClient.getMetadata(targetClip);
-      let newTagReference = currentTagReference;
+      console.log("target clip changed:", currentTagReference)
       if (Object.keys(currentTagReference).length === 0) {
         const currentFileParsed = new ParsedFileName(targetClip, 0);
         const currentMap = MapTags.find(
@@ -34,14 +34,9 @@ export const TagsManager = () => {
             agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
         );
         const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+
         if (!currentMap || !currentAgent || !inGameClipTag)
           throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
-
-        const tagReferenceToAdd: TagReference = {
-          [currentAgent.id]: [],
-          [currentMap.id]: [],
-          [inGameClipTag.id]: [],
-        };
 
         const mapTagIds = MapTags.map((mapTag) => {
           return mapTag.id;
@@ -49,16 +44,20 @@ export const TagsManager = () => {
         const agentTagIds = AgentTags.map((agentTag) => {
           return agentTag.id;
         });
-        const exclusiveTagIds = [...mapTagIds, ...agentTagIds];
-        newTagReference = await apiClient.updateFileProperties(
-          targetClip,
-          tagReferenceToAdd,
-          exclusiveTagIds,
-          true
-        );
-        console.log(newTagReference)
+
+        const clipTypeTagIds = GenericTags.clipType.tags.map((clipTypeTag) => {
+          return clipTypeTag.id;
+        });
+
+        const exclusiveTagIds = [...mapTagIds, ...agentTagIds, ...clipTypeTagIds];
+        addTags([
+          currentAgent,
+          currentMap,
+          inGameClipTag
+        ], 0, exclusiveTagIds)
+      }else{
+        setTagReferenceMaster(currentTagReference)
       }
-      setTagReferenceMaster(newTagReference);
     };
     getMetadata();
   }, [targetClip]);

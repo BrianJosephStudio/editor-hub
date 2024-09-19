@@ -22,7 +22,7 @@ export const TagDisplayItem = ({
   mouseLeaveCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
   const { videoPlayer, targetClip } = useClipViewer();
-  const { tagDisplayList, tagReferenceMaster, setTagReferenceMaster, tagReferenceLabeled } = useTags();
+  const { tagDisplayList, setTagReferenceMaster, tagReferenceLabeled } = useTags();
   const [left, setLeft] = useState<number>(0);
 
   const body = useRef<HTMLDivElement | null>(null);

@@ -16,6 +16,8 @@ export const TagsDisplay = () => {
     tagReferenceLabeled,
     setTagReferenceLabeled,
     setTagReferenceMaster,
+    tagOffset,
+    setTagOffset,
   } = useTags();
   const { videoPlayer, pauseOnInput, setPauseOnInput, targetClip } =
     useClipViewer();
@@ -28,7 +30,7 @@ export const TagsDisplay = () => {
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
   const [hoverHeightPercentage, setHoverHeightPercentage] = useState<number>(0);
   const [playheadHoverVisible, setPlayheadHoverVisible] =
-    useState<boolean>(false);
+  useState<boolean>(false);
 
   function getPlaybackPercentage(currentTime: number, duration: number) {
     if (duration === 0) return 0;
@@ -36,11 +38,13 @@ export const TagsDisplay = () => {
   }
 
   useEffect(() => {
+    console.log("haciendo labels en master")
     const newLabeledTagReference = labelTagReference(tagReferenceMaster);
     setTagReferenceLabeled(newLabeledTagReference);
   }, [tagReferenceMaster]);
 
   useEffect(() => {
+    console.log("labels changed!")
     const newExclusiveTags: { tagObject: TagObject; time?: number }[] = [];
     const newGenericTags: {
       tagObject: TagObject;
@@ -126,12 +130,13 @@ export const TagsDisplay = () => {
     >
       <Box
         sx={{
-          backgroundColor: "blue",
+          backgroundColor: "hsl(0, 0%, 40%)",
           display: "flex",
           gap: "0.2rem",
           padding: "0.3rem",
           flexWrap: "wrap",
           placeContent: "center",
+          minHeight: '6rem'
         }}
       >
         {exclusiveTags.map((exclusiveTag) => (
@@ -251,6 +256,7 @@ export const TagsDisplay = () => {
           display: "flex",
           justifyContent: "space-evenly",
           height: "4rem",
+          gap: '3rem'
         }}
       >
         <Button
@@ -272,13 +278,23 @@ export const TagsDisplay = () => {
         >
           Pause on Input
         </Button>
-        <Box>
-          <Typography>Tag Offset</Typography>
+        <Box sx={{
+          display: 'flex',
+          flexDirection: 'column',
+        }}>
+          <Typography>Tag Offset ms</Typography>
           <Input type="number"
           sx={{
-            color: 'white'
+            color: 'white',
+            textAlign: 'center',
           }}
-          value={'0'}
+          value={tagOffset}
+          onChange={(event) => {
+            const inputValue = event.target.value
+            const inputValueNumber = parseInt(inputValue)
+            if(isNaN(inputValueNumber)) throw new Error("Input is NaN")
+            setTagOffset(Math.max(0, inputValueNumber))
+          }}
           />
         </Box>
       </Box>

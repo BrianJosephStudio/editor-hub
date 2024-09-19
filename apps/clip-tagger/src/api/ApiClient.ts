@@ -59,37 +59,10 @@ export class ApiClient {
 
   public updateFileProperties = async (
     path: string,
-    tagReferenceToAdd: TagReference,
-    exclusiveTagIds: string[] | undefined,
-    unique?: boolean
-  ): Promise<TagReference> => {
-    const upToDateTagReference = await this.getMetadata(path);
-    let updatedTagReference: TagReference = upToDateTagReference;
-
-    if (exclusiveTagIds) {
-      exclusiveTagIds.forEach((tagId) => {
-        if (upToDateTagReference[tagId]) {
-          delete updatedTagReference[tagId];
-        }
-      });
-    }
-
-    Object.keys(tagReferenceToAdd).map((newTagId) => {
-      const referenceExistsInMaster = Array.isArray(
-        upToDateTagReference[newTagId]
-      );
-  
-      if (!unique && referenceExistsInMaster) {
-        updatedTagReference[newTagId] = updatedTagReference[
-          newTagId
-        ].concat(tagReferenceToAdd[newTagId]);
-      } else {
-        updatedTagReference = {
-          ...upToDateTagReference,
-          ...tagReferenceToAdd,
-        };
-      }
-    })
+    tagReferenceMaster: TagReference,
+  ): Promise<boolean> => {
+    const updatedTagReference = tagReferenceMaster
+    console.log('apiClient 1', updatedTagReference)
 
     const url = `${this.apiHost}/properties/update`;
     const headers = {
@@ -110,9 +83,15 @@ export class ApiClient {
         },
       ],
     };
+    console.log('apiClient 2', updatedTagReference)
 
-    await axios.post(url, body, { headers });
-    return await this.getMetadata(path);
+    try {
+      console.log("post request!")
+      await axios.post(url, body, { headers });
+      return true
+    } catch (error: any) {
+      return false
+    }
   };
 
   public getMetadata = async (path: string): Promise<TagReference> => {
@@ -158,7 +137,7 @@ export class ApiClient {
   ): Promise<boolean> => {
     return new Promise(async (resolve, _reject) => {
       try {
-        if (entries.length === 0) return resolve(false)  
+        if (entries.length === 0) return resolve(false);
         const url = `${this.apiHost}/move_batch_v2`;
         const headers = {
           "Content-Type": "application/json",
@@ -189,7 +168,7 @@ export class ApiClient {
         }, 500);
       } catch (e) {
         console.error(e);
-        resolve(false)
+        resolve(false);
       }
     });
   };
@@ -210,13 +189,15 @@ export class ApiClient {
     }
     return false;
   };
-  public getCurrentFolderEntries = async (currentFolderPath: string): Promise<DropboxFile[]> => {
+  public getCurrentFolderEntries = async (
+    currentFolderPath: string
+  ): Promise<DropboxFile[]> => {
     try {
       const url = `${apiHost}/list_folder`;
       const headers = {
         "Content-Type": "application/json",
       };
-  
+
       const body = {
         include_deleted: false,
         include_has_explicit_shared_members: false,
@@ -226,23 +207,23 @@ export class ApiClient {
         path: currentFolderPath,
         recursive: false,
       };
-  
+
       let entries: any[] = [];
       let hasMore = true;
       let cursor = null;
-  
+
       while (hasMore) {
         //@ts-ignore
         const { data } = await axios.post(url, cursor ? { cursor } : body, {
           headers,
         });
-  
+
         entries = [...entries, ...data.entries];
         hasMore = data.has_more;
         cursor = data.cursor;
       }
-  
-      return entries
+
+      return entries;
     } catch (e: any) {
       throw new Error(e);
     }
@@ -254,18 +235,18 @@ export class ApiClient {
     newTagEntry: TimeCode[]
   ): Promise<TagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
-    let updatedTagReference: TagReference = upToDateTagReference
-    if(newTagEntry.length === 0){
-      delete updatedTagReference[tagObjectId]
-    }else{
+    let updatedTagReference: TagReference = upToDateTagReference;
+    if (newTagEntry.length === 0) {
+      delete updatedTagReference[tagObjectId];
+    } else {
       updatedTagReference = {
         ...upToDateTagReference,
-        [tagObjectId]: newTagEntry
-      }
+        [tagObjectId]: newTagEntry,
+      };
     }
 
-    console.log("tagReferenceMaster:", upToDateTagReference)
-    console.log("updatedTagReference:", updatedTagReference)
+    console.log("tagReferenceMaster:", upToDateTagReference);
+    console.log("updatedTagReference:", updatedTagReference);
 
     const url = `${this.apiHost}/properties/update`;
     const headers = {

@@ -7,7 +7,6 @@ export interface TagObject {
   unique?: boolean;
   timeless: boolean;
   protected: boolean;
-  exclusive?: boolean;
   keybind: string;
   id: string;
 }
