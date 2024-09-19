@@ -1,10 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { useClipViewer } from "../../../context/ClipViewerContext";
-import { TagObject, TimeCode } from "../../../types/tags";
+import { TagObject } from "../../../types/tags";
 import { useEffect, useRef, useState } from "react";
 import { useTags } from "../../../context/TagsContext";
 import { Clear } from "@mui/icons-material";
-import { ApiClient } from "../../../api/ApiClient";
 
 export const TagDisplayItem = ({
   index,
@@ -21,7 +20,7 @@ export const TagDisplayItem = ({
   mouseEnterCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
   mouseLeaveCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
-  const { videoPlayer, targetClip } = useClipViewer();
+  const { videoPlayer } = useClipViewer();
   const { tagDisplayList, removeTag } = useTags();
   const [left, setLeft] = useState<number>(0);
 

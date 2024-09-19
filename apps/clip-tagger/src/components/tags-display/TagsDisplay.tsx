@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useClipViewer } from "../../context/ClipViewerContext";
 import { TagDisplayItem } from "./components/TagDisplayItem";
 import { labelTagReference } from "../../util/tagInstanceId";
-import { ApiClient } from "../../api/ApiClient";
 import Cookies from "js-cookie";
 
 export const TagsDisplay = () => {
@@ -15,12 +14,11 @@ export const TagsDisplay = () => {
     tagDisplayList,
     tagReferenceLabeled,
     setTagReferenceLabeled,
-    setTagReferenceMaster,
     tagOffset,
     setTagOffset,
     removeTag
   } = useTags();
-  const { videoPlayer, pauseOnInput, setPauseOnInput, targetClip } =
+  const { videoPlayer, pauseOnInput, setPauseOnInput } =
     useClipViewer();
   const [exclusiveTags, setExclusiveTags] = useState<
     { tagObject: TagObject; time?: number }[]
