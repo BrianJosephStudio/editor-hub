@@ -22,7 +22,7 @@ export const TagDisplayItem = ({
   mouseLeaveCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
 }) => {
   const { videoPlayer, targetClip } = useClipViewer();
-  const { tagDisplayList, setTagReferenceMaster, tagReferenceLabeled } = useTags();
+  const { tagDisplayList, removeTag } = useTags();
   const [left, setLeft] = useState<number>(0);
 
   const body = useRef<HTMLDivElement | null>(null);
@@ -122,15 +122,7 @@ export const TagDisplayItem = ({
           }}
           onClick={async (event) => {
             event.stopPropagation()
-            const tagEntry = tagReferenceLabeled[tagObject.id]
-            if(!tagEntry) return
-            const filteredTagEntry = tagEntry.filter(timeEntry => timeEntry.instanceId !== instanceId)
-            const newTagEntry: TimeCode[] = filteredTagEntry.map(timeEntry => timeEntry.time)
-
-            const apiClient = new ApiClient()
-            const newTagReference = await apiClient.removeTag(targetClip, tagObject.id, newTagEntry)
-            console.log("newTagReference:", newTagReference)
-            setTagReferenceMaster(newTagReference)
+            removeTag(tagObject,instanceId)
           }}
         ></Clear>
       </Box>

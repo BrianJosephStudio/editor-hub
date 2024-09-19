@@ -18,6 +18,7 @@ export const TagsDisplay = () => {
     setTagReferenceMaster,
     tagOffset,
     setTagOffset,
+    removeTag
   } = useTags();
   const { videoPlayer, pauseOnInput, setPauseOnInput, targetClip } =
     useClipViewer();
@@ -153,17 +154,8 @@ export const TagsDisplay = () => {
             onClick={async (event) => {
               event.stopPropagation();
               if (exclusiveTag.tagObject.protected) return;
-              const tagEntry = tagReferenceMaster[exclusiveTag.tagObject.id];
-              if (!tagEntry) return;
 
-              const apiClient = new ApiClient();
-              const newTagReference = await apiClient.removeTag(
-                targetClip,
-                exclusiveTag.tagObject.id,
-                tagEntry
-              );
-              console.log("newTagReference:", newTagReference);
-              setTagReferenceMaster(newTagReference);
+              removeTag(exclusiveTag.tagObject)
             }}
           >
             <Typography>{exclusiveTag.tagObject.displayName}</Typography>
