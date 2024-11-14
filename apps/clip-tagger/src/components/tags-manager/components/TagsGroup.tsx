@@ -1,19 +1,34 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppContext } from "../../../context/AppContext";
 import { TagGroup } from "../../../types/tags";
 import { useTags } from "../../../context/TagsContext";
 import { Box, Typography } from "@mui/material";
 import { Tag } from "./Tag";
 import { useKeybind } from "../../../context/KeyBindContext";
+import { useClipViewer } from "../../../context/ClipViewerContext";
 
 export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, groupName: string, key: number }) => {
   const { AppRoot } = useAppContext();
   const { selectedTagGroup, setSelectedTagGroup } = useTags();
-  const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier } = useKeybind();
+  const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier } = useKeybind();
+  const {currentVideoSource, targetClip, setPauseOnInput, videoPlayer} = useClipViewer()
+
+  const exclusiveTagIds = useRef<string[] | undefined>(undefined)
+
+  if(tagsGroup.exclusive){
+    exclusiveTagIds.current = tagsGroup.tags.map((tagObject) => tagObject.id)
+  }
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
     if (event.key === tagsGroup.keybindGroup && !blockGroupLevelListeners && !iterableTagListModifier) {
-      setSelectedTagGroup(tagsGroup.id);
+      setPauseOnInput((currentValue) => {
+        if(!videoPlayer.current) return currentValue
+        if(currentValue){
+          videoPlayer.current.pause()
+        }
+        return currentValue
+      })
+      setSelectedTagGroup(tagsGroup.id)
       setBlockGroupLevelListeners(true)
       return
     }
@@ -30,17 +45,13 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
   };
 
   useEffect(() => {
-    addKeyBindGroupListener();
-    // return removeKeyBindGroupListener;
-  }, []);
-
-  useEffect(() => {
-    if(blockGroupLevelListeners || iterableTagListModifier){
+    if(blockGroupLevelListeners || iterableTagListModifier || clipBrowserModifier){
       removeKeyBindGroupListener()
     }else{
+      if(!currentVideoSource || !targetClip) return
       addKeyBindGroupListener()
     }
-  }, [blockGroupLevelListeners, iterableTagListModifier]);
+  }, [blockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier, currentVideoSource]);
 
   return (
     <>
@@ -50,11 +61,12 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
           sx={{
             display: "flex",
             flexDirection: 'column',
-            backgroundColor: "hsla(210, 20%, 40%, 0.5)",
             borderRadius: "2rem",
             flexGrow: "1",
             placeItems: "center",
             cursor: "pointer",
+            height: '100%',
+            backgroundColor: 'black'
           }}
         >
           <Typography
@@ -80,10 +92,10 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
               width: "12rem",
               height: "6rem",
               borderRadius: '2rem',
-              placeItems: 'center'
+              placeItems: 'center',
             }}
           >
-            <Tag tagObject={tag}/>
+            <Tag tagObject={tag} exclusiveTagIds={exclusiveTagIds.current}/>
           </Box>
         ))}
     </>

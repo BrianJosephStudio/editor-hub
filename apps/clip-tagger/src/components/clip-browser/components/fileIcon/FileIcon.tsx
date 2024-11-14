@@ -21,11 +21,9 @@ export const FileIcon = ({
   itemIndex: number;
   clickCallback: () => void;
 }) => {
-  const { setCurrentVideoSource, setNextVideoSource } = useClipViewer();
-  const {
-    activeItem,
-  } = useFolderNavigation();
-
+  const { setCurrentVideoSource, setNextVideoSource, setTargetClip } =
+    useClipViewer();
+  const { activeItem } = useFolderNavigation();
 
   const folderElement = useRef<HTMLDivElement>(null);
   const [cachedFile, setCachedFile] = useState<string>("");
@@ -49,12 +47,12 @@ export const FileIcon = ({
       try {
         const link = await apiClient.getTemporaryLink(path);
         setLocalTemporaryLink(link);
-        
+
         const { data: videoBlob } = await axios.get(link, {
           responseType: "blob",
         });
         const videoUrl = URL.createObjectURL(videoBlob);
-        
+
         setCachedFile(videoUrl);
       } catch (e) {
         console.error(e);
@@ -70,9 +68,10 @@ export const FileIcon = ({
     };
   }, []);
 
-  useEffect(()=> {
-    if(activeItem === itemIndex) setNextVideoSource(cachedFile ? cachedFile : localTemporaryLink!)
-  }, [activeItem, cachedFile, localTemporaryLink])
+  useEffect(() => {
+    if (activeItem === itemIndex)
+      setNextVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
+  }, [activeItem, cachedFile, localTemporaryLink]);
 
   return (
     <div
@@ -82,6 +81,7 @@ export const FileIcon = ({
       }`}
       onDoubleClick={(event) => {
         event.preventDefault();
+        setTargetClip(path);
         setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
       }}
       onClick={clickCallback}

@@ -1,85 +1,75 @@
 import { Box } from "@mui/material";
 import { GenericTags } from "../../resources/TagSystem.ts";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { TagsGroup } from "./components/TagsGroup";
-import { IterableTagList } from "./components/IterableTagList.tsx";
 import { useKeybind } from "../../context/KeyBindContext.tsx";
-import { useAppContext } from "../../context/AppContext.tsx";
-import { IterableTagListId } from "../../types/tags";
+import { useClipViewer } from "../../context/ClipViewerContext.tsx";
+import { ApiClient } from "../../api/ApiClient.ts";
+import { useTags } from "../../context/TagsContext.tsx";
+import { ParsedFileName } from "../../util/dropboxFileParsing";
+import { MapTags } from "../../resources/TagSystem.ts";
+import { AgentTags } from "../../resources/TagSystem.ts";
 
 export const TagsManager = () => {
-  const { AppRoot } = useAppContext();
+  const { targetClip } = useClipViewer();
   const {
     blockGroupLevelListeners,
-    setTargetIterableTagList,
-    setIterableTagListModifier,
   } = useKeybind();
 
-  const switchIterableTagList = () =>
-    setTargetIterableTagList((targetIterableTagList) =>
-      targetIterableTagList === "agent" ? "map" : "agent"
-    );
-
-  const switchIterableTagListEventListener = useRef((event: KeyboardEvent) => {
-    if (event.key === "m") {
-      console.log("switching!");
-      switchIterableTagList();
-    }
-  });
-
-  const modifierKeyDownEventListener = (event: KeyboardEvent) => {
-    if (event.key === "v" && !blockGroupLevelListeners) {
-      console.log("modifier in");
-      setIterableTagListModifier(true);
-      addSwitchIterableTagListEventListener();
-    }
-  };
-  const modifierKeyUpEventListener = (event: KeyboardEvent) => {
-    if (event.key === "v" && !blockGroupLevelListeners) {
-      console.log("modifier out");
-      setIterableTagListModifier(false);
-      removeSwitchIterableTagListEventListener();
-    }
-  };
-
-  const addSwitchIterableTagListEventListener = () => {
-    if (!AppRoot || !AppRoot.current) return;
-    AppRoot.current.addEventListener(
-      "keydown",
-      switchIterableTagListEventListener.current
-    );
-  };
-
-  const removeSwitchIterableTagListEventListener = () => {
-    if (!AppRoot || !AppRoot.current) return;
-    AppRoot.current.removeEventListener(
-      "keydown",
-      switchIterableTagListEventListener.current
-    );
-  };
-
-  const addModifierEventListeners = () => {
-    if (!AppRoot || !AppRoot.current) return;
-    AppRoot.current.addEventListener("keydown", modifierKeyDownEventListener);
-    AppRoot.current.addEventListener("keyup", modifierKeyUpEventListener);
-  };
+  const { addTags, setTagReferenceMaster } = useTags();
 
   useEffect(() => {
-    addModifierEventListeners();
-  }, []);
+    setTagReferenceMaster({})
+    const getMetadata = async () => {
+      const apiClient = new ApiClient();
+      const currentTagReference = await apiClient.getMetadata(targetClip);
+      console.log("target clip changed:", currentTagReference)
+      if (Object.keys(currentTagReference).length === 0) {
+        const currentFileParsed = new ParsedFileName(targetClip, 0);
+        const currentMap = MapTags.find(
+          (mapTag) => mapTag.tag === currentFileParsed.map.toLocaleLowerCase()
+        );
+        const currentAgent = AgentTags.find(
+          (agentTag) =>
+            agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
+        );
+        const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+
+        if (!currentMap || !currentAgent || !inGameClipTag)
+          throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
+
+        const mapTagIds = MapTags.map((mapTag) => {
+          return mapTag.id;
+        });
+        const agentTagIds = AgentTags.map((agentTag) => {
+          return agentTag.id;
+        });
+
+        const clipTypeTagIds = GenericTags.clipType.tags.map((clipTypeTag) => {
+          return clipTypeTag.id;
+        });
+
+        const exclusiveTagIds = [...mapTagIds, ...agentTagIds, ...clipTypeTagIds];
+        addTags([
+          currentAgent,
+          currentMap,
+          inGameClipTag
+        ], 0, exclusiveTagIds)
+      }else{
+        setTagReferenceMaster(currentTagReference)
+      }
+    };
+    getMetadata();
+  }, [targetClip]);
 
   return (
     <>
       <Box
         sx={{
           display: blockGroupLevelListeners ? "flex" : "grid",
-          placeContent: blockGroupLevelListeners ? "start" : "auto",
           gridGap: " 0.6rem",
           gridTemplateRows: "repeat(2, 1fr)",
           gridTemplateColumns: "repeat(6, 1fr)",
-          gridColumn: "1/6",
-          backgroundColor: "hsl(0, 0%, 12%)",
-          flexWrap: "wrap",
           padding: "0.6rem",
         }}
       >
@@ -91,18 +81,6 @@ export const TagsManager = () => {
           ></TagsGroup>
         ))}
       </Box>
-
-      <IterableTagList
-        gridColumn="4/5"
-        gridRow="1/2"
-        iterableTagListId={"agent"}
-      ></IterableTagList>
-
-      <IterableTagList
-        gridColumn="5/6"
-        gridRow="1/2"
-        iterableTagListId={"map"}
-      ></IterableTagList>
     </>
   );
 };

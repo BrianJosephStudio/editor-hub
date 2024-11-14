@@ -8,6 +8,8 @@ interface KeybindContextProps {
   setTargetIterableTagList: React.Dispatch<React.SetStateAction<IterableTagListId>>;
   iterableTagListModifier: boolean;
   setIterableTagListModifier: React.Dispatch<React.SetStateAction<boolean>>;
+  clipBrowserModifier: boolean;
+  setClipBrowserModifier: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const KeybindContext = createContext<KeybindContextProps | undefined>(
@@ -29,6 +31,8 @@ export const KeybindProvider = ({ children }: { children: ReactNode }) => {
     useState<IterableTagListId>('agent');
   const [iterableTagListModifier, setIterableTagListModifier] =
     useState<boolean>(false);
+  const [clipBrowserModifier, setClipBrowserModifier] =
+    useState<boolean>(false);
 
   return (
     <KeybindContext.Provider
@@ -39,6 +43,8 @@ export const KeybindProvider = ({ children }: { children: ReactNode }) => {
         setTargetIterableTagList,
         iterableTagListModifier,
         setIterableTagListModifier,
+        clipBrowserModifier,
+        setClipBrowserModifier,
       }}
     >
       {children}

@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
 import { useClipViewer } from "../../context/ClipViewerContext";
-import { useEffect, useRef } from "react";
+import { useAppContext } from "../../context/AppContext";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -8,22 +8,26 @@ const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 if (!clipsRootPath || !apiHost) throw new Error("Missing envs");
 
 export const ClipViewer = () => {
-  const { currentVideoSource } = useClipViewer();
-
-  const videoElement = useRef<HTMLVideoElement>(null);
+  const { currentVideoSource, videoPlayer } = useClipViewer();
+  const { AppRoot } = useAppContext();
 
   return (
-    <Box sx={{ display: "flex", flexDirection: 'column', width: "100%", gridColumn: '1/4' }}>
+    <Box component={'div'} tabIndex={-1} sx={{ display: "flex", flexDirection: 'column', minHeight: '0', placeContent: 'center' }}>
       <video
+        tabIndex={-1}
         autoPlay
-        ref={videoElement}
+        ref={videoPlayer}
         controls
         preload="auto"
         src={currentVideoSource}
+        onFocus={(event) => {
+           event.target.blur()
+           AppRoot?.current?.focus()
+        }}
         style={{
-          // maxWidth: "60rem",
-          flexGrow: "1",
-          maxHeight: '100%'
+          minHeight: '0',
+          minWidth: '0',
+          outline: 'none',
         }}
       ></video>
     </Box>

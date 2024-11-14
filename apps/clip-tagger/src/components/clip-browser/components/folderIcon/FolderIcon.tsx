@@ -5,7 +5,6 @@ import { useEffect, useRef } from "react";
 
 export const FolderIcon = ({
   name,
-  path,
   id,
   active,
   clickCallback,

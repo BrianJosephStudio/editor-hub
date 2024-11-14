@@ -1,9 +1,9 @@
 .container {
   display: grid;
-  height: 100%;
-  overflow: hidden;
   grid-gap: 0.6rem;
   grid-template-rows: 3rem auto;
+  min-width: 24rem;
+  min-height: 0;
 }
 
 .filesViewport {

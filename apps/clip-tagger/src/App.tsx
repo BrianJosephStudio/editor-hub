@@ -9,6 +9,7 @@ import { Box } from "@mui/material";
 import { TagsManager } from "./components/tags-manager/TagsManager";
 import { useRef } from "react";
 import { KeybindProvider } from "./context/KeyBindContext";
+import { TagsDisplay } from "./components/tags-display/TagsDisplay";
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -18,36 +19,41 @@ function App() {
   return (
     <AppContext.Provider value={{ AppRoot }}>
       <KeybindProvider>
-        <TagsProvider>
-          <ClipViewerProvider>
+        <ClipViewerProvider>
+          <TagsProvider>
             <FolderNavigationProvider currentPath={currentPath ?? ""}>
               <Box
+                component={"div"}
                 ref={AppRoot}
+                tabIndex={0}
                 sx={{
                   margin: "0",
                   padding: "0",
                   display: "grid",
-                  gridTemplateColumns: "2fr 8fr",
+                  gridTemplateColumns: "2fr 8fr 3fr",
                   width: "100vw",
                   height: "100vh",
+                  outline: "none",
                 }}
               >
                 <ClipBrowser></ClipBrowser>
                 <Box
                   sx={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(5, 1fr)",
                     gridTemplateRows: "6fr 3fr",
+                    gridTemplateColumns: "100%",
                     minHeight: "0",
+                    minWidth: "0",
                   }}
                 >
                   <ClipViewer></ClipViewer>
                   <TagsManager></TagsManager>
                 </Box>
+                <TagsDisplay></TagsDisplay>
               </Box>
             </FolderNavigationProvider>
-          </ClipViewerProvider>
-        </TagsProvider>
+          </TagsProvider>
+        </ClipViewerProvider>
       </KeybindProvider>
     </AppContext.Provider>
   );
