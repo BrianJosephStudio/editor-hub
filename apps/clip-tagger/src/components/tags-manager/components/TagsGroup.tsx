@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { useAppContext } from "../../../context/AppContext";
 import { TagGroup } from "../../../types/tags";
 import { useTags } from "../../../context/TagsContext";

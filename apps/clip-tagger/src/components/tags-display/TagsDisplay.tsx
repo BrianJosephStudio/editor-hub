@@ -120,6 +120,10 @@ export const TagsDisplay = () => {
     Cookies.set("pauseOnInput", pauseOnInput.toString());
   }, [pauseOnInput]);
 
+  useEffect(() => {
+    Cookies.set('tagOffset', tagOffset.toString())
+  },[tagOffset])
+
   return (
     <Box
       sx={{
@@ -140,6 +144,8 @@ export const TagsDisplay = () => {
       >
         {exclusiveTags.map((exclusiveTag) => (
           <Box
+            component={'div'}
+            title="remove"
             sx={{
               display: "flex",
               placeContent: "center",
@@ -148,6 +154,9 @@ export const TagsDisplay = () => {
               minWidth: "0",
               padding: "0.3rem 0.8rem",
               borderRadius: "1rem",
+              '&:hover': {
+                backgroundColor: exclusiveTag.tagObject.protected ? 'black' : '#a33643'
+              }
             }}
             onClick={async (event) => {
               event.stopPropagation();

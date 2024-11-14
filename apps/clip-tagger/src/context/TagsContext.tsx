@@ -8,6 +8,7 @@ import {
 } from "../types/tags.d";
 import { ApiClient } from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
+import Cookies from "js-cookie";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -56,7 +57,16 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   );
   const [tagReferenceLabeled, setTagReferenceLabeled] =
     useState<LabeledTagReference>({});
-  const [tagOffset, setTagOffset] = useState<number>(500);
+  const [tagOffset, setTagOffset] = useState<number>(() => {
+    const defaultValue = 500
+    const tagOffsetCookie = Cookies.get("tagOffset")
+    if(!tagOffsetCookie) return defaultValue
+    const tagOffsetNumber = parseInt(tagOffsetCookie)
+    if(!isNaN(tagOffsetNumber)) {
+      return tagOffsetNumber
+    }
+    return defaultValue
+  });
   const tagDisplayList = useRef<HTMLDivElement>(null);
 
   const addTags = (

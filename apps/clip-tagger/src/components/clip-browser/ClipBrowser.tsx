@@ -16,11 +16,15 @@ const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
 if (!clipsRootPath || !apiHost) throw new Error("Missing envs");
 
-export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
+export const ClipBrowser = () => {
   const { AppRoot } = useAppContext();
   const [loadingContent, setLoadingContent] = useState<boolean>(true);
   const filesViewport = useRef<HTMLDivElement>(null);
-  const { clipBrowserModifier, setClipBrowserModifier, setBlockGroupLevelListeners } = useKeybind();
+  const {
+    clipBrowserModifier,
+    setClipBrowserModifier,
+    setBlockGroupLevelListeners,
+  } = useKeybind();
   const { setTagReferenceMaster } = useTags();
 
   const {
@@ -32,17 +36,27 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
     setActiveItem,
     handleBackNavigation,
     setFolderEntryNames,
-    pathSegments
+    pathSegments,
   } = useFolderNavigation();
 
-  const { setCurrentVideoSource, nextVideoSource, setTargetClip, videoPlayer } = useClipViewer();
+  const {
+    setCurrentVideoSource,
+    nextVideoSource,
+    setNextVideoSource,
+    setTargetClip,
+    videoPlayer,
+  } = useClipViewer();
 
-  const [clipLevel, setClipLevel] = useState<boolean>(false)
-  const [isRenaming, setIsRenaming ] = useState<boolean>(false)
+  const [clipLevel, setClipLevel] = useState<boolean>(false);
+  const [isRenaming, setIsRenaming] = useState<boolean>(false);
 
   useEffect(() => {
-    setClipLevel(pathSegments.length > 0)
-  },[pathSegments])
+    setClipLevel(pathSegments.length > 0);
+  }, [pathSegments]);
+
+  useEffect(() => {
+    setActiveItem(0);
+  }, [currentFolderEntries]);
 
   const focusPreviousItem = () => {
     if (activeItem !== null) {
@@ -93,33 +107,37 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
   };
 
   const autoRenameFolders = async () => {
-    setIsRenaming(true)
-    const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries)
-    if(!wasJobSuccessful){
-      setIsRenaming(false) 
-      window.location.reload()
-      return
+    setIsRenaming(true);
+    const wasJobSuccessful = await setFolderEntryNames(currentFolderEntries);
+    if (!wasJobSuccessful) {
+      setIsRenaming(false);
+      window.location.reload();
+      return;
     }
-    setTargetClip("")
-    setCurrentVideoSource("")
-    setTagReferenceMaster({})
-    const apiClient = new ApiClient()
-    const newEntries = await apiClient.getCurrentFolderEntries(`${clipsRootPath}/${currentFolder}`)
-    setCurrentFolderEntries(newEntries)
-    setIsRenaming(false)
-  }
+    setTargetClip("");
+    setCurrentVideoSource("");
+    setTagReferenceMaster({});
+    const apiClient = new ApiClient();
+    const newEntries = await apiClient.getCurrentFolderEntries(
+      `${clipsRootPath}/${currentFolder}`
+    );
+    setCurrentFolderEntries(newEntries);
+    setIsRenaming(false);
+  };
 
   useEffect(() => {
     (async () => {
       setActiveItem(0);
       setCurrentFolderEntries([]);
       setLoadingContent(true);
-      setClipLevel(false)
-      const apiClient = new ApiClient()
-      const currentEntries = await apiClient.getCurrentFolderEntries(`${clipsRootPath}/${currentFolder}`);
-      setCurrentFolderEntries(currentEntries)
+      setClipLevel(false);
+      const apiClient = new ApiClient();
+      const currentEntries = await apiClient.getCurrentFolderEntries(
+        `${clipsRootPath}/${currentFolder}`
+      );
+      setCurrentFolderEntries(currentEntries);
       setLoadingContent(false);
-  
+
       const urlParams = new URLSearchParams(window.location.search);
       urlParams.set("path", currentFolder);
       window.history.replaceState(
@@ -127,7 +145,7 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
         "",
         `${window.location.pathname}?${urlParams.toString()}`
       );
-    })()
+    })();
   }, [currentFolder]);
 
   useEffect(() => {
@@ -157,12 +175,23 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
               )
             );
           } else if (currentFolderEntries[activeItem][".tag"] === "file") {
-            setTargetClip(currentFolderEntries[activeItem].path_lower)
-            setCurrentVideoSource(nextVideoSource);
+            setTargetClip(currentFolderEntries[activeItem].path_lower);
+            console.log(nextVideoSource);
+            // if (nextVideoSource) {
+            //   setCurrentVideoSource(nextVideoSource);
+            //   break;
+            // }
+            setNextVideoSource((currentNextVideoSource) => {
+              console.log(currentNextVideoSource);
+              setCurrentVideoSource(currentNextVideoSource);
+              return currentNextVideoSource;
+            });
           }
           break;
         case " ":
-          videoPlayer.current?.paused ? videoPlayer.current?.play() : videoPlayer.current?.pause()
+          videoPlayer.current?.paused
+            ? videoPlayer.current?.play()
+            : videoPlayer.current?.pause();
           break;
         case "Escape":
           // setSelectedTagGroup(null);
@@ -222,73 +251,76 @@ export const ClipBrowser = ({ currentPath }: { currentPath?: string }) => {
 
   return (
     <>
-      <Box sx={{
-        display: "grid",
-        gridGap: "0.6rem",
-        gridTemplateRows: "3rem auto",
-        minWidth: "24rem",
-        minHeight: "0",
-      }}>
+      <Box
+        sx={{
+          display: "grid",
+          gridGap: "0.6rem",
+          gridTemplateRows: "3rem auto",
+          minWidth: "24rem",
+          minHeight: "0",
+        }}
+      >
         <PathNav path={currentFolder}></PathNav>
         <Box ref={filesViewport} className="filesViewport">
-        {(clipLevel && !isRenaming) &&
-          <Button
-          sx={{
-            height: '2rem'
-          }}
-          onClick={autoRenameFolders}
-          >
-            Auto-name clips
-          </Button>
-        }
-        {(clipLevel && isRenaming) &&
-          <Box sx={{
-            display: 'flex',
-            gap: '0.4rem',
-            placeContent: 'center',
-            width: '100%',
-            paddingY: '0.4rem'
-          }}>
-            <CircularProgress size={24}></CircularProgress>
-            <Typography>
-              Renaming...
-            </Typography>
-          </Box>}
-        {!loadingContent &&
-          currentFolderEntries.map((entry, index) => (
-            <div key={index}>
-              {entry[".tag"] === "folder" && (
-                <FolderIcon
-                  name={entry.name}
-                  path={entry.path_lower}
-                  id={entry.id}
-                  key={index}
-                  active={activeItem === index}
-                  clickCallback={() => setActiveItem(index)}
-                  openFolderCallback={() => {
-                    setCurrentFolder(
-                      entry.path_lower.replace(
-                        clipsRootPath.toLowerCase(),
-                        ""
-                      )
-                    );
-                  }}
-                ></FolderIcon>
-              )}
+          {clipLevel && !isRenaming && (
+            <Button
+              sx={{
+                height: "2rem",
+              }}
+              onClick={autoRenameFolders}
+            >
+              Auto-name clips
+            </Button>
+          )}
+          {clipLevel && isRenaming && (
+            <Box
+              sx={{
+                display: "flex",
+                gap: "0.4rem",
+                placeContent: "center",
+                width: "100%",
+                paddingY: "0.4rem",
+              }}
+            >
+              <CircularProgress size={24}></CircularProgress>
+              <Typography>Renaming...</Typography>
+            </Box>
+          )}
+          {!loadingContent &&
+            currentFolderEntries.map((entry, index) => (
+              <div key={index}>
+                {entry[".tag"] === "folder" && (
+                  <FolderIcon
+                    name={entry.name}
+                    path={entry.path_lower}
+                    id={entry.id}
+                    key={index}
+                    active={activeItem === index}
+                    clickCallback={() => setActiveItem(index)}
+                    openFolderCallback={() => {
+                      setCurrentFolder(
+                        entry.path_lower.replace(
+                          clipsRootPath.toLowerCase(),
+                          ""
+                        )
+                      );
+                    }}
+                  ></FolderIcon>
+                )}
 
-              {entry[".tag"] === "file" && (
-                <FileIcon
-                  itemIndex={index}
-                  name={entry.name}
-                  path={entry.path_lower}
-                  id={entry.id}
-                  key={index}
-                  active={activeItem === index}
-                  clickCallback={() => setActiveItem(index)}
-                ></FileIcon>
-              )}
-            </div>
-          ))}
+                {entry[".tag"] === "file" && (
+                  <FileIcon
+                    itemIndex={index}
+                    name={entry.name}
+                    path={entry.path_lower}
+                    id={entry.id}
+                    key={index}
+                    active={activeItem === index}
+                    clickCallback={() => setActiveItem(index)}
+                  ></FileIcon>
+                )}
+              </div>
+            ))}
 
           {loadingContent &&
             [0, 1, 3].map((_entry, index) => (

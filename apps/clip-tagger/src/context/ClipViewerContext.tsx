@@ -5,7 +5,7 @@ interface ClipViewerContextProps {
   targetClip: string;
   setTargetClip: (path: string) => void;
   nextVideoSource: string;
-  setNextVideoSource: (path: string) => void;
+  setNextVideoSource: React.Dispatch<React.SetStateAction<string>>;
   currentVideoSource: string;
   setCurrentVideoSource: (path: string) => void;
   videoPlayer: React.RefObject<HTMLVideoElement>;

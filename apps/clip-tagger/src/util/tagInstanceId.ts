@@ -1,4 +1,4 @@
-import { LabeledTagReference, TagReference, TimeEntry } from "../types/tags";
+import { LabeledTagReference, TagReference } from "../types/tags";
 import { v4 as uuid } from "uuid";
 
 export const labelTagReference = (unlabeledTagReference: TagReference): LabeledTagReference => {

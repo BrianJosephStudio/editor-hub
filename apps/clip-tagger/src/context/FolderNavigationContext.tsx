@@ -76,7 +76,8 @@ export const FolderNavigationProvider = ({
     }).filter((data) => data !== null);
 
 
-    let newCurrentIndex = Math.max(-1, ...currentIndexes) +1;
+    //@ts-ignore
+    let newCurrentIndex = Math.max(-1, ...currentIndexes) + 1;
 
     const dropboxFiles = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'file')
     const dropboxFolders = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'folder')
@@ -97,6 +98,8 @@ export const FolderNavigationProvider = ({
       .filter((data) => !!data);
     
     const apiClient = new ApiClient();
+
+    //@ts-ignore
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
 
     const folderPromises = dropboxFolders.map(async (dropboxFolder) =>{
