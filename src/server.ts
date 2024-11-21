@@ -24,7 +24,8 @@ app.use("/", (req, _res, next) => {
 })
 
 app.use("/authorization", authRoutes);
-app.use("/api", requireAuth(), clipTaggerAuthorizationFilter, apiRoutesV1)
+app.use("/api", apiRoutesV1)
+app.use("/api/v2", clipTaggerAuthorizationFilter, apiRoutesV1)
 app.use("/project-manager", projectManagerRoutes);
 app.get("/health", (_req, res) => res.send("ok"));
 

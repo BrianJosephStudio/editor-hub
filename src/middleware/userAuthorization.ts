@@ -8,13 +8,10 @@ export const clipTaggerAuthorizationFilter = (
 ) => {
   const auth = getAuth(req);
 
-  const isAuthorized =
-    auth.has({ role: "org:clip_tagger" }) ||
-    auth.has({ role: "org:admin" });
+  const role = auth.sessionClaims?.metadata?.role;
 
-  console.log(auth.has({ role: "org:clip_tagger" }));
-  console.log(auth.has({ role: "org:admin" }));
-  console.log("isAuthorized", isAuthorized)
+  const isAuthorized = role === "clip_tagger" || role === "admin";
+  console.log("API v2 request by role:", auth.sessionClaims?.metadata?.role);
 
   if (!isAuthorized) {
     return res.status(403).send("Unauthorized");
@@ -29,13 +26,11 @@ export const projectManagerAuthorizationFilter = (
 ) => {
   const auth = getAuth(req);
 
-  const isAuthorized =
-    auth.has({ role: "org:project_manager" }) ||
-    auth.has({ role: "org:admin" });
+  const role = auth.sessionClaims?.metadata?.role;
 
-  console.log(auth.has({ role: "org:clip_tagger" }));
-  console.log(auth.has({ role: "org:admin" }));
-  console.log("isAuthorized", isAuthorized)
+  const isAuthorized = role === "project_manager" || role === "admin";
+
+  console.log("API v2 request by role:", auth.sessionClaims?.metadata?.role);
 
   if (!isAuthorized) {
     return res.status(403).send("Unauthorized");
