@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-0d4177bc-049d-4d38-9d2f-13fa892fa6bf" data-name="Layer_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40">
+  <defs>
+    <style>
+      .uuid-515b06ec-7e11-41ad-94fd-5acf4b1a97ad {
+        font-family: UniversLTStd-BoldCn, 'Univers LT Std';
+        font-size: 20.83px;
+        letter-spacing: -.05em;
+      }
+
+      .uuid-515b06ec-7e11-41ad-94fd-5acf4b1a97ad, .uuid-0b93cd27-bb1d-4044-a2aa-dde553f4f39e {
+        font-weight: 700;
+      }
+
+      .uuid-cf75420e-8dab-44ac-8171-879fcd96dfec {
+        fill: #2772cc;
+      }
+
+      .uuid-9a637c6d-203a-4bdc-bdca-51b16b2e4551, .uuid-0b93cd27-bb1d-4044-a2aa-dde553f4f39e {
+        fill: #e5e5e5;
+      }
+
+      .uuid-0b93cd27-bb1d-4044-a2aa-dde553f4f39e {
+        font-family: SegoeScript-Bold, 'Segoe Script';
+        font-size: 14.53px;
+        letter-spacing: -.05em;
+      }
+    </style>
+  </defs>
+  <text class="uuid-515b06ec-7e11-41ad-94fd-5acf4b1a97ad" transform="translate(-.07 26.04)"><tspan class="uuid-9a637c6d-203a-4bdc-bdca-51b16b2e4551" x="0" y="0">SKILL-</tspan><tspan class="uuid-cf75420e-8dab-44ac-8171-879fcd96dfec" x="48.14" y="0">CAPPED</tspan></text>
+  <text class="uuid-0b93cd27-bb1d-4044-a2aa-dde553f4f39e" transform="translate(119.34 22.51)"><tspan x="0" y="0">Clip Tagger</tspan></text>
+</svg>
