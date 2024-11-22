@@ -6,6 +6,6 @@ export default defineConfig({
   plugins: [react()],
   base: "clip-tagger",
   build: {
-    outDir: "../../dist/clip-tagger"
+    outDir: "../../public/clip-tagger"
   }
 })
