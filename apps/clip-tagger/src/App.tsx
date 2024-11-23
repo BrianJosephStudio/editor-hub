@@ -5,53 +5,33 @@ import { FolderNavigationProvider } from "./context/FolderNavigationContext";
 import { ClipViewerProvider } from "./context/ClipViewerContext";
 import { TagsProvider } from "./context/TagsContext";
 import { AppContext } from "./context/AppContext";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { TagsManager } from "./components/tags-manager/TagsManager";
 import { useRef } from "react";
 import { KeybindProvider } from "./context/KeyBindContext";
 import { TagsDisplay } from "./components/tags-display/TagsDisplay";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  SignOutButton,
-} from "@clerk/clerk-react";
-import clipTaggerLogo from "../public/editor-hub-clip-tagger-logo.svg";
+import { useUser } from "@clerk/clerk-react";
+import { UnauthorizedUser } from "./components/auth-pages/UnauthorizedUser";
+import { NavBar } from "./components/nav-bar/NavBar";
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
   const currentPath = urlParams.get("path");
   const AppRoot = useRef<HTMLDivElement>(null);
+  const { user } = useUser();
+
+  const role = user?.publicMetadata.role as string;
+  const isAuthorizedUser = role === "admin" || role === "clip_tagger";
 
   return (
     <AppContext.Provider value={{ AppRoot }}>
-      <SignedIn>
+      <NavBar/>
+      {!isAuthorizedUser && <UnauthorizedUser />}
+      {isAuthorizedUser && (
         <KeybindProvider>
           <ClipViewerProvider>
             <TagsProvider>
               <FolderNavigationProvider currentPath={currentPath ?? ""}>
-                <Box
-                  sx={{
-                    display: "grid",
-                    gridTemplateColumns: '1fr 12fr 1fr',
-                    alignItems: "center",
-                    justifyContent: "flex-end",
-                    width: "100%",
-                    height: "4vh",
-                    placeItems: 'center',
-                    backgroundColor: 'hsl(0, 0%, 20%)'
-                  }}
-                >
-                  <Box
-                    component={"img"}
-                    src={clipTaggerLogo}
-                    sx={{
-                      maxHeight: "2.6rem",
-                      gridColumn: '2/3'
-                    }}
-                  />
-                  <SignOutButton></SignOutButton>
-                </Box>
                 <Box
                   component={"div"}
                   ref={AppRoot}
@@ -86,41 +66,7 @@ function App() {
             </TagsProvider>
           </ClipViewerProvider>
         </KeybindProvider>
-      </SignedIn>
-
-      <SignedOut>
-        <Box
-          component={"div"}
-          id="signout-root"
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            height: "100%",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-            gap: "1rem",
-          }}
-        >
-          <Box
-            component={"img"}
-            src={clipTaggerLogo}
-            sx={{
-              maxHeight: "3rem",
-            }}
-          />
-          <Typography variant="h4">Welcome to the Clip Tagger!</Typography>
-          <Typography
-            variant="h6"
-            sx={{
-              fontWeight: "200",
-            }}
-          >
-            You must be signed in to proceed
-          </Typography>
-          <SignInButton></SignInButton>
-        </Box>
-      </SignedOut>
+      )}
     </AppContext.Provider>
   );
 }

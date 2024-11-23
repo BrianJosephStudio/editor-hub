@@ -177,3 +177,5 @@ authCode
 .DS_Store
 
 src/util/dropbox/access_token.json
+
+public/clip-tagger
