@@ -256,7 +256,7 @@ export const ClipBrowser = () => {
           display: "grid",
           gridGap: "0.6rem",
           gridTemplateRows: "3rem auto",
-          minWidth: "24rem",
+          minWidth: "20rem",
           minHeight: "0",
         }}
       >

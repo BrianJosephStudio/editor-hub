@@ -1,6 +1,7 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
+import { AccountCircle } from "@mui/icons-material";
 
 export const NavBar = () => {
   const { user } = useUser();
@@ -10,7 +11,7 @@ export const NavBar = () => {
     <Box
       sx={{
         display: "grid",
-        gridTemplateColumns: "1fr 12fr 1fr",
+        gridTemplateColumns: "2fr 12fr 2fr",
         alignItems: "center",
         justifyContent: "flex-end",
         width: "100%",
@@ -19,7 +20,15 @@ export const NavBar = () => {
         backgroundColor: "hsl(0, 0%, 20%)",
       }}
     >
-      <Typography>{userName}</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          gap: '0.6rem'
+        }}
+      >
+        <AccountCircle />
+        <Typography>{userName}</Typography>
+      </Box>
       <Box
         component={"img"}
         src={clipTaggerLogo}
@@ -28,7 +37,9 @@ export const NavBar = () => {
           gridColumn: "2/3",
         }}
       />
-      <SignOutButton></SignOutButton>
+      <SignOutButton>
+        <Button sx={{outline: 'none !important'}} size="small">Sign Out</Button>
+      </SignOutButton>
     </Box>
   );
 };

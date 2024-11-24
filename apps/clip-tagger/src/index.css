@@ -70,3 +70,21 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+@media (max-width: 1450px) or (max-height: 1000px) {
+  html{
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 1270px) or (max-height: 850px) {
+  html{
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 1000px) or (max-height: 650px) {
+  html{
+    font-size: 10px;
+  }
+}

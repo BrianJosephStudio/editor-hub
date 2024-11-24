@@ -7,32 +7,56 @@ import { Tag } from "./Tag";
 import { useKeybind } from "../../../context/KeyBindContext";
 import { useClipViewer } from "../../../context/ClipViewerContext";
 
-export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, groupName: string, key: number }) => {
+export const TagsGroup = ({
+  tagsGroup,
+  groupName,
+  key,
+}: {
+  tagsGroup: TagGroup;
+  groupName: string;
+  key: number;
+}) => {
   const { AppRoot } = useAppContext();
   const { selectedTagGroup, setSelectedTagGroup } = useTags();
-  const { blockGroupLevelListeners, setBlockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier } = useKeybind();
-  const {currentVideoSource, targetClip, setPauseOnInput, videoPlayer} = useClipViewer()
+  const {
+    blockGroupLevelListeners,
+    setBlockGroupLevelListeners,
+    iterableTagListModifier,
+    clipBrowserModifier,
+  } = useKeybind();
+  const { currentVideoSource, targetClip, setPauseOnInput, videoPlayer } =
+    useClipViewer();
 
-  const exclusiveTagIds = useRef<string[] | undefined>(undefined)
+  const normalizedGroupName = groupName
+    .replace(/([a-z])([A-Z])/g, "$1 $2")
+    .split(" ")
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(" ");
 
-  if(tagsGroup.exclusive){
-    exclusiveTagIds.current = tagsGroup.tags.map((tagObject) => tagObject.id)
+  const exclusiveTagIds = useRef<string[] | undefined>(undefined);
+
+  if (tagsGroup.exclusive) {
+    exclusiveTagIds.current = tagsGroup.tags.map((tagObject) => tagObject.id);
   }
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
-    if (event.key === tagsGroup.keybindGroup && !blockGroupLevelListeners && !iterableTagListModifier) {
+    if (
+      event.key === tagsGroup.keybindGroup &&
+      !blockGroupLevelListeners &&
+      !iterableTagListModifier
+    ) {
       setPauseOnInput((currentValue) => {
-        if(!videoPlayer.current) return currentValue
-        if(currentValue){
-          videoPlayer.current.pause()
+        if (!videoPlayer.current) return currentValue;
+        if (currentValue) {
+          videoPlayer.current.pause();
         }
-        return currentValue
-      })
-      setSelectedTagGroup(tagsGroup.id)
-      setBlockGroupLevelListeners(true)
-      return
+        return currentValue;
+      });
+      setSelectedTagGroup(tagsGroup.id);
+      setBlockGroupLevelListeners(true);
+      return;
     }
-  })
+  });
 
   const addKeyBindGroupListener = () => {
     if (!AppRoot || !AppRoot.current) return;
@@ -45,13 +69,22 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
   };
 
   useEffect(() => {
-    if(blockGroupLevelListeners || iterableTagListModifier || clipBrowserModifier){
-      removeKeyBindGroupListener()
-    }else{
-      if(!currentVideoSource || !targetClip) return
-      addKeyBindGroupListener()
+    if (
+      blockGroupLevelListeners ||
+      iterableTagListModifier ||
+      clipBrowserModifier
+    ) {
+      removeKeyBindGroupListener();
+    } else {
+      if (!currentVideoSource || !targetClip) return;
+      addKeyBindGroupListener();
     }
-  }, [blockGroupLevelListeners, iterableTagListModifier, clipBrowserModifier, currentVideoSource]);
+  }, [
+    blockGroupLevelListeners,
+    iterableTagListModifier,
+    clipBrowserModifier,
+    currentVideoSource,
+  ]);
 
   return (
     <>
@@ -59,25 +92,27 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
         <Box
           key={key}
           sx={{
-            display: "flex",
-            flexDirection: 'column',
-            borderRadius: "2rem",
-            flexGrow: "1",
+            display: "grid",
+            gridTemplateRows: "2fr 4fr 2fr",
+            padding: '0.6rem',
+            borderRadius: "1rem",
+            // flexGrow: "1",
             placeItems: "center",
             cursor: "pointer",
-            height: '100%',
-            backgroundColor: 'black'
+            // height: "100%",
+            overflow: 'hidden',
+            backgroundColor: "hsl(0, 0%, 18%)",
           }}
         >
           <Typography
             textAlign={"center"}
-            sx={{ fontSize: "1rem", padding:'0 0 auto 0' }}
+            sx={{ fontSize: "1rem", padding: "0 0 auto 0" }}
           >
-            {groupName}
+            {normalizedGroupName}
           </Typography>
           <Typography
             textAlign={"center"}
-            sx={{ fontSize: "4rem", fontWeight: '900', padding: 'auto 0' }}
+            sx={{ fontSize: "3rem", fontWeight: "900", padding: "auto 0" }}
           >
             {tagsGroup.keybindGroup.toUpperCase()}
           </Typography>
@@ -88,14 +123,14 @@ export const TagsGroup = ({ tagsGroup, groupName, key }: { tagsGroup: TagGroup, 
           <Box
             key={index}
             sx={{
-              backgroundColor: "black",
-              width: "12rem",
-              height: "6rem",
-              borderRadius: '2rem',
-              placeItems: 'center',
+              backgroundColor: "#2772cc",
+              width: "7rem",
+              height: "5rem",
+              borderRadius: "1rem",
+              placeContent: "center",
             }}
           >
-            <Tag tagObject={tag} exclusiveTagIds={exclusiveTagIds.current}/>
+            <Tag tagObject={tag} exclusiveTagIds={exclusiveTagIds.current} />
           </Box>
         ))}
     </>

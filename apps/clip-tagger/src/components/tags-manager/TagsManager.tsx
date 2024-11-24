@@ -67,10 +67,13 @@ export const TagsManager = () => {
       <Box
         sx={{
           display: blockGroupLevelListeners ? "flex" : "grid",
-          gridGap: " 0.6rem",
+          gridGap: " 0.3rem",
           gridTemplateRows: "repeat(2, 1fr)",
           gridTemplateColumns: "repeat(6, 1fr)",
           padding: "0.6rem",
+          placeContent: 'center',
+          flexWrap: 'wrap',
+          overflow: 'auto'
         }}
       >
         {Object.keys(GenericTags).map((groupName, index) => (

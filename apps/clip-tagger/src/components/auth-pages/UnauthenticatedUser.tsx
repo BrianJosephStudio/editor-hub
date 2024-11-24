@@ -1,5 +1,5 @@
 import { SignInButton } from "@clerk/clerk-react"
-import { Box, Typography } from "@mui/material"
+import { Box, Button, Typography } from "@mui/material"
 import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
 
 export const UnauthenticatedUser = () => {
@@ -33,7 +33,9 @@ export const UnauthenticatedUser = () => {
           >
             You must be signed in to proceed
           </Typography>
-          <SignInButton></SignInButton>
+          <SignInButton>
+            <Button variant="contained" size="large" sx={{outline: 'none !important'}}> Sign In</Button>
+          </SignInButton>
         </Box>
     )
 }

@@ -252,16 +252,18 @@ export const TagsDisplay = () => {
       <Box
         sx={{
           backgroundColor: "hsl(0, 0%, 30%)",
-          display: "flex",
+          display: "grid",
+          gridTemplateColumns: 'repeat(2,1fr)',
           justifyContent: "space-evenly",
           height: "4rem",
-          gap: '3rem'
+          // gap: "3rem",
         }}
       >
         <Button
           sx={{
             flexGrow: 1,
             stroke: "none",
+            borderRadius: '0',
             "&:focus": {
               outline: "none",
             },
@@ -277,23 +279,30 @@ export const TagsDisplay = () => {
         >
           Pause on Input
         </Button>
-        <Box sx={{
-          display: 'flex',
-          flexDirection: 'column',
-        }}>
-          <Typography>Tag Offset ms</Typography>
-          <Input type="number"
+        <Box
           sx={{
-            color: 'white',
-            textAlign: 'center',
+            display: "flex",
+            flexDirection: "column",
+            placeContent: 'center',
           }}
-          value={tagOffset}
-          onChange={(event) => {
-            const inputValue = event.target.value
-            const inputValueNumber = parseInt(inputValue)
-            if(isNaN(inputValueNumber)) throw new Error("Input is NaN")
-            setTagOffset(Math.max(0, inputValueNumber))
-          }}
+        >
+          <Typography fontWeight={'400'}>Tag Offset ms</Typography>
+          <Input
+            type="number"
+            sx={{
+              color: "white",
+              backgroundColor: 'hsl(0,0%,35%)',
+              '& input': {
+                textAlign: "center",
+              }
+            }}
+            value={tagOffset}
+            onChange={(event) => {
+              const inputValue = event.target.value;
+              const inputValueNumber = parseInt(inputValue);
+              if (isNaN(inputValueNumber)) throw new Error("Input is NaN");
+              setTagOffset(Math.max(0, inputValueNumber));
+            }}
           />
         </Box>
       </Box>

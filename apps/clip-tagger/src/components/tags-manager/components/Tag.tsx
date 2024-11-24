@@ -68,7 +68,7 @@ export const Tag = ({
 
   return (
     <Box>
-      <Typography sx={{ fontSize: "2rem", fontWeight: "900" }}>
+      <Typography sx={{ fontSize: "1.6rem", fontWeight: "900" }}>
         {tagObject.keybind.toUpperCase()}
       </Typography>
       <Typography sx={{ fontSize: "1rem" }}>
