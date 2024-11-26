@@ -226,10 +226,10 @@ export const ClipBrowser = () => {
   useEffect(() => {
     const eventHandler = (event: KeyboardEvent) => {
       const { key } = event;
-      if (key === "j") {
+      if (key === "j" || event.key === '∆') {
         focusNextItem();
       }
-      if (key === "k") {
+      if (key === "k" || event.key === '˚') {
         focusPreviousItem();
       }
     };

@@ -44,7 +44,6 @@ function App() {
                     width: "100vw",
                     height: "96vh",
                     outline: "none",
-                    // background: 'red'
                   }}
                 >
                   <ClipBrowser></ClipBrowser>
