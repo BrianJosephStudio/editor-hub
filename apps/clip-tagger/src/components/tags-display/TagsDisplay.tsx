@@ -1,6 +1,6 @@
 import { Box, Button, Input, Typography } from "@mui/material";
 import { useTags } from "../../context/TagsContext";
-import { ExclusiveTags, GenericTag, TagObject } from "../../types/tags";
+import { ExclusiveTags, GenericTag } from "../../types/tags";
 import { AgentTags, GenericTags, MapTags } from "../../resources/TagSystem";
 import { useEffect, useRef, useState } from "react";
 import { useClipViewer } from "../../context/ClipViewerContext";
