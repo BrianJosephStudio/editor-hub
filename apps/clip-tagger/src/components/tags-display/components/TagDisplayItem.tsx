@@ -28,7 +28,6 @@ export const TagDisplayItem = ({
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => void;
 }) => {
-  console.log("oye", top);
   const { videoPlayer } = useClipViewer();
   const { removeTag } = useTags();
 
