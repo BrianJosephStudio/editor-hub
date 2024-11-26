@@ -42,11 +42,12 @@ export const TagsDisplay = () => {
 
   useEffect(() => {
     const handleTimeUpdate = () => {
-      if (!isVideoReady || !videoPlayer.current) return;
+      if (!videoPlayer.current) return;
       const currentTime = videoPlayer.current.currentTime;
       const duration = videoPlayer.current.duration;
       setCurrentTimePercentage(getPlaybackPercentage(currentTime, duration));
     };
+    
     const handleLoadedMetadata = () => {
       setIsVideoReady(true);
     };
