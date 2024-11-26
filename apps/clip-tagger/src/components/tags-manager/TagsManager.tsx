@@ -21,6 +21,7 @@ export const TagsManager = () => {
   useEffect(() => {
     setTagReferenceMaster({})
     const getMetadata = async () => {
+      if(!targetClip) return
       const apiClient = new ApiClient();
       const currentTagReference = await apiClient.getMetadata(targetClip);
       console.log("target clip changed:", currentTagReference)
