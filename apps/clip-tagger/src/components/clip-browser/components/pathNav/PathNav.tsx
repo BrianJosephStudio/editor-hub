@@ -1,9 +1,8 @@
 import { useEffect, useRef } from "react";
 import "./PathNav.css";
-import backArrowIcon from "../../../../assets/double-arrow-up.svg";
 import { useFolderNavigation } from "../../../../context/FolderNavigationContext";
 import { Box } from "@mui/material";
-import { ArrowBackIos, ArrowBackIosNew } from "@mui/icons-material";
+import { ArrowBackIosNew } from "@mui/icons-material";
 
 export const PathNav = ({ path }: { path: string }) => {
   const pathContainer = useRef<HTMLDivElement>();

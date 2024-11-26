@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { useClipViewer } from "../../../context/ClipViewerContext";
 import { TagObject } from "../../../types/tags";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import { useTags } from "../../../context/TagsContext";
 import { Clear } from "@mui/icons-material";
 
@@ -10,59 +10,39 @@ export const TagDisplayItem = ({
   instanceId,
   tagObject,
   time,
+  top,
+  left,
   mouseEnterCallback,
-  mouseLeaveCallback
+  mouseLeaveCallback,
 }: {
   index: number;
-  instanceId: string
+  instanceId: string;
   tagObject: TagObject;
   time: number;
-  mouseEnterCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
-  mouseLeaveCallback: (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void
+  top: number;
+  left: number;
+  mouseEnterCallback: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void;
+  mouseLeaveCallback: (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => void;
 }) => {
+  console.log("oye", top);
   const { videoPlayer } = useClipViewer();
-  const { tagDisplayList, removeTag } = useTags();
-  const [left, setLeft] = useState<number>(0);
+  const { removeTag } = useTags();
 
   const body = useRef<HTMLDivElement | null>(null);
 
-  function getPlaybackPercentage(currentTime: number, duration: number) {
-    if (duration === 0) return 0;
-    return (currentTime / duration) * 100;
-  }
-
-  useEffect(() => {
-    if (!body.current || !tagDisplayList.current) return;
-    
-    const currentItem = tagDisplayList.current.children[index]
-    const previousItem = tagDisplayList.current.children[index-1]
-    if (!currentItem || !previousItem) return;
-    const currentItemTagTitle = currentItem.children[1]
-    const previousItemTagTitle = previousItem.children[1]
-    if (!currentItemTagTitle || !previousItemTagTitle) return;
-
-    const containerRect = tagDisplayList.current.getBoundingClientRect()
-    const currentItemRect = currentItemTagTitle.getBoundingClientRect()
-    const prevItemRect = previousItemTagTitle.getBoundingClientRect();
-    const prevTagTitleRect = previousItemTagTitle.getBoundingClientRect();
-
-    console.log("left", currentItemRect.left);
-
-    if (prevItemRect.bottom >= currentItemRect.top) {
-      setLeft(prevTagTitleRect.right - containerRect.left + 24);
-    }
-  }, []);
-
   return (
     <Box
+      key={index}
+      component={"div"}
+      id="tag-display-item"
       ref={body}
       sx={{
         position: "absolute",
-        top: `calc(${getPlaybackPercentage(
-          time,
-          videoPlayer.current!.duration
-        )}%)`,
-        // backgroundColor: 'red',
+        top: `${top}px`,
         width: "100%",
         height: "1.6rem",
         display: "flex",
@@ -80,48 +60,52 @@ export const TagDisplayItem = ({
         }}
       ></Box>
       <Box
-        component={'div'}
+        component={"div"}
         sx={{
           height: "1.6rem",
-          backgroundColor: "black",
-          paddingX: "1rem",
-          borderRadius: "1rem",
+          // backgroundColor: "hsl(0, 0%, 12%)",
+          backgroundColor: "#2265b5",
+          paddingX: "0.6rem",
+          gap: "0.3rem",
+          borderRadius: "0.8rem",
+          placeItems: "center",
           display: "flex",
-          flexDirection: "column",
           placeContent: "center",
           position: "absolute",
           cursor: "pointer",
           left: `${left}px`,
           zIndex: 2,
-          '&:hover': {
-            backgroundColor: '#283cbd'
-          }
+          overflow: "hidden",
+          color: "white",
+          "&:hover": {
+            color: "black",
+            backgroundColor: "hsl(0, 0%, 90%)",
+          },
         }}
         onMouseEnter={(e) => {
-          mouseEnterCallback(e)
+          mouseEnterCallback(e);
         }}
         onMouseLeave={(e) => {
-          mouseLeaveCallback(e)
+          mouseLeaveCallback(e);
         }}
         onClick={() => {
-          videoPlayer.current!.currentTime = time
+          videoPlayer.current!.currentTime = time;
         }}
       >
         <Typography>{tagObject.displayName}</Typography>
         <Clear
+          titleAccess="Remove Tag"
           fontSize="small"
           sx={{
-            position: "absolute",
-            left: "100%",
-            bottom: "50%",
-            fill: "hsl(0,100%,100%)",
-            '&:hover': {
+            maxHeight: "1rem",
+            fill: "black",
+            "&:hover": {
               fill: "hsl(0,70%,60%)",
-            }
+            },
           }}
           onClick={async (event) => {
-            event.stopPropagation()
-            removeTag(tagObject,instanceId)
+            event.stopPropagation();
+            removeTag(tagObject, instanceId);
           }}
         ></Clear>
       </Box>

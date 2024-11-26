@@ -11,6 +11,19 @@ export interface TagObject {
   id: string;
 }
 
+export interface ExclusiveTags {
+  tagObject: TagObject;
+  time?: number;
+}
+
+export interface GenericTag {
+  tagObject: TagObject;
+  time?: number;
+  top: number;
+  left: number;
+  instanceId: string;
+}
+
 export interface TagGroup {
   tags: TagObject[];
   keybindGroup: string;
