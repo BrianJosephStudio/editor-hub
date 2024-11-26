@@ -1,8 +1,8 @@
 import { Box, Button, Input, Typography } from "@mui/material";
 import { useTags } from "../../context/TagsContext";
-import { TagObject } from "../../types/tags";
+import { ExclusiveTags, GenericTag, TagObject } from "../../types/tags";
 import { AgentTags, GenericTags, MapTags } from "../../resources/TagSystem";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useClipViewer } from "../../context/ClipViewerContext";
 import { TagDisplayItem } from "./components/TagDisplayItem";
 import { labelTagReference } from "../../util/tagInstanceId";
@@ -16,20 +16,17 @@ export const TagsDisplay = () => {
     setTagReferenceLabeled,
     tagOffset,
     setTagOffset,
-    removeTag
+    removeTag,
   } = useTags();
-  const { videoPlayer, pauseOnInput, setPauseOnInput } =
-    useClipViewer();
-  const [exclusiveTags, setExclusiveTags] = useState<
-    { tagObject: TagObject; time?: number }[]
-  >([]);
-  const [genericTags, setGenericTags] = useState<
-    { tagObject: TagObject; time?: number; instanceId: string }[]
-  >([]);
+  const { videoPlayer, pauseOnInput, setPauseOnInput } = useClipViewer();
+  const [exclusiveTags, setExclusiveTags] = useState<ExclusiveTags[]>([]);
+  const [genericTags, setGenericTags] = useState<GenericTag[]>([]);
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
   const [hoverHeightPercentage, setHoverHeightPercentage] = useState<number>(0);
   const [playheadHoverVisible, setPlayheadHoverVisible] =
-  useState<boolean>(false);
+    useState<boolean>(false);
+
+  const genericTagsContainer = useRef<HTMLDivElement | null>(null);
 
   function getPlaybackPercentage(currentTime: number, duration: number) {
     if (duration === 0) return 0;
@@ -37,19 +34,15 @@ export const TagsDisplay = () => {
   }
 
   useEffect(() => {
-    console.log("haciendo labels en master")
+    console.log("haciendo labels en master");
     const newLabeledTagReference = labelTagReference(tagReferenceMaster);
     setTagReferenceLabeled(newLabeledTagReference);
   }, [tagReferenceMaster]);
 
   useEffect(() => {
-    console.log("labels changed!")
-    const newExclusiveTags: { tagObject: TagObject; time?: number }[] = [];
-    const newGenericTags: {
-      tagObject: TagObject;
-      time?: number;
-      instanceId: string;
-    }[] = [];
+    console.log("labels changed!");
+    const newExclusiveTags: ExclusiveTags[] = [];
+    const newGenericTags: GenericTag[] = [];
 
     Object.keys(tagReferenceLabeled).forEach((tagId) => {
       const mapTagObject = MapTags.find((mapTag) => mapTag.id === tagId);
@@ -79,6 +72,8 @@ export const TagsDisplay = () => {
                 tagObject: matchingTagObject,
                 time: timeEntry.time,
                 instanceId: timeEntry.instanceId,
+                top: 0,
+                left: 6,
               })
             );
           } else {
@@ -93,6 +88,39 @@ export const TagsDisplay = () => {
     });
 
     newGenericTags.sort((a, b) => a.time! - b.time!);
+
+    newGenericTags.forEach((genericTag, index) => {
+      if (!genericTagsContainer.current) throw new Error("State not allowed");
+      console.log(genericTag);
+      if (genericTag.time === null || genericTag.time === undefined)
+        throw new Error("Missing mandatory property 'time' in genericTag");
+
+      const currentVideoDuration = videoPlayer.current!.duration;
+      const multiplier = genericTag.time / currentVideoDuration;
+
+      const genericTagsContainerRect =
+        genericTagsContainer.current?.getBoundingClientRect();
+      const containerHeight = genericTagsContainerRect.height;
+
+      const top = containerHeight * multiplier;
+
+      console.log("left", genericTag.left);
+      console.log("top", Number.parseInt(top.toFixed(0)));
+      genericTag.top = Number.parseInt(top.toFixed(0));
+
+      const previousEntry = newGenericTags[index - 1];
+
+      if (previousEntry) {
+        const intersectionThreslhold = 30;
+        if (top < previousEntry.top + intersectionThreslhold) {
+          genericTag.left =
+            previousEntry.left +
+            32 +
+            10 * previousEntry.tagObject.displayName.length;
+        }
+      }
+    });
+
     setExclusiveTags(newExclusiveTags);
     setGenericTags(newGenericTags);
   }, [tagReferenceLabeled]);
@@ -121,8 +149,8 @@ export const TagsDisplay = () => {
   }, [pauseOnInput]);
 
   useEffect(() => {
-    Cookies.set('tagOffset', tagOffset.toString())
-  },[tagOffset])
+    Cookies.set("tagOffset", tagOffset.toString());
+  }, [tagOffset]);
 
   return (
     <Box
@@ -132,6 +160,8 @@ export const TagsDisplay = () => {
       }}
     >
       <Box
+        component={"div"}
+        id="exclusive-tags-container"
         sx={{
           backgroundColor: "hsl(0, 0%, 40%)",
           display: "flex",
@@ -139,12 +169,12 @@ export const TagsDisplay = () => {
           padding: "0.3rem",
           flexWrap: "wrap",
           placeContent: "center",
-          minHeight: '6rem'
+          minHeight: "6rem",
         }}
       >
         {exclusiveTags.map((exclusiveTag) => (
           <Box
-            component={'div'}
+            component={"div"}
             title="remove"
             sx={{
               display: "flex",
@@ -154,15 +184,17 @@ export const TagsDisplay = () => {
               minWidth: "0",
               padding: "0.3rem 0.8rem",
               borderRadius: "1rem",
-              '&:hover': {
-                backgroundColor: exclusiveTag.tagObject.protected ? 'black' : '#a33643'
-              }
+              "&:hover": {
+                backgroundColor: exclusiveTag.tagObject.protected
+                  ? "black"
+                  : "#a33643",
+              },
             }}
             onClick={async (event) => {
               event.stopPropagation();
               if (exclusiveTag.tagObject.protected) return;
 
-              removeTag(exclusiveTag.tagObject)
+              removeTag(exclusiveTag.tagObject);
             }}
           >
             <Typography>{exclusiveTag.tagObject.displayName}</Typography>
@@ -171,12 +203,12 @@ export const TagsDisplay = () => {
       </Box>
       <Box
         component={"div"}
+        id="generic-tags-container"
+        ref={genericTagsContainer}
         sx={{
           position: "relative",
           width: "100%",
           flexGrow: "1",
-          // height: '90%',
-          // cursor: "pointer",
         }}
         onMouseMove={(event) => {
           const divElement = event.currentTarget;
@@ -228,13 +260,20 @@ export const TagsDisplay = () => {
             height: `${hoverHeightPercentage}%`,
           }}
         ></Box>
-        <Box ref={tagDisplayList}>
+        <Box
+          component={"div"}
+          id="tag-display-list"
+          ref={tagDisplayList}
+          height={"100%"}
+        >
           {genericTags.map((genericTag, index) => (
             <TagDisplayItem
               index={index}
               instanceId={genericTag.instanceId}
               tagObject={genericTag.tagObject}
               time={genericTag.time!}
+              top={genericTag.top}
+              left={genericTag.left}
               mouseEnterCallback={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -253,17 +292,16 @@ export const TagsDisplay = () => {
         sx={{
           backgroundColor: "hsl(0, 0%, 30%)",
           display: "grid",
-          gridTemplateColumns: 'repeat(2,1fr)',
+          gridTemplateColumns: "repeat(2,1fr)",
           justifyContent: "space-evenly",
           height: "4rem",
-          // gap: "3rem",
         }}
       >
         <Button
           sx={{
             flexGrow: 1,
             stroke: "none",
-            borderRadius: '0',
+            borderRadius: "0",
             "&:focus": {
               outline: "none",
             },
@@ -283,18 +321,18 @@ export const TagsDisplay = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            placeContent: 'center',
+            placeContent: "center",
           }}
         >
-          <Typography fontWeight={'400'}>Tag Offset ms</Typography>
+          <Typography fontWeight={"400"}>Tag Offset ms</Typography>
           <Input
             type="number"
             sx={{
               color: "white",
-              backgroundColor: 'hsl(0,0%,35%)',
-              '& input': {
+              backgroundColor: "hsl(0,0%,35%)",
+              "& input": {
                 textAlign: "center",
-              }
+              },
             }}
             value={tagOffset}
             onChange={(event) => {
