@@ -25,6 +25,7 @@ export const TagsDisplay = () => {
   const [hoverHeightPercentage, setHoverHeightPercentage] = useState<number>(0);
   const [playheadHoverVisible, setPlayheadHoverVisible] =
     useState<boolean>(false);
+  const [isVideoReady, setIsVideoReady] = useState(false);
 
   const genericTagsContainer = useRef<HTMLDivElement | null>(null);
 
@@ -40,7 +41,38 @@ export const TagsDisplay = () => {
   }, [tagReferenceMaster]);
 
   useEffect(() => {
+    const handleTimeUpdate = () => {
+      if (!isVideoReady || !videoPlayer.current) return;
+      const currentTime = videoPlayer.current.currentTime;
+      const duration = videoPlayer.current.duration;
+      setCurrentTimePercentage(getPlaybackPercentage(currentTime, duration));
+    };
+    const handleLoadedMetadata = () => {
+      setIsVideoReady(true);
+    };
+
+    if (videoPlayer.current) {
+      videoPlayer.current.addEventListener("timeupdate", handleTimeUpdate);
+      videoPlayer.current.addEventListener(
+        "loadedmetadata",
+        handleLoadedMetadata
+      );
+    }
+
+    return () => {
+      if (videoPlayer.current) {
+        videoPlayer.current.removeEventListener("timeupdate", handleTimeUpdate);
+        videoPlayer.current.removeEventListener(
+          "loadedmetadata",
+          handleLoadedMetadata
+        );
+      }
+    };
+  }, []);
+
+  useEffect(() => {
     console.log("labels changed!");
+    if (!videoPlayer.current?.duration) return;
     const newExclusiveTags: ExclusiveTags[] = [];
     const newGenericTags: GenericTag[] = [];
 
@@ -90,12 +122,12 @@ export const TagsDisplay = () => {
     newGenericTags.sort((a, b) => a.time! - b.time!);
 
     newGenericTags.forEach((genericTag, index) => {
+      if (!videoPlayer.current) return;
       if (!genericTagsContainer.current) throw new Error("State not allowed");
-      console.log(genericTag);
       if (genericTag.time === null || genericTag.time === undefined)
         throw new Error("Missing mandatory property 'time' in genericTag");
 
-      const currentVideoDuration = videoPlayer.current!.duration;
+      const currentVideoDuration = videoPlayer.current.duration;
       const multiplier = genericTag.time / currentVideoDuration;
 
       const genericTagsContainerRect =
@@ -103,9 +135,6 @@ export const TagsDisplay = () => {
       const containerHeight = genericTagsContainerRect.height;
 
       const top = containerHeight * multiplier;
-
-      console.log("left", genericTag.left);
-      console.log("top", Number.parseInt(top.toFixed(0)));
       genericTag.top = Number.parseInt(top.toFixed(0));
 
       const previousEntry = newGenericTags[index - 1];
@@ -123,26 +152,7 @@ export const TagsDisplay = () => {
 
     setExclusiveTags(newExclusiveTags);
     setGenericTags(newGenericTags);
-  }, [tagReferenceLabeled]);
-
-  useEffect(() => {
-    const handleTimeUpdate = () => {
-      if (!videoPlayer.current) return;
-      const currentTime = videoPlayer.current.currentTime;
-      const duration = videoPlayer.current.duration;
-      setCurrentTimePercentage(getPlaybackPercentage(currentTime, duration));
-    };
-
-    if (videoPlayer.current) {
-      videoPlayer.current.addEventListener("timeupdate", handleTimeUpdate);
-    }
-
-    return () => {
-      if (videoPlayer.current) {
-        videoPlayer.current.removeEventListener("timeupdate", handleTimeUpdate);
-      }
-    };
-  }, []);
+  }, [tagReferenceLabeled, isVideoReady]);
 
   useEffect(() => {
     Cookies.set("pauseOnInput", pauseOnInput.toString());
@@ -172,8 +182,9 @@ export const TagsDisplay = () => {
           minHeight: "6rem",
         }}
       >
-        {exclusiveTags.map((exclusiveTag) => (
+        {exclusiveTags.map((exclusiveTag, index) => (
           <Box
+            key={index}
             component={"div"}
             title="remove"
             sx={{
@@ -268,6 +279,7 @@ export const TagsDisplay = () => {
         >
           {genericTags.map((genericTag, index) => (
             <TagDisplayItem
+              key={index}
               index={index}
               instanceId={genericTag.instanceId}
               tagObject={genericTag.tagObject}
