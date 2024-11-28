@@ -25,13 +25,15 @@ jobs:
           if [ "${GITHUB_REF##*/}" == "main" ]; then
             echo "Deploying to Production..."
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}"
+            BRANCH_TO_CHECKOUT="main"
           else
             echo "Deploying to Development..."
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
+            BRANCH_TO_CHECKOUT="dev"
           fi
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
           cd $DEPLOY_FOLDER
+          git checkout $BRANCH_TO_CHECKOUT
           git pull
-          ${{ secrets.EDITOR_HUB_PASSPHRASE }}
           npm run deploy
