@@ -29,7 +29,10 @@ jobs:
             echo "Deploying to Development..."
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
           fi
-          cd $DEPLOY_FOLDER
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
+          export SERVER_CONTAINER_NAME="editor-hub-${GITHUB_REF##*/}"
+          export AUTH_CONTAINER_NAME="authorization-${GITHUB_REF##*/}"
+          export CLIP_TAGGER_CONTAINER_NAME="clip-tagger-${GITHUB_REF##*/}"
+          cd $DEPLOY_FOLDER
           npm run deploy
