@@ -20,7 +20,6 @@ jobs:
         host: ${{ secrets.EDITOR_HUB_HOST }}
         username: ${{ secrets.EDITOR_HUB_USER }}
         key: ${{ secrets.EDITOR_HUB_KEY }}
-        passphrase: ${{ secrets.EDITOR_HUB_PASSPHRASE }}
         script: |
           pwd
           if [ "${GITHUB_REF##*/}" == "main" ]; then
@@ -34,4 +33,5 @@ jobs:
           source ~/.nvm/nvm.sh
           cd $DEPLOY_FOLDER
           git pull
+          ${{ secrets.EDITOR_HUB_PASSPHRASE }}
           npm run deploy
