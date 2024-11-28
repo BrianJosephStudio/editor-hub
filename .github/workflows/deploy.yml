@@ -21,12 +21,12 @@ jobs:
         username: ${{ secrets.EDITOR_HUB_USER }}
         key: ${{ secrets.EDITOR_HUB_KEY }}
         script: if [ "${GITHUB_REF##*/}" == "main" ]; then
-          echo "Deploying to Production..."
-          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
-        else
-          echo "Deploying to Development..."
-          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_DEV_DIR }}
-        fi
-        cd $DEPLOY_FOLDER
-        npm run deploy
-        EOF
+            echo "Deploying to Production..."
+            DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}"
+          else
+            echo "Deploying to Development..."
+            DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
+          fi
+          cd $DEPLOY_FOLDER
+          npm run deploy
+          EOF
