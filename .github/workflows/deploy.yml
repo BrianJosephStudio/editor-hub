@@ -5,7 +5,7 @@ on:
     branches:
       - main     # For production deployment
       - dev      # For development deployment
-
+    workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -15,22 +15,21 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up SSH
-      uses: webfactory/ssh-agent@v0.5.3
+      uses: appleboy/ssh-action@v1.2.0
       with:
-        ssh-private-key: ${{ secrets.EDITOR_HUB_GITHUB_ACTIONS }}
+        host: ${{ secrets.EDITOR_HUB_HOST }}
+        passphrase: ${{ secrets.EDITOR_HUB_PASSPHRASE }}
+        key: ${{ secrets.EDITOR_HUB_KEY }}
 
-    - name: Install dependencies and deploy
+    - name: Deploy
       run: |
         if [ "${GITHUB_REF##*/}" == "main" ]; then
           echo "Deploying to Production..."
-          DEPLOY_FOLDER="/home/servers/skillcapped/editor-hub/production"
+          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
         else
           echo "Deploying to Development..."
-          DEPLOY_FOLDER="/home/servers/skillcapped/editor-hub/dev"
+          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_DEV_DIR }}
         fi
-
-        # SSH into the VPS and deploy
-        ssh -i ${{ secrets.SSH_PRIVATE_KEY }} root@ralvar.com << EOF
-          cd $DEPLOY_FOLDER
-          npm run deploy
+        cd $DEPLOY_FOLDER
+        npm run deploy
         EOF
