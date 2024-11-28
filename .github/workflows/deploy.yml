@@ -18,6 +18,7 @@ jobs:
       uses: webfactory/ssh-agent@v0.5.3
       with:
         ssh-private-key: ${{ secrets.EDITOR_HUB_GITHUB_ACTIONS }}
+        ssh-private-key: ${{ secrets.EDITOR_HUB_PASSPHRASE }}
 
     - name: Install dependencies and deploy
       run: |
