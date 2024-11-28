@@ -32,4 +32,5 @@ jobs:
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
           cd $DEPLOY_FOLDER
+          git log
           npm run deploy
