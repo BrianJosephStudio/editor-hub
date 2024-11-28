@@ -5,7 +5,7 @@ services:
     container_name: editor-hub-${ENVIRONMENT}
     build: .
     ports:
-      - "5100:5100"
+      - "${PORT}:${PORT}"
     restart: always
     working_dir: /app
     volumes:
