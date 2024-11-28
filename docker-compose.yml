@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   server:
-    container_name: ${SERVER_CONTAINER_NAME:-editor-hub}
+    container_name: editor-hub-${ENVIRONMENT}
     build: .
     ports:
       - "5100:5100"
@@ -19,13 +19,13 @@ services:
       - authorization
       - clip-tagger
   authorization:
-    container_name: ${AUTH_CONTAINER_NAME:-authorization}
+    container_name: authorization-${ENVIRONMENT}
     build: ./apps/authorization
     working_dir: /app
     volumes:
       - auth-app:/app/dist
   clip-tagger:
-    container_name: ${CLIP_TAGGER_CONTAINER_NAME:-clip-tagger}
+    container_name: clip-tagger-${ENVIRONMENT}
     build: ./apps/clip-tagger
     working_dir: /app
     volumes:
