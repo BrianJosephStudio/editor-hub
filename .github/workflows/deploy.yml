@@ -30,5 +30,5 @@ jobs:
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
           fi
           cd $DEPLOY_FOLDER
-          la
+          source ~/.bashrc  # Or the appropriate file where npm is configured
           npm run deploy
