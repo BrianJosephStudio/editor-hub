@@ -20,16 +20,14 @@ jobs:
         host: ${{ secrets.EDITOR_HUB_HOST }}
         username: ${{ secrets.EDITOR_HUB_USER }}
         key: ${{ secrets.EDITOR_HUB_KEY }}
-
-    - name: Deploy to production
-      if: endsWith(github.ref, '/main')
-      run: |
-        cd ${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
+        script: |
+        if [ "${GITHUB_REF##*/}" == "main" ]; then
+          echo "Deploying to Production..."
+          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
+        else
+          echo "Deploying to Development..."
+          DEPLOY_FOLDER=${{ secrets.EDITOR_HUB_DEV_DIR }}
+        fi
+        cd $DEPLOY_FOLDER
         npm run deploy
-    - name: Deploy to dev
-      if: endsWith(github.ref, '/dev')
-      run: |
-        pwd
-        echo ${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
-        cd ${{ secrets.EDITOR_HUB_DEV_DIR }}
-        npm run deploy
+        EOF
