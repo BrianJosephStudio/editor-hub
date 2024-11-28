@@ -8,4 +8,4 @@ RUN bun i
 
 EXPOSE 5100
 
-CMD ["bun", "src/server.ts"]
+CMD ["bun", "run", "serve"]

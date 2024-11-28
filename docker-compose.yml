@@ -9,4 +9,27 @@ services:
     restart: always
     working_dir: /app
     volumes:
-      - ./public:/app/public
+      - ./public/jsonFiles:/app/public/jsonFiles
+      - ./public/modules:/app/public/modules
+      - ./public/resources:/app/public/resources
+      - auth-app:/app/apps/authorization/dist
+      - ./authCode:/app/authCode
+      - clip-tagger:/app/public/clip-tagger
+    depends_on:
+      - authorization
+      - clip-tagger
+  authorization:
+    container_name: authorization
+    build: ./apps/authorization
+    working_dir: /app
+    volumes:
+      - auth-app:/app/dist
+  clip-tagger:
+    container_name: clip-tagger
+    build: ./apps/clip-tagger
+    working_dir: /app
+    volumes:
+      - clip-tagger:/app/dist
+volumes:
+  auth-app:
+  clip-tagger:

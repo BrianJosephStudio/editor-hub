@@ -9,6 +9,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 .pnpm-debug.log*
+.env.production
+.env.development
 
 # Caches
 
@@ -149,7 +151,7 @@ dist
 .fusebox/
 
 # DynamoDB Local files
-
+authCode
 .dynamodb/
 
 # TernJS port file
@@ -175,3 +177,5 @@ dist
 .DS_Store
 
 src/util/dropbox/access_token.json
+
+public/clip-tagger
