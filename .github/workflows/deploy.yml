@@ -24,6 +24,8 @@ jobs:
     - name: Deploy to production
       if: endsWith(github.ref, '/main')
       run: |
+        pwd
+        echo ${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
         cd ${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}
         npm run deploy
     - name: Deploy to dev
