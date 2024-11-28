@@ -21,7 +21,6 @@ jobs:
         username: ${{ secrets.EDITOR_HUB_USER }}
         key: ${{ secrets.EDITOR_HUB_KEY }}
         script: |
-          pwd
           if [ "${GITHUB_REF##*/}" == "main" ]; then
             echo "Deploying to Production..."
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}"
@@ -30,5 +29,5 @@ jobs:
             DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
           fi
           cd $DEPLOY_FOLDER
+          la
           npm run deploy
-          EOF
