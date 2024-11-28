@@ -3,8 +3,8 @@ name: Deploy to Production and Development
 on:
   push:
     branches:
-      - main     # For production deployment
-      - dev      # For development deployment
+      - main
+      - dev
     workflow_dispatch:
 jobs:
   deploy:
@@ -18,7 +18,7 @@ jobs:
       uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.EDITOR_HUB_HOST }}
-        passphrase: ${{ secrets.EDITOR_HUB_PASSPHRASE }}
+        username: ${{ secrets.EDITOR_HUB_USER }}
         key: ${{ secrets.EDITOR_HUB_KEY }}
 
     - name: Deploy
