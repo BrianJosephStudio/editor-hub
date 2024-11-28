@@ -1,0 +1,39 @@
+name: Deploy to Production and Development
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.EDITOR_HUB_HOST }}
+        username: ${{ secrets.EDITOR_HUB_USER }}
+        key: ${{ secrets.EDITOR_HUB_KEY }}
+        script: |
+          pwd
+          if [ "${GITHUB_REF##*/}" == "main" ]; then
+            echo "Deploying to Production..."
+            DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_PRODUCTION_DIR }}"
+            BRANCH_TO_CHECKOUT="main"
+          else
+            echo "Deploying to Development..."
+            DEPLOY_FOLDER="${{ secrets.EDITOR_HUB_DEV_DIR }}"
+            BRANCH_TO_CHECKOUT="dev"
+          fi
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
+          cd $DEPLOY_FOLDER
+          git checkout $BRANCH_TO_CHECKOUT
+          git pull
+          npm run deploy
