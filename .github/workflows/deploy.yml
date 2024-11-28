@@ -32,5 +32,6 @@ jobs:
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
           cd $DEPLOY_FOLDER
-          git log
+          git checkout "${GITHUB_REF##*/}"
+          git pull
           npm run deploy
