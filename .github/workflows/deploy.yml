@@ -14,7 +14,12 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v3
 
+
     - name: Set up SSH
+      env:
+        SERVER_CONTAINER_NAME: editor-hub-${GITHUB_REF##*/}
+        AUTH_CONTAINER_NAME: authorization-${GITHUB_REF##*/}
+        CLIP_TAGGER_CONTAINER_NAME: clip-tagger-${GITHUB_REF##*/}
       uses: appleboy/ssh-action@v1.2.0
       with:
         host: ${{ secrets.EDITOR_HUB_HOST }}
