@@ -1,1 +1,1 @@
-Editor Hub Server v1.4.5
+Editor Hub Server v1.4.6

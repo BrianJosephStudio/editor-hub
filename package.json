@@ -2,7 +2,7 @@
   "name": "editor-hub",
   "module": "src/server.html",
   "type": "module",
-  "version": "1.4.5",
+  "version": "1.4.6",
   "scripts": {
     "dev": "NODE_ENV=development bun src/server.ts",
     "serve": "NODE_ENV=production bun src/server.ts",
