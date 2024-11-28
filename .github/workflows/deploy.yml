@@ -6,12 +6,6 @@ on:
       - main
       - dev
     workflow_dispatch:
-
-env:
-  SERVER_CONTAINER_NAME: editor-hub-${GITHUB_REF##*/}
-  AUTH_CONTAINER_NAME: authorization-${GITHUB_REF##*/}
-  CLIP_TAGGER_CONTAINER_NAME: clip-tagger-${GITHUB_REF##*/}
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -19,7 +13,6 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
 
     - name: Set up SSH
       uses: appleboy/ssh-action@v1.2.0
@@ -38,6 +31,5 @@ jobs:
           fi
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
-          echo ${SERVER_CONTAINER_NAME}
           cd $DEPLOY_FOLDER
           npm run deploy
