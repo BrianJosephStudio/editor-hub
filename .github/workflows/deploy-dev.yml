@@ -1,0 +1,29 @@
+name: CI/CD Dev
+
+on:
+  push:
+    branches:
+      - dev
+    workflow_dispatch:
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up SSH
+      uses: appleboy/ssh-action@v1.2.0
+      with:
+        host: ${{ secrets.EDITOR_HUB_HOST }}
+        username: ${{ secrets.EDITOR_HUB_USER }}
+        key: ${{ secrets.EDITOR_HUB_KEY }}
+        script: |
+          echo "Deploying to dev..."
+          export NVM_DIR=~/.nvm
+          source ~/.nvm/nvm.sh
+          cd ${{ secrets.EDITOR_HUB_DEV_DIR }}
+          git checkout dev
+          git pull
+          npm run deploy
