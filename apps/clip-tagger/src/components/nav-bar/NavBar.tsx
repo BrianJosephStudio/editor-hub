@@ -2,6 +2,7 @@ import { Box, Button, Typography } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { AccountCircle } from "@mui/icons-material";
+import packageJson from "../../../package.json";
 
 export const NavBar = () => {
   const { user } = useUser();
@@ -23,7 +24,7 @@ export const NavBar = () => {
       <Box
         sx={{
           display: "flex",
-          gap: '0.6rem'
+          gap: "0.6rem",
         }}
       >
         <AccountCircle />
@@ -37,9 +38,20 @@ export const NavBar = () => {
           gridColumn: "2/3",
         }}
       />
-      <SignOutButton>
-        <Button sx={{outline: 'none !important'}} size="small">Sign Out</Button>
-      </SignOutButton>
+      <Box
+        sx={{
+          display: "flex",
+          placeItems: "center",
+          gap: '1rem',
+        }}
+      >
+        <Typography fontSize={"0.8rem"}>v -{packageJson.version}</Typography>
+        <SignOutButton>
+          <Button sx={{ outline: "none !important" }} size="small">
+            Sign Out
+          </Button>
+        </SignOutButton>
+      </Box>
     </Box>
   );
 };
