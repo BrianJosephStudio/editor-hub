@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
 import { useState } from "react";
-import { Folder as Foldericon, MaximizeTwoTone } from "@mui/icons-material";
+import { Folder as Foldericon } from "@mui/icons-material";
 import { File } from "./File";
 import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 

@@ -1,6 +1,6 @@
 import axios from "axios";
-import { TagReference, TimeCode } from "../types/tags";
-import { DropboxFile, ListFolderResponse, Metadata } from "../types/dropbox";
+import { TagReference } from "../types/tags";
+import { ListFolderResponse, Metadata } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
