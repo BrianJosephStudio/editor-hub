@@ -5,6 +5,7 @@ import React, { useEffect } from "react";
 import { Folder } from "./components/Folder";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { FileTreeNode } from "../../types/app";
+import scLogoMini from "../../../public/editor-hub-logo-mini.svg";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -16,6 +17,7 @@ export const VideoGallery: React.FC<{
   const apiClient = new ApiClient();
 
   const {
+    currentVideoSource,
     fileTree,
     setFileTree,
     initialFetchDone,
@@ -26,6 +28,7 @@ export const VideoGallery: React.FC<{
     clipMetadataBatch,
     setClipMetadataBatch,
     resolveTreeStructure,
+    videoPlayer,
   } = useVideoGallery();
 
   const fetchClickedFolder = async (
@@ -95,6 +98,8 @@ export const VideoGallery: React.FC<{
     })();
   }, [foldersRendered]);
 
+  // useEffect(() => {videoPlayer.current?.pause()}, [activePage]);
+
   return (
     <Box
       component={"div"}
@@ -107,24 +112,39 @@ export const VideoGallery: React.FC<{
       }}
     >
       <Box
+        ref={videoPlayer}
         component={"video"}
         controls
+        autoPlay
+        poster={scLogoMini}
+        src={currentVideoSource?.temporary_link}
         id={"page:video-gallery:video-player"}
         data-testid={"page:video-gallery:video-player"}
-        sx={
-          {
-            // maxHeight: '25%'
-          }
-        }
+        sx={{
+          maxHeight: "50%",
+        }}
       ></Box>
       <Box
         component={"div"}
+        tabIndex={-1}
         id={"page:video-gallery:in-game-footage-browser:container"}
         data-testid={"page:video-gallery:in-game-footage-browser:container"}
         sx={{
           display: "flex",
           flexDirection: "column",
           overflow: "hidden",
+          outline: "none",
+        }}
+        onKeyDown={(event) => {
+          if (event.key === " ") {
+            event.preventDefault();
+            event.stopPropagation;
+            if (!videoPlayer.current?.src) return;
+            if (videoPlayer.current!.paused) {
+              return videoPlayer.current?.play();
+            }
+            videoPlayer.current!.pause();
+          }
         }}
       >
         <Box
@@ -132,7 +152,7 @@ export const VideoGallery: React.FC<{
           id={"page:video-gallery-in-game-footage-browser:banner"}
           data-testid={"page:video-gallery-in-game-footage-browser:banner"}
           sx={{
-            backgroundColor: "black",
+            backgroundColor: "Gray",
             paddingY: "0.2rem",
           }}
         >
@@ -150,6 +170,20 @@ export const VideoGallery: React.FC<{
             padding: "0",
             margin: "0",
             overflowY: "scroll",
+            "&::-webkit-scrollbar": {
+              width: "0.5rem",
+            },
+            "&::-webkit-scrollbar-thumb": {
+              backgroundColor: "gray",
+              borderRadius: "0px",
+            },
+            "&::-webkit-scrollbar-track": {
+              backgroundColor: "transparent",
+            },
+            scrollbarWidth: "thin",
+            "&": {
+              scrollbarColor: "rgba(255, 255, 255, 0.5) transparent",
+            },
           }}
         >
           {fileTree.children!.map((fileTreeNode, index) => (
@@ -157,9 +191,9 @@ export const VideoGallery: React.FC<{
               fileTreeNode={fileTreeNode}
               nodeKey={index}
               onClickCallback={async (setIsLoading) => {
-                setIsLoading(true)
+                setIsLoading(true);
                 await fetchClickedFolder(fileTree, fileTreeNode);
-                setIsLoading(false)
+                setIsLoading(false);
               }}
             ></Folder>
           ))}

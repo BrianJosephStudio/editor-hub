@@ -37,11 +37,19 @@ export const Folder = ({
       }}
     >
       <Box
+        component={"div"}
         tabIndex={tabIndex}
         onClick={() => {
           setIsOpen(!isOpen);
           if (!onClickCallback) return;
           onClickCallback(setIsLoading);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") {
+            event.stopPropagation()
+            event.preventDefault()
+            setIsOpen((currentValue) => !currentValue)
+          };
         }}
         sx={{
           display: "flex",

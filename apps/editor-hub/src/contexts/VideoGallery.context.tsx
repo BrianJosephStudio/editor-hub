@@ -1,10 +1,16 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import { FileTreeNode } from "../types/app";
 import { Metadata } from "../types/dropbox";
+import { ApiClient } from "../api/ApiClient";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
 interface VideoGalleryContextProps {
+  videoPlayer: React.RefObject<HTMLVideoElement>;
+  currentVideoSource: FileTreeNode | null;
+  setCurrentVideoSource: React.Dispatch<
+    React.SetStateAction<FileTreeNode | null>
+  >;
   fileTree: FileTreeNode;
   setFileTree: React.Dispatch<React.SetStateAction<FileTreeNode>>;
   currentTabIndex: number;
@@ -17,7 +23,14 @@ interface VideoGalleryContextProps {
   setinitialFetchDone: React.Dispatch<React.SetStateAction<boolean>>;
   clipMetadataBatch: Metadata[];
   setClipMetadataBatch: React.Dispatch<React.SetStateAction<Metadata[]>>;
-  resolveTreeStructure: (currentFileTreeNode: FileTreeNode, newMetadata: Metadata[]) => FileTreeNode;
+  resolveTreeStructure: (
+    currentFileTreeNode: FileTreeNode,
+    newMetadata: Metadata[]
+  ) => FileTreeNode;
+  playVideo: (
+    fileTreeNode: FileTreeNode,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => void;
 }
 
 const VideoGalleryContext = createContext<VideoGalleryContextProps | undefined>(
@@ -42,6 +55,11 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
     children: [],
   });
 
+  const videoPlayer = useRef<HTMLVideoElement>(null);
+  const [currentVideoSource, setCurrentVideoSource] =
+    useState<FileTreeNode | null>(null);
+
+  const [currentTabIndex, setCurrentTabIndex] = useState<number>(5);
   const [fetchUpfront, setFetchUpfront] = useState<number>(5);
   const [initialFetchDone, setinitialFetchDone] = useState<boolean>(false);
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
@@ -87,17 +105,27 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
       })
       .filter((child) => !!child);
 
-    if(!currentFileTreeNode.children || currentFileTreeNode.children.length === 0){
+    if (
+      !currentFileTreeNode.children ||
+      currentFileTreeNode.children.length === 0
+    ) {
       currentFileTreeNode.children = [
         ...children,
         ...(currentFileTreeNode.children ?? []),
-      ]
-    }else{
+      ];
+    } else {
       children.forEach((child) => {
-        const matchingFileTreeNodeIndex = currentFileTreeNode.children!.findIndex((childFileTreeNode) => childFileTreeNode.path === child.path)
-        if(matchingFileTreeNodeIndex === -1) return
-        currentFileTreeNode.children!.splice(matchingFileTreeNodeIndex, 1, child)
-      })
+        const matchingFileTreeNodeIndex =
+          currentFileTreeNode.children!.findIndex(
+            (childFileTreeNode) => childFileTreeNode.path === child.path
+          );
+        if (matchingFileTreeNodeIndex === -1) return;
+        currentFileTreeNode.children!.splice(
+          matchingFileTreeNodeIndex,
+          1,
+          child
+        );
+      });
     }
 
     return { ...currentFileTreeNode };
@@ -107,13 +135,37 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
     return path.replace(clipsRootPath.toLowerCase(), "");
   };
 
+  const playVideo = async (
+    fileTreeNode: FileTreeNode,
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => {
+    setIsLoading(true);
+    if (videoPlayer.current && videoPlayer.current.src) {
+      videoPlayer.current.src = "";
+    }
+    if (!fileTreeNode.temporary_link) {
+      const apiClient = new ApiClient();
+      const temporary_link = await apiClient.getTemporaryLink(
+        fileTreeNode.metadata.path_lower
+      );
+      fileTreeNode.temporary_link = temporary_link;
+    }
+    setCurrentVideoSource({ ...fileTreeNode });
+    setIsLoading(false);
+  };
+
   return (
     <VideoGalleryContext.Provider
       value={{
+        videoPlayer,
+        currentVideoSource,
+        setCurrentVideoSource,
         fileTree,
         setFileTree,
         initialFetchDone,
         setinitialFetchDone,
+        currentTabIndex,
+        setCurrentTabIndex,
         fetchUpfront,
         setFetchUpfront,
         foldersRendered,
@@ -121,6 +173,7 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
         clipMetadataBatch,
         setClipMetadataBatch,
         resolveTreeStructure,
+        playVideo,
       }}
     >
       {children}
