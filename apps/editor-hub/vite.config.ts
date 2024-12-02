@@ -4,8 +4,12 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  base: 'editor-hub/',
+  base: '/editor-hub/',
   build: {
-    outDir: "../../public/editor-hub"
+    rollupOptions: {
+      external: [
+        './src/budiness-logic/test.ts'
+      ]
+    }
   },
 })
