@@ -3,6 +3,7 @@ import { FileTreeNode } from "../../../types/app";
 import { useState } from "react";
 import { Folder as Foldericon, MaximizeTwoTone } from "@mui/icons-material";
 import { File } from "./File";
+import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 
 export const Folder = ({
   fileTreeNode,
@@ -11,10 +12,17 @@ export const Folder = ({
 }: {
   fileTreeNode: FileTreeNode;
   nodeKey: number;
-  onClickCallback?: (setIsLoading: React.Dispatch<React.SetStateAction<boolean>>) => Promise<void>;
+  onClickCallback?: (
+    setIsLoading: React.Dispatch<React.SetStateAction<boolean>>
+  ) => Promise<void>;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const { currentTabIndex, setCurrentTabIndex } = useVideoGallery();
+
+  const tabIndex = currentTabIndex;
+  setCurrentTabIndex((current) => current++);
 
   return (
     <Box
@@ -25,12 +33,11 @@ export const Folder = ({
       sx={{
         display: "flex",
         flexDirection: "column",
-        // placeItems: "flex-start",
-        // paddingLeft: "1rem",
         cursor: "pointer",
       }}
     >
       <Box
+        tabIndex={tabIndex}
         onClick={() => {
           setIsOpen(!isOpen);
           if (!onClickCallback) return;
@@ -41,7 +48,7 @@ export const Folder = ({
           flexGrow: "1",
           paddingY: "0.3rem",
           paddingLeft: "0.4rem",
-          placeItems: 'center',
+          placeItems: "center",
           gap: "0.3rem",
           "&:hover": {
             backgroundColor: "hsla(0, 0%, 100%, 0.2)",

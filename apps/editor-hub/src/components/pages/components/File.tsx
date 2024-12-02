@@ -1,6 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
-import { Theaters } from "@mui/icons-material";
+import { Download, PlayArrow, Theaters } from "@mui/icons-material";
+import { useVideoGallery } from "../../../contexts/VideoGallery.context";
+import { useState } from "react";
 
 export const File = ({
   fileTreeNode,
@@ -9,10 +11,17 @@ export const File = ({
   fileTreeNode: FileTreeNode;
   nodeKey: number;
 }) => {
+  const {currentTabIndex, setCurrentTabIndex } = useVideoGallery()
+  const [ selectedItem, setSelectedFile]  = useState(false)
+  const tabIndex = currentTabIndex
+  setCurrentTabIndex(current => current++)
   return (
     <Box
       component={"li"}
+      tabIndex={tabIndex}
       key={nodeKey}
+      onFocus={() => setSelectedFile(true)}
+      onBlur={() => setSelectedFile(false)}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -25,22 +34,39 @@ export const File = ({
         component={"div"}
         id={"file-browser:file:container"}
         data-testid={"file-browser:file:container"}
-        onClick={() => {
-          console.log("Clicked file!");
-        }}
         sx={{
           display: "flex",
           flexGrow: "1",
           paddingY: "0.3rem",
           paddingLeft: "0.4rem",
           gap: "0.3rem",
+          backgroundColor: selectedItem ?  "hsla(0, 0%, 100%, 0.25)": "none",
           "&:hover": {
-            backgroundColor: "hsla(0, 0%, 100%, 0.2)",
+            backgroundColor: selectedItem ?  "hsla(0, 0%, 100%, 0.25)": "hsla(0, 0%, 100%, 0.20)",
           },
         }}
       >
         <Theaters></Theaters>
         <Typography>{fileTreeNode.name}</Typography>
+        <Box
+          sx={{
+            display: "flex",
+            marginLeft: "auto",
+            marginRight: '2rem',
+            gap: '0.3rem'
+          }}
+        >
+          <PlayArrow fontSize="small" sx={{
+            '&:hover': {
+              fill: '#2265b5'
+            }
+          }}></PlayArrow>
+          <Download fontSize="small" sx={{
+            '&:hover': {
+              fill: '#2265b5'
+            }
+          }}></Download>
+        </Box>
       </Box>
     </Box>
   );

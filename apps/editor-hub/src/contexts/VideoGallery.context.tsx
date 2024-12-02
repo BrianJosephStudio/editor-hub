@@ -7,6 +7,8 @@ const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 interface VideoGalleryContextProps {
   fileTree: FileTreeNode;
   setFileTree: React.Dispatch<React.SetStateAction<FileTreeNode>>;
+  currentTabIndex: number;
+  setCurrentTabIndex: React.Dispatch<React.SetStateAction<number>>;
   fetchUpfront: number;
   setFetchUpfront: React.Dispatch<React.SetStateAction<number>>;
   foldersRendered: boolean;
