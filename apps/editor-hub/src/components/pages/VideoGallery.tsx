@@ -1,15 +1,11 @@
-import {
-  ArrowDropDownCircleOutlined,
-  ConstructionOutlined,
-  FilterCenterFocus,
-  SvgIconComponent,
-} from "@mui/icons-material";
+import { SvgIconComponent } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { ApiClient } from "../../api/ApiClient";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Metadata } from "../../types/dropbox";
 import { FileTreeNode } from "../../types/app";
 import { Folder } from "./components/Folder";
+import { useVideoGallery } from "../../contexts/VideoGallery.context";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -20,16 +16,17 @@ export const VideoGallery: React.FC<{
 }> = () => {
   const apiClient = new ApiClient();
 
-  const [fileTree, setFileTree] = useState<FileTreeNode>({
-    name: "root",
-    tag: "folder",
-    path: "/",
-    children: [],
-  });
-
-  const [fetchUpfront, setFetchUpfront] = useState<number>(5);
-  const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
-  const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
+  const {
+    fileTree,
+    setFileTree,
+    initialFetchDone,
+    setinitialFetchDone,
+    fetchUpfront,
+    foldersRendered,
+    setFoldersRendered,
+    clipMetadataBatch,
+    setClipMetadataBatch,
+  } = useVideoGallery();
 
   const getMetadataPath = (path: string) => {
     return path.replace(clipsRootPath.toLowerCase(), "");
@@ -106,16 +103,19 @@ export const VideoGallery: React.FC<{
   }, [clipMetadataBatch]);
 
   useEffect(() => {
+    if (initialFetchDone) {
+      return;
+    }
     (async () => {
       const clipMetadataBatch = await apiClient.getFolderEntries(clipsRootPath);
       const reversedClipMetadataBatch = clipMetadataBatch.reverse();
-      setClipMetadataBatch(reversedClipMetadataBatch);
       setFoldersRendered(true);
+      setClipMetadataBatch(reversedClipMetadataBatch);
     })();
   }, []);
 
   useEffect(() => {
-    if (!foldersRendered) {
+    if (!foldersRendered || initialFetchDone) {
       return;
     }
     (async () => {
@@ -132,6 +132,7 @@ export const VideoGallery: React.FC<{
         .flat()
         .filter((child) => !!child);
 
+      setinitialFetchDone(true);
       setClipMetadataBatch(fetchedMetadata);
     })();
   }, [foldersRendered]);
@@ -145,7 +146,15 @@ export const VideoGallery: React.FC<{
         minHeight: "0",
       }}
     >
-      <Box component={"video"} controls></Box>
+      <Box
+        component={"video"}
+        controls
+        sx={
+          {
+            // maxHeight: '25%'
+          }
+        }
+      ></Box>
       <Box
         sx={{
           display: "flex",
