@@ -179,3 +179,4 @@ authCode
 src/util/dropbox/access_token.json
 
 public/clip-tagger
+public/editor-hub
