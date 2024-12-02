@@ -16,6 +16,8 @@ export const Folder = ({
   return (
     <Box
       component={"li"}
+      id={"file-browser:folder:container"}
+      data-testid={"file-browser:folder:container"}
       key={nodeKey}
       sx={{
         display: "flex",
@@ -46,6 +48,8 @@ export const Folder = ({
       </Box>
       <Box
         component={"ul"}
+        id={"file-browser:folder:children"}
+        data-testid={"file-browser:folder:children"}
         sx={{
           flexGrow: "1",
           display: isOpen ? "flex" : "none",

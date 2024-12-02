@@ -8,8 +8,8 @@ export const Tab = ({ page, tabName }: { page: number; tabName: string }) => {
     <Box
       key={page}
       component={"div"}
-      id={`nav-tab:${tabName.toLowerCase()}-`}
-      data-test-id={`nav-tab:${tabName.toLowerCase()}-`}
+      id={`nav-tab:${tabName.toLowerCase()}`}
+      data-testid={`nav-bar:tab:${tabName.toLowerCase()}`}
       onClick={() => {
         setActivePage(page);
       }}

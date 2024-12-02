@@ -18,7 +18,7 @@ export const NavBar = () => {
     <Box
       component={"div"}
       id="nav-bar"
-      data-test-id={"nav-bar-container"}
+      data-testid={"nav-bar-container"}
       sx={{
         display: "flex",
         width: "100%",

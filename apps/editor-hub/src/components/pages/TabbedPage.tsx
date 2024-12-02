@@ -21,7 +21,7 @@ export const TabbedPage = ({ children, pageId }: TabbedPageProps) => {
         <Box
           component={"div"}
           id={`page:video-gallery:container`}
-          data-test-id={`page:video-gallery:container`}
+          data-testid={`page:video-gallery:container`}
           sx={{
             display: "grid",
             gridTemplateColumns: "2.3rem auto",
@@ -40,6 +40,8 @@ export const TabbedPage = ({ children, pageId }: TabbedPageProps) => {
               <Box
                 key={index}
                 component={"div"}
+                id={`tabbed-page:tab:container:${child.props.tabName.toLowerCase()}`}
+                data-testid={`tabbed-page:tab:container:${child.props.tabName.toLowerCase()}`}
                 title={child.props.tabName}
                 onClick={() => setActiveTab(index)}
                 sx={{

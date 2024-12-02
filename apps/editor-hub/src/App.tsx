@@ -13,7 +13,7 @@ function App() {
       <Box
         component={"div"}
         id="editor-hub-container"
-        data-test-id={"editor-hub-container"}
+        data-testid={"editor-hub-container"}
         sx={{
           display: "grid",
           gridTemplateRows: " 2.4rem 3rem auto",

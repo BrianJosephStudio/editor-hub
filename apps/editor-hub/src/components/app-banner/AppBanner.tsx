@@ -10,6 +10,9 @@ export const AppBanner = () => {
   const userName = user?.firstName ?? "";
   return (
     <Box
+      component={"div"}
+      id={`app-banner:container`}
+      data-testid={`app-banner:container`}
       sx={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr 1fr",
@@ -21,16 +24,27 @@ export const AppBanner = () => {
       }}
     >
       <Box
+        component={"div"}
+        id={`app-banner:account-info:container`}
+        data-testid={`app-banner:account-info:container`}
         sx={{
           display: "flex",
           gap: "0.6rem",
         }}
       >
-        <AccountCircle fontSize="small"/>
-        <Typography fontSize={'0.8rem'}>{userName}</Typography>
+        <AccountCircle fontSize="small" />
+        <Typography
+          id={`app-banner:account-info:user-name`}
+          data-testid={`app-banner:account-info:user-name`}
+          fontSize={"0.8rem"}
+        >
+          {userName}
+        </Typography>
       </Box>
       <Box
         component={"img"}
+        id={`app-banner:app-logo`}
+        data-testid={`app-banner:app-logo`}
         src={clipTaggerLogo}
         sx={{
           maxHeight: "1.8rem",
@@ -41,12 +55,23 @@ export const AppBanner = () => {
         sx={{
           display: "flex",
           placeItems: "center",
-          gap: '1rem',
+          gap: "1rem",
         }}
       >
-        <Typography fontSize={"0.6rem"}>v -{packageJson.version}</Typography>
+        <Typography
+          id={`app-banner:app-version`}
+          data-testid={`app-banner:app-version`}
+          fontSize={"0.6rem"}
+        >
+          v -{packageJson.version}
+        </Typography>
         <SignOutButton>
-          <Button sx={{ outline: "none !important", fontSize: '0.6rem' }} size="small">
+          <Button
+            id={`app-banner:sign-out-button`}
+            data-testid={`app-banner:sign-out-button`}
+            sx={{ outline: "none !important", fontSize: "0.6rem" }}
+            size="small"
+          >
             Sign Out
           </Button>
         </SignOutButton>

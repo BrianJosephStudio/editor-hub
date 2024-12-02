@@ -139,16 +139,20 @@ export const VideoGallery: React.FC<{
 
   return (
     <Box
+      component={"div"}
+      id={"page:video-gallery:container"}
+      data-testid={"page:video-gallery:container"}
       sx={{
         display: "flex",
         flexDirection: "column",
-        // backgroundColor: "green",
         minHeight: "0",
       }}
     >
       <Box
         component={"video"}
         controls
+        id={"page:video-gallery:video-player"}
+        data-testid={"page:video-gallery:video-player"}
         sx={
           {
             // maxHeight: '25%'
@@ -156,6 +160,9 @@ export const VideoGallery: React.FC<{
         }
       ></Box>
       <Box
+        component={"div"}
+        id={"page:video-gallery:in-game-footage-browser:container"}
+        data-testid={"page:video-gallery:in-game-footage-browser:container"}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -163,6 +170,9 @@ export const VideoGallery: React.FC<{
         }}
       >
         <Box
+          component={"div"}
+          id={"page:video-gallery-in-game-footage-browser:banner"}
+          data-testid={"page:video-gallery-in-game-footage-browser:banner"}
           sx={{
             backgroundColor: "black",
             paddingY: "0.2rem",
@@ -172,6 +182,8 @@ export const VideoGallery: React.FC<{
         </Box>
         <Box
           component={"ul"}
+          id={"page:video-gallery-in-game-footage-browser:file-browser"}
+          data-testid={"page:video-gallery-in-game-footage-browser:file-browser"}
           sx={{
             display: "flex",
             flexDirection: "column",
