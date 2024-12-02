@@ -2,6 +2,8 @@ import { createContext, useContext, useState, ReactNode } from "react";
 import { FileTreeNode } from "../types/app";
 import { Metadata } from "../types/dropbox";
 
+const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
+
 interface VideoGalleryContextProps {
   fileTree: FileTreeNode;
   setFileTree: React.Dispatch<React.SetStateAction<FileTreeNode>>;
@@ -13,6 +15,7 @@ interface VideoGalleryContextProps {
   setinitialFetchDone: React.Dispatch<React.SetStateAction<boolean>>;
   clipMetadataBatch: Metadata[];
   setClipMetadataBatch: React.Dispatch<React.SetStateAction<Metadata[]>>;
+  resolveTreeStructure: (currentFileTreeNode: FileTreeNode, newMetadata: Metadata[]) => FileTreeNode;
 }
 
 const VideoGalleryContext = createContext<VideoGalleryContextProps | undefined>(
@@ -42,6 +45,66 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
   const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
 
+  const resolveTreeStructure = (
+    currentFileTreeNode: FileTreeNode,
+    newMetadata: Metadata[]
+  ): FileTreeNode => {
+    const currentHead = currentFileTreeNode.path;
+
+    const children: FileTreeNode[] = newMetadata
+      .map((metadata) => {
+        const currentHeadLength = currentHead.split("/").filter(Boolean).length;
+
+        const metadataPath = getMetadataPath(metadata.path_lower!);
+        const metadataLength = metadataPath.split("/").filter(Boolean).length;
+
+        const parentFolder = metadataPath.replace(/\/[^/]*$/, "");
+
+        if (
+          (currentHeadLength === 0 && metadataLength === 1) ||
+          parentFolder === currentHead
+        ) {
+          let newFileTreeNode: FileTreeNode = {
+            name: metadata.name,
+            tag: metadata[".tag"],
+            path: getMetadataPath(metadata.path_lower!),
+            metadata,
+          };
+
+          if (newFileTreeNode.tag === "folder") {
+            newFileTreeNode = resolveTreeStructure(
+              newFileTreeNode,
+              newMetadata
+            );
+          }
+
+          return newFileTreeNode;
+        }
+
+        return null;
+      })
+      .filter((child) => !!child);
+
+    if(!currentFileTreeNode.children || currentFileTreeNode.children.length === 0){
+      currentFileTreeNode.children = [
+        ...children,
+        ...(currentFileTreeNode.children ?? []),
+      ]
+    }else{
+      children.forEach((child) => {
+        const matchingFileTreeNodeIndex = currentFileTreeNode.children!.findIndex((childFileTreeNode) => childFileTreeNode.path === child.path)
+        if(matchingFileTreeNodeIndex === -1) return
+        currentFileTreeNode.children!.splice(matchingFileTreeNodeIndex, 1, child)
+      })
+    }
+
+    return { ...currentFileTreeNode };
+  };
+
+  const getMetadataPath = (path: string) => {
+    return path.replace(clipsRootPath.toLowerCase(), "");
+  };
+
   return (
     <VideoGalleryContext.Provider
       value={{
@@ -55,6 +118,7 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
         setFoldersRendered,
         clipMetadataBatch,
         setClipMetadataBatch,
+        resolveTreeStructure,
       }}
     >
       {children}

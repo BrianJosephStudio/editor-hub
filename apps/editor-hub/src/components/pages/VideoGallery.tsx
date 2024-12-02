@@ -2,10 +2,9 @@ import { SvgIconComponent } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
 import { ApiClient } from "../../api/ApiClient";
 import React, { useEffect } from "react";
-import { Metadata } from "../../types/dropbox";
-import { FileTreeNode } from "../../types/app";
 import { Folder } from "./components/Folder";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
+import { FileTreeNode } from "../../types/app";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -26,74 +25,33 @@ export const VideoGallery: React.FC<{
     setFoldersRendered,
     clipMetadataBatch,
     setClipMetadataBatch,
+    resolveTreeStructure,
   } = useVideoGallery();
 
-  const getMetadataPath = (path: string) => {
-    return path.replace(clipsRootPath.toLowerCase(), "");
-  };
+  const fetchClickedFolder = async (
+    currentFileTree: FileTreeNode,
+    fileTreeNode: FileTreeNode
+  ) => {
+    if (!currentFileTree.children || currentFileTree.children.length === 0)
+      return;
 
-  const resolveTreeStructure = (
-    currentFileTreeNode: FileTreeNode,
-    newMetadata: Metadata[]
-  ): FileTreeNode => {
-    const currentHead = currentFileTreeNode.path;
-
-    const children: FileTreeNode[] = newMetadata
-      .map((metadata) => {
-        const currentHeadLength = currentHead.split("/").filter(Boolean).length;
-
-        const metadataPath = getMetadataPath(metadata.path_lower!);
-        const metadataLength = metadataPath.split("/").filter(Boolean).length;
-
-        const parentFolder = metadataPath.replace(/\/[^/]*$/, "");
-
-        if (
-          (currentHeadLength === 0 && metadataLength === 1) ||
-          parentFolder === currentHead
-        ) {
-          let newFileTreeNode: FileTreeNode = {
-            name: metadata.name,
-            tag: metadata[".tag"],
-            path: getMetadataPath(metadata.path_lower!),
-            metadata,
-          };
-
-          if (newFileTreeNode.tag === "folder") {
-            newFileTreeNode = resolveTreeStructure(
-              newFileTreeNode,
-              newMetadata
-            );
-          }
-
-          return newFileTreeNode;
-        }
-
-        return null;
-      })
-      .filter((child) => !!child);
-
+    const matchingFileTreeNode = currentFileTree.children.find(
+      (childTreeNode) => {
+        return childTreeNode.path === fileTreeNode.path;
+      }
+    );
     if (
-      currentFileTreeNode.children &&
-      currentFileTreeNode.children.length > 0
-    ) {
-      currentFileTreeNode.children = currentFileTreeNode.children?.filter(
-        (childFileTreeNode) => {
-          const match = children.find((child) => {
-            return child.path === childFileTreeNode.path;
-          });
-          if (match) {
-            return false;
-          }
-          return true;
-        }
-      );
-    }
-    currentFileTreeNode.children = [
-      ...children,
-      ...(currentFileTreeNode.children ?? []),
-    ];
+      !matchingFileTreeNode ||
+      (matchingFileTreeNode &&
+        matchingFileTreeNode.children &&
+        matchingFileTreeNode.children.length > 0)
+    )
+      return;
 
-    return { ...currentFileTreeNode };
+    const newMetadata = await apiClient.getFolderEntriesRecursively(
+      fileTreeNode.metadata.path_lower
+    );
+    setClipMetadataBatch(newMetadata);
   };
 
   useEffect(() => {
@@ -183,7 +141,9 @@ export const VideoGallery: React.FC<{
         <Box
           component={"ul"}
           id={"page:video-gallery-in-game-footage-browser:file-browser"}
-          data-testid={"page:video-gallery-in-game-footage-browser:file-browser"}
+          data-testid={
+            "page:video-gallery-in-game-footage-browser:file-browser"
+          }
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -193,7 +153,15 @@ export const VideoGallery: React.FC<{
           }}
         >
           {fileTree.children!.map((fileTreeNode, index) => (
-            <Folder fileTreeNode={fileTreeNode} nodeKey={index}></Folder>
+            <Folder
+              fileTreeNode={fileTreeNode}
+              nodeKey={index}
+              onClickCallback={async (setIsLoading) => {
+                setIsLoading(true)
+                await fetchClickedFolder(fileTree, fileTreeNode);
+                setIsLoading(false)
+              }}
+            ></Folder>
           ))}
         </Box>
       </Box>

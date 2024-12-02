@@ -1,17 +1,20 @@
-import { Box, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
 import { useState } from "react";
-import { Folder as Foldericon } from "@mui/icons-material";
+import { Folder as Foldericon, MaximizeTwoTone } from "@mui/icons-material";
 import { File } from "./File";
 
 export const Folder = ({
   fileTreeNode,
   nodeKey,
+  onClickCallback,
 }: {
   fileTreeNode: FileTreeNode;
   nodeKey: number;
+  onClickCallback?: (setIsLoading: React.Dispatch<React.SetStateAction<boolean>>) => Promise<void>;
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
     <Box
@@ -29,14 +32,16 @@ export const Folder = ({
     >
       <Box
         onClick={() => {
-          console.log(isOpen, !isOpen);
           setIsOpen(!isOpen);
+          if (!onClickCallback) return;
+          onClickCallback(setIsLoading);
         }}
         sx={{
           display: "flex",
           flexGrow: "1",
           paddingY: "0.3rem",
           paddingLeft: "0.4rem",
+          placeItems: 'center',
           gap: "0.3rem",
           "&:hover": {
             backgroundColor: "hsla(0, 0%, 100%, 0.2)",
@@ -45,6 +50,7 @@ export const Folder = ({
       >
         <Foldericon></Foldericon>
         <Typography>{fileTreeNode.name}</Typography>
+        {isLoading && <CircularProgress size={16}></CircularProgress>}
       </Box>
       <Box
         component={"ul"}
