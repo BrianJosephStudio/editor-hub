@@ -15,6 +15,8 @@ router.post('/get_temporary_link', await dropboxFilesProxy());
 
 router.post('/list_folder', await dropboxFilesProxy());
 
+router.post('/list_folder/continue', await dropboxFilesProxy());
+
 router.post('/upload', await dropboxContentProxy());
 
 router.post('/tags/get', await dropboxFilesProxy());
