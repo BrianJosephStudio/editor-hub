@@ -14,7 +14,6 @@ export const File = ({
   nodeKey: number;
 }) => {
   const { currentTabIndex, setCurrentTabIndex, playVideo } = useVideoGallery();
-  const [selectedItem, setSelectedFile] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const tabIndex = currentTabIndex;
@@ -25,8 +24,6 @@ export const File = ({
       component={"li"}
       tabIndex={tabIndex}
       key={nodeKey}
-      onFocus={() => setSelectedFile(true)}
-      onBlur={() => setSelectedFile(false)}
       onDoubleClick={() => {
         const selection = window.getSelection();
         if (selection) {
@@ -45,14 +42,12 @@ export const File = ({
         display: "flex",
         flexDirection: "column",
         cursor: "pointer",
+        "&:hover": {
+          backgroundColor: "hsla(0, 0%, 100%, 0.1)",
+        },
         "&:focus": {
           backgroundColor: "hsla(0,0%,100%, 0.15)",
           outline: "none",
-        },
-        "&:hover": {
-          backgroundColor: selectedItem
-            ? "hsla(0, 0%, 100%, 0.15)"
-            : "hsla(0, 0%, 100%, 0.1)",
         },
       }}
     >
