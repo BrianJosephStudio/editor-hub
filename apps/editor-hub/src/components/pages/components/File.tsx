@@ -3,6 +3,8 @@ import { FileTreeNode } from "../../../types/app";
 import { Download, PlayArrow, Theaters } from "@mui/icons-material";
 import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 import { useState } from "react";
+import { Resource } from "../../../business-logic/Resource";
+import { AppPaths } from "../../../business-logic/AppPaths";
 
 export const File = ({
   fileTreeNode,
@@ -88,6 +90,11 @@ export const File = ({
             }}
           ></PlayArrow>
           <Download
+            onClick={() => {
+              const appPaths = new AppPaths()
+              const resource = new Resource(fileTreeNode, appPaths.inGameFootage)
+              resource.download()
+            }}
             fontSize="small"
             sx={{
               "&:hover": {
