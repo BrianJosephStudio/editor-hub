@@ -36,17 +36,24 @@ export const File = ({
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
-          event.preventDefault()
-          event.stopPropagation()
-          playVideo(fileTreeNode, setIsLoading)
-        };
+          event.preventDefault();
+          event.stopPropagation();
+          playVideo(fileTreeNode, setIsLoading);
+        }
       }}
       sx={{
         display: "flex",
         flexDirection: "column",
-        // placeItems: "flex-start",
-        // paddingLeft: "1rem",
         cursor: "pointer",
+        "&:focus": {
+          backgroundColor: "hsla(0,0%,100%, 0.15)",
+          outline: "none",
+        },
+        "&:hover": {
+          backgroundColor: selectedItem
+            ? "hsla(0, 0%, 100%, 0.15)"
+            : "hsla(0, 0%, 100%, 0.1)",
+        },
       }}
     >
       <Box
@@ -55,21 +62,23 @@ export const File = ({
         data-testid={"file-browser:file:container"}
         sx={{
           display: "flex",
+          alignItems: "center",
           flexGrow: "1",
           paddingY: "0.3rem",
           paddingLeft: "0.4rem",
           gap: "0.3rem",
-          backgroundColor: selectedItem ? "hsla(0, 0%, 100%, 0.25)" : "none",
-          "&:hover": {
-            backgroundColor: selectedItem
-              ? "hsla(0, 0%, 100%, 0.25)"
-              : "hsla(0, 0%, 100%, 0.20)",
-          },
         }}
       >
         <Theaters></Theaters>
         <Typography>{fileTreeNode.name}</Typography>
-        {isLoading && <CircularProgress size={16}></CircularProgress>}
+        {isLoading && (
+          <CircularProgress
+            size={16}
+            // @ts-ignore
+            color="action"
+            sx={{ fill: "white" }}
+          ></CircularProgress>
+        )}
         <Box
           sx={{
             display: "flex",
@@ -90,10 +99,16 @@ export const File = ({
             }}
           ></PlayArrow>
           <Download
-            onClick={() => {
-              const appPaths = new AppPaths()
-              const resource = new Resource(fileTreeNode, appPaths.inGameFootage)
-              resource.download()
+            onClick={async () => {
+              setIsLoading(true);
+              const appPaths = new AppPaths();
+              const resource = new Resource(
+                fileTreeNode,
+                appPaths.inGameFootage
+              );
+              await resource.download();
+              await resource.import();
+              setIsLoading(false);
             }}
             fontSize="small"
             sx={{

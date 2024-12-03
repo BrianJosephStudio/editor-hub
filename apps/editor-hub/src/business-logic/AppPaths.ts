@@ -8,7 +8,7 @@ export class AppPaths{
 
     constructor() {
         const node = new NodeWrapper()
-        this.editorHub_documents = `${node.os.homedir()}/Documents/Editor Hub`
+        this.editorHub_documents = `${node.os.homedir().replace(/\\/g, "/")}/Documents/Editor Hub`
         this.resources = `${this.editorHub_documents}/resources`
         this.videoResources = `${this.resources}/video`
         this.inGameFootage = `${this.videoResources}/ingameFootage`

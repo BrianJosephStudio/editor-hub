@@ -4,12 +4,31 @@ export const mockOs = {
     arch: () => "Mock Architecture",
   };
   
+  export const mockFs = {
+    readFileSync: (path: string, _encoding: string) =>
+      (`Mock file content from ${path}`),
+    writeFileSync: (path: string, data: string, _encoding: string) =>
+      (console.log(`Mock write to ${path} with data: ${data}`)),
+    statSync: (_path: string) =>
+      ({
+        isFile: () => true,
+        isDirectory: () => false,
+        size: 1024,
+      }),
+    unlinkSync: (path: string) =>
+      (console.log(`Mock file removed at ${path}`)),
+    mkdirSync: (path: string, options?: { recursive?: boolean }) =>
+      (console.log(`Mock folder created at ${path} with options: ${JSON.stringify(options)}`)),
+    rmdirSync: (path: string) =>
+      (console.log(`Mock folder removed at ${path}`)),
+  };
+
   export const mockFsPromises = {
     readFile: async (path: string, _encoding: string) =>
       Promise.resolve(`Mock file content from ${path}`),
     writeFile: async (path: string, data: string, _encoding: string) =>
       Promise.resolve(console.log(`Mock write to ${path} with data: ${data}`)),
-    stat: async (path: string) =>
+    stat: async (_path: string) =>
       Promise.resolve({
         isFile: () => true,
         isDirectory: () => false,
