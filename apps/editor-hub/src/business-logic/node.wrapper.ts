@@ -1,16 +1,22 @@
+import { mockOs, mockFs, mockFsPromises, mockPath } from "./util/mocks/node.mock";
+
 export class NodeWrapper {
-  os: any;
-  fsPromises: any;
-  path: any;
+  isNodeEnv: boolean
+  public os: any;
+  public fs: any;
+  public fsPromises: any;
+  public path: any;
 
   constructor() {
-    if (this.isNodeEnvironment()) {
+    this.isNodeEnv = this.isNodeEnvironment()
+    if (this.isNodeEnv) {
       this.os = require("os");
+      this.fs = require("fs");
       this.fsPromises = require("fs/promises");
       this.path = require("path");
     } else {
-      const { mockOs, mockFsPromises, mockPath } = require("./mocks/node.mock");
       this.os = mockOs;
+      this.fs = mockFs;
       this.fsPromises = mockFsPromises;
       this.path = mockPath;
     }
