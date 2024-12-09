@@ -2,14 +2,13 @@ import { Project } from "./premire-api/classes/Project";
 import { ProjectItem } from "./premire-api/classes/ProjectItem";
 
 export class PremiereApi {
-  importResource = async (filePath: string, targetBin: ProjectItem) => {
+  importResource = async (filePath: string, binPathArray: string[]) => {
     const project = await Project.getInstance()
 
-    const createBinResponse = await project.rootItem.createBin("Editor Hub") as any
-    if (!createBinResponse.success) {
-      return console.log(createBinResponse.message)
+    const createdBin = await this.createBinRecursive(binPathArray)
+    if (!createdBin) {
+      return console.error(createdBin, createdBin)
     }
-    const createdBin = await ProjectItem.getProjectItemByNodeId(createBinResponse.nodeId)
     await project.importFile(filePath, true, createdBin, false)
   };
 
@@ -29,6 +28,5 @@ export class PremiereApi {
     );
 
     return finalBin;
-
   }
 }
