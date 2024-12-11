@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   server:
-    container_name: editor-hub-${ENVIRONMENT}
+    container_name: editor-hub-server-${ENVIRONMENT}
     build: .
     ports:
       - "${PORT}:${PORT}"
@@ -15,6 +15,7 @@ services:
       - auth-app:/app/apps/authorization/dist
       - ./authCode:/app/authCode
       - clip-tagger:/app/public/clip-tagger
+      - editor-hub:/app/public/editor-hub
     depends_on:
       - authorization
       - clip-tagger
@@ -30,6 +31,13 @@ services:
     working_dir: /app
     volumes:
       - clip-tagger:/app/dist
+  editor-hub:
+    container_name: editor-hub-${ENVIRONMENT}
+    build: ./apps/editor-hub
+    working_dir: /app
+    volumes:
+      - editor-hub:/app/dist
 volumes:
   auth-app:
   clip-tagger:
+  editor-hub:
