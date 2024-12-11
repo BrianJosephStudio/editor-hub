@@ -154,4 +154,16 @@ export class ApiClient {
       throw new Error(e);
     }
   };
+
+  public download = async (path: string) => {
+    const url = `${this.apiHost}/download`;
+    const headers = {
+        'Dropbox-API-Arg': JSON.stringify({ path })
+    };
+
+    const {
+      data
+    } = await axios.post(url, undefined, { headers, responseType: 'arraybuffer' });
+    return data
+  }
 }

@@ -46,10 +46,10 @@ export const Folder = ({
         }}
         onKeyDown={(event) => {
           if (event.key === "Enter") {
-            event.stopPropagation()
-            event.preventDefault()
-            setIsOpen((currentValue) => !currentValue)
-          };
+            event.stopPropagation();
+            event.preventDefault();
+            setIsOpen((currentValue) => !currentValue);
+          }
         }}
         sx={{
           display: "flex",
@@ -59,13 +59,20 @@ export const Folder = ({
           placeItems: "center",
           gap: "0.3rem",
           "&:hover": {
-            backgroundColor: "hsla(0, 0%, 100%, 0.2)",
+            backgroundColor: "hsla(0, 0%, 100%, 0.1)",
+          },
+          "&:focus": {
+            backgroundColor: "hsla(0,0%,100%, 0.15)",
+            outline: "none",
           },
         }}
       >
         <Foldericon></Foldericon>
         <Typography>{fileTreeNode.name}</Typography>
-        {isLoading && <CircularProgress size={16}></CircularProgress>}
+        {isLoading && (
+          // @ts-ignore
+          <CircularProgress size={16} color="action"></CircularProgress>
+        )}
       </Box>
       <Box
         component={"ul"}
