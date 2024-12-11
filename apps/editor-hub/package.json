@@ -5,9 +5,9 @@
   "type": "module",
   "author": "Brian Ure",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
+    "dev": "vite --mode development",
+    "stage": "tsc && vite build --mode stage",
+    "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {

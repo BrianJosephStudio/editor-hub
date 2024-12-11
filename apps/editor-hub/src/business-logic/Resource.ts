@@ -31,7 +31,7 @@ export class Resource {
       this.fileTreeNode.metadata.path_lower
     );
 
-    if (!isNodeEnv) return console.log("File Download was triggered");
+    if (!isNodeEnv) return console.log("File Download was triggered for ", this.fileTreeNode.name);
 
     const buffer = Buffer.from(data);
     const uint8Array = new Uint8Array(buffer);
@@ -45,6 +45,8 @@ export class Resource {
   };
 
   import = async () => {
+    if(!isNodeEnv) return console.log("Import function has been triggered for ", this.fileTreeNode.name)
+    
     const project = await Project.getInstance()
 
     const createdBin = await this.createBinRecursive(this.binPathArray)
