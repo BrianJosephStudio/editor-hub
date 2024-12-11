@@ -1,19 +1,19 @@
 export class NodeWrapper {
-  os: any;
-  fsPromises: any;
-  path: any;
+  isNodeEnv: boolean;
+  public os: typeof import("os") | undefined;
+  public fs: typeof import("fs") | undefined;
+  public fsPromises: typeof import("fs/promises") | undefined;
+  public path: typeof import("path") | undefined;
 
   constructor() {
-    if (this.isNodeEnvironment()) {
-      this.os = require("os");
-      this.fsPromises = require("fs/promises");
-      this.path = require("path");
-    } else {
-      const { mockOs, mockFsPromises, mockPath } = require("./mocks/node.mock");
-      this.os = mockOs;
-      this.fsPromises = mockFsPromises;
-      this.path = mockPath;
-    }
+    this.isNodeEnv = this.isNodeEnvironment();
+
+    if (!this.isNodeEnv) return;
+    
+    this.os = require("os");
+    this.fs = require("fs");
+    this.fsPromises = require("fs/promises");
+    this.path = require("path");
   }
 
   private isNodeEnvironment(): boolean {
