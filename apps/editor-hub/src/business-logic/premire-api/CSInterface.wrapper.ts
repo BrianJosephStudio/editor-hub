@@ -1,7 +1,6 @@
 import { CSInterface } from "@extendscript/csinterface/dist/v8";
 import { NodeWrapper } from "../node.wrapper";
 import axios from "axios";
-import { resolve } from "bun";
 
 /**
  * This wrapper's goal is to identify which environment the app is running in
@@ -23,9 +22,11 @@ export class CSInterfaceWrapper {
     if (!this.node.isNodeEnv) return;
     
     const { data: jsonParser } = await axios.get("extendScript/json2.js");
-    const { data: jsxDeclarations } = await axios.get("extendScript/index.js");
+    const { data: jsxCsInterfaceXDeclarations } = await axios.get("extendScript/index.js");
+    const { data: jsxEditorHubDeclarations } = await axios.get("extendScript/projectItem.js");
     await this.evalScript(jsonParser);
-    await this.evalScript(jsxDeclarations);
+    await this.evalScript(jsxCsInterfaceXDeclarations);
+    await this.evalScript(jsxEditorHubDeclarations);
   };
 
   public evalScript = async (

@@ -1,5 +1,6 @@
 import { v4 as uuid } from "uuid";
 import { CSInterfaceWrapper } from "../CSInterface.wrapper";
+import { Project } from "./Project";
 
 interface ProjectItemParams {
   name: string;
@@ -21,13 +22,22 @@ export class ProjectItem {
     this.referenceId = referenceId
   }
 
-  public createBin = async (name: string): Promise<ProjectItem> => {
-    return new Promise((resolve) => {
-      const referenceId = uuid()
+  /**
+   * Creates an empty bin, within the project item. Only works within bins.
+   * @param name A name of a new bin.
+   * @param unique If true, checks whether a bin with this name already exists and if so, it returns that instead of creating a new one.
+   */
+  public createBin = async (name: string, unique?: boolean): Promise<ProjectItem> => {
+    return new Promise(async (resolve) => {
+      if (unique) {
+        const existingChild = await this.getChildByName(name)
+        if (existingChild) return resolve(existingChild)
+      }
+
+      const newBinReferenceId = uuid()
       ProjectItem.csInterface.evalScript(
-        `createBin("${name}", "${this.nodeId}", "${referenceId}")`,
+        `createBin("${name}", "${this.referenceId}", "${newBinReferenceId}")`,
         (response) => {
-          console.log(response);
           const result = JSON.parse(response)
           ProjectItem.getProjectItemByNodeId(result.nodeId).then((projectItem) => {
             resolve(projectItem);
@@ -37,35 +47,105 @@ export class ProjectItem {
     });
   };
 
-  getChildrenParamsArray = async (): Promise<ProjectItemParams[]> => {
-    return new Promise((resolve, reject) => {
-      ProjectItem.csInterface.evalScript(`getProjectItemChildren("${this.referenceId}")`, (response) => {
+  getChildByName = async (name: string): Promise<ProjectItem | undefined> => {
+    return new Promise(async (resolve, reject) => {
+      if (this.type !== 2 && this.type !== 3) return resolve(undefined);
+
+      const childReferenceId = uuid()
+      ProjectItem.csInterface.evalScript(`getChildByName("${name}", "${this.referenceId}", "${childReferenceId}")`, (response) => {
         if (CSInterfaceWrapper.isEvalScriptError(response)) {
-          reject(response);
+          return reject(response)
         }
 
-        const projectItemParamsArray = ProjectItem.resolveProjectItemArray(response)
-        if (!projectItemParamsArray) return reject(response);
+        if (response === "undefined") {
+          return resolve(undefined)
+        }
 
-        resolve(projectItemParamsArray)
+        const projectItemParams = ProjectItem.resolveProjectItem(response)
+        if (!projectItemParams) return reject(response);
+
+        const existingProjectItem = Project.getProjectItem(projectItemParams.nodeId)
+        if (existingProjectItem) {
+          return ProjectItem.csInterface.evalScript(`deleteProjectItemTempReference("${childReferenceId}")`, (response) => {
+            if (CSInterfaceWrapper.isEvalScriptError(response)) {
+              return reject(response)
+            }
+
+            return resolve(existingProjectItem);
+          })
+        }
+
+        ProjectItem.csInterface.evalScript(`saveProjectItemReference("${childReferenceId}")`, (response) => {
+          if (CSInterfaceWrapper.isEvalScriptError(response)) {
+            return reject(response)
+          }
+
+          const projectItem = new ProjectItem(projectItemParams, childReferenceId)
+          Project.addProjectItem(projectItem)
+          resolve(projectItem)
+        })
       })
     })
   }
 
-  getChildByName = async (name: string): Promise<ProjectItem | undefined> => {
-    return new Promise(async (resolve, _reject) => {
-      const childrenParamsArray = await this.getChildrenParamsArray()
+  /**
+   * Sets the in point to timeInTicks, for specified media types.
+   * @param time A time in Ticks
+   * @param mediaType Determining which media type to affect; pass 1 for video only, 2 for audio only, or 4 for all media types.
+   * @returns Returns 0 if successful.
+   */
+  public setInPoint = async (time: number, mediaType: number): Promise<0 | null> => {
+    return new Promise((resolve, reject) => {
+      ProjectItem.csInterface.evalScript(`setInPoint("${this.referenceId}", ${time}, ${mediaType})`,
+        (response) => {
+          if(CSInterfaceWrapper.isEvalScriptError(response)){
+            return reject(response)
+          }
 
-      const foundProjectitemParams = childrenParamsArray.find((childrenParams) => {
-        return childrenParams.name === name
+          if(response === "0") return resolve(0);
+          resolve(null)
       })
 
-      const referenceId = uuid()
+    })
+  }
 
-      if (!foundProjectitemParams) return resolve(undefined)
-      const projectItem = new ProjectItem(foundProjectitemParams, referenceId)
+  /**
+   * Sets the out point to timeInTicks, for specified media types.
+   * @param time A time in Ticks
+   * @param mediaType Determining which media type to affect; pass 1 for video only, 2 for audio only, or 4 for all media types.
+   * @returns Returns 0 if successful.
+   */
+  public setOutPoint = async (time: number, mediaType: number): Promise<0 | null> => {
+    return new Promise((resolve, reject) => {
+      ProjectItem.csInterface.evalScript(`setOutPoint("${this.referenceId}", ${time}, ${mediaType})`,
+        (response) => {
+          if(CSInterfaceWrapper.isEvalScriptError(response)){
+            return reject(response)
+          }
 
-      resolve(projectItem)
+          if(response === "0") return resolve(0);
+          resolve(null)
+      })
+
+    })
+  }
+
+  /**
+   * Returns the path associated with the project item’s media, as a String.
+   * NOTE: This only works for atomic media;
+   * this call cannot provide meaningful paths for media which has no actual path
+   * (which will be the case for any media generated by synthetic importers,
+   * like Premiere Pro’s own Universal Counting Leader).
+   * Also, for image sequences, only the path to the first image in the sequence will be returned.
+   * @returns A String containing the path to the media associate with the project item.
+   */
+  public getMediaPath = async (): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      ProjectItem.csInterface.evalScript(`getMediaPath("${this.referenceId}")`, (response) => {
+        if(CSInterfaceWrapper.isEvalScriptError(response)) return reject(response);
+
+        return resolve(response)
+      })
     })
   }
 
@@ -73,15 +153,33 @@ export class ProjectItem {
 
   static getRootItem = async (): Promise<ProjectItem> => {
     return new Promise((resolve, reject) => {
-      const referenceId = uuid()
-      this.csInterface.evalScript(`getRootItem("${referenceId}")`, (response) => {
+      const newReferenceId = uuid()
+      this.csInterface.evalScript(`getRootItem("${newReferenceId}")`, (response) => {
         if (CSInterfaceWrapper.isEvalScriptError(response)) {
-          reject(response);
+          return reject(response);
         }
         const projectItemParams = ProjectItem.resolveProjectItem(response);
         if (!projectItemParams) return reject(response);
-        const rootItem = new ProjectItem(projectItemParams, referenceId);
-        resolve(rootItem);
+
+        const existingProjectItem = Project.getProjectItem(projectItemParams.nodeId)
+        if (existingProjectItem) {
+          ProjectItem.csInterface.evalScript(`deleteProjectItemTempReference("${newReferenceId}")`, (response) => {
+            if (CSInterfaceWrapper.isEvalScriptError(response)) {
+              return reject(response);
+            }
+            return resolve(existingProjectItem)
+          })
+        } //TODO: enhance memory management for unused declared referenceId properties
+
+        ProjectItem.csInterface.evalScript(`saveProjectItemReference("${newReferenceId}")`, (response) => {
+          if (CSInterfaceWrapper.isEvalScriptError(response)) {
+            return reject(response);
+          }
+
+          const rootItem = new ProjectItem(projectItemParams, newReferenceId);
+          Project.addProjectItem(rootItem)
+          resolve(rootItem);
+        })
       });
     });
   };
@@ -90,20 +188,37 @@ export class ProjectItem {
     nodeId: string
   ): Promise<ProjectItem> => {
     return new Promise((resolve, reject) => {
-      const referenceId = uuid()
+      const newReferenceId = uuid()
       this.csInterface.evalScript(
         `
-          findProjectItemByNodeId("${nodeId}", undefined, "${referenceId}")
+          findProjectItemByNodeId("${nodeId}", undefined, "${newReferenceId}")
         `,
         (response) => {
-          console.log(response);
           if (CSInterfaceWrapper.isEvalScriptError(response)) {
             return reject(response);
           }
           const projectItemParams = ProjectItem.resolveProjectItem(response);
           if (!projectItemParams) return reject(response);
-          const projectItem = new ProjectItem(projectItemParams, referenceId);
-          resolve(projectItem);
+
+          const existingProjectItem = Project.getProjectItem(projectItemParams.nodeId)
+          if (existingProjectItem) {
+            ProjectItem.csInterface.evalScript(`deleteProjectItemTempReference("${newReferenceId}")`, (response) => {
+              if (CSInterfaceWrapper.isEvalScriptError(response)) {
+                return reject(response);
+              }
+              return resolve(existingProjectItem)
+            })
+          } //TODO: enhance memory management for unused declared referenceId properties
+
+          ProjectItem.csInterface.evalScript(`saveProjectItemReference("${newReferenceId}")`, (response) => {
+            if (CSInterfaceWrapper.isEvalScriptError(response)) {
+              return reject(response);
+            }
+
+            const projectItem = new ProjectItem(projectItemParams, newReferenceId);
+            Project.addProjectItem(projectItem)
+            resolve(projectItem);
+          })
         }
       );
     });
@@ -113,17 +228,37 @@ export class ProjectItem {
     filePath: string
   ): Promise<ProjectItem> => {
     return new Promise((resolve, reject) => {
-      const referenceId = uuid()
+      const newReferenceId = uuid()
       this.csInterface.evalScript(
-        `getProjectItemBySourcePath("${filePath}", "${referenceId}")`,
+        `getProjectItemBySourcePath("${filePath}", "${newReferenceId}")`,
         (response) => {
           if (CSInterfaceWrapper.isEvalScriptError(response)) {
             return reject(response);
           }
           const foundProjectItem = ProjectItem.resolveProjectItem(response);
-          if (!foundProjectItem) return reject(response);
-          const projectItem = new ProjectItem(foundProjectItem, referenceId);
-          resolve(projectItem);
+          if (!foundProjectItem) {
+            return reject(response);
+          }
+
+          const existingProjectItem = Project.getProjectItem(foundProjectItem.nodeId)
+          if (existingProjectItem) {
+            return ProjectItem.csInterface.evalScript(`deleteProjectItemTempReference("${newReferenceId}")`, (response) => {
+              if (CSInterfaceWrapper.isEvalScriptError(response)) {
+                return reject(response);
+              }
+              return resolve(existingProjectItem)
+            })
+          } //TODO: enhance memory management for unused declared referenceId properties
+
+          ProjectItem.csInterface.evalScript(`saveProjectItemReference("${newReferenceId}")`, (response) => {
+            if (CSInterfaceWrapper.isEvalScriptError(response)) {
+              return reject(response);
+            }
+
+            const projectItem = new ProjectItem(foundProjectItem, newReferenceId);
+            Project.addProjectItem(projectItem)
+            resolve(projectItem);
+          })
         }
       );
     });
@@ -138,13 +273,13 @@ export class ProjectItem {
         parsedResponse.name &&
         parsedResponse.nodeId &&
         parsedResponse.type &&
-        parsedResponse.name instanceof String &&
-        parsedResponse.nodeIde instanceof Number &&
-        parsedResponse.type instanceof String
+        typeof (parsedResponse.name) === 'string' &&
+        typeof (parsedResponse.nodeId) === 'string' &&
+        typeof (parsedResponse.type) === 'number'
       ) {
         return {
           name: parsedResponse.name,
-          nodeId: parsedResponse.nodeIde,
+          nodeId: parsedResponse.nodeId,
           type: parsedResponse.type,
         };
       }
@@ -153,34 +288,34 @@ export class ProjectItem {
     }
   };
 
-  static resolveProjectItemArray = (
-    extendScriptResponse: string
-  ): ProjectItemParams[] | undefined => {
-    try {
-      const parsedResponse = JSON.parse(extendScriptResponse);
-      if (!Array.isArray(parsedResponse)) {
-        throw new Error("is not array")
-      }
-      const projectItemArray = parsedResponse.map((projectItem) => {
-        if (
-          projectItem.name &&
-          projectItem.nodeId &&
-          projectItem.type &&
-          projectItem.name instanceof String &&
-          projectItem.nodeId instanceof Number &&
-          projectItem.type instanceof String
-        ) {
-          return {
-            name: projectItem.name,
-            nodeId: projectItem.nodeIde,
-            type: projectItem.type,
-          };
-        }
-        throw new Error("is not project item params")
-      })
-      return projectItemArray
-    } catch (e) {
-      console.error(e);
-    }
-  };
+  // static resolveProjectItemArray = (
+  //   extendScriptResponse: string
+  // ): ProjectItemParams[] | undefined => {
+  //   try {
+  //     const parsedResponse = JSON.parse(extendScriptResponse);
+  //     if (!Array.isArray(parsedResponse)) {
+  //       throw new Error("is not array")
+  //     }
+  //     const projectItemArray = parsedResponse.map((projectItem) => {
+  //       if (
+  //         projectItem.name &&
+  //         projectItem.nodeId &&
+  //         projectItem.type &&
+  //         typeof (projectItem.name) === 'string' &&
+  //         typeof (projectItem.nodeId) === 'string' &&
+  //         typeof (projectItem.type) === 'number'
+  //       ) {
+  //         return {
+  //           name: projectItem.name,
+  //           nodeId: projectItem.nodeId,
+  //           type: projectItem.type,
+  //         };
+  //       }
+  //       throw new Error("is not project item params")
+  //     })
+  //     return projectItemArray
+  //   } catch (e) {
+  //     console.error(e);
+  //   }
+  // };
 }

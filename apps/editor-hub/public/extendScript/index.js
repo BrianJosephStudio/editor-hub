@@ -1,5 +1,8 @@
-var CSInterfaceX = {
-  projectItems: {}
+if (!CSInterfaceX) {
+  var CSInterfaceX = {
+    projectItems: {},
+    temp: {}
+  }
 }
 
 function findProjectItemByNodeId(nodeId, parentItem, referenceId) {
@@ -7,7 +10,7 @@ function findProjectItemByNodeId(nodeId, parentItem, referenceId) {
     parentItem = app.project.rootItem;
   }
   if (parentItem.nodeId === nodeId) {
-    CSInterfaceX.projectItems[referenceId] = parentItem
+    saveProjectItemTempReference(referenceId, parentItem)
     return parentItem;
   }
 
@@ -15,7 +18,7 @@ function findProjectItemByNodeId(nodeId, parentItem, referenceId) {
     var projectItem = parentItem.children[i];
 
     if (projectItem.nodeId === nodeId) {
-      CSInterfaceX.projectItems[referenceId] = projectItem
+      saveProjectItemTempReference(referenceId, projectItem)
       return JSON.stringify({
         name: projectItem.name,
         nodeId: projectItem.nodeId,
@@ -26,7 +29,7 @@ function findProjectItemByNodeId(nodeId, parentItem, referenceId) {
     if (projectItem.type === ProjectItemType.BIN) {
       var foundItem = getProjectItemByNodeId(nodeId, projectItem);
       if (foundItem) {
-        CSInterfaceX.projectItems[referenceId] = foundItem
+        saveProjectItemTempReference(referenceId, foundItem)
         return JSON.stringify({
           name: foundItem.name,
           nodeId: foundItem.nodeId,
@@ -65,23 +68,28 @@ function getProjectItemByNodeId(nodeId, parentItem) {
   return null;
 }
 
-function getProjectItemBySourcePath(filePath) {
-  if (!parentItem) {
-    parentItem = app.project.rootItem;
+function getProjectItemBySourcePath(filePath, referenceId, parentProjectItem) {
+  if (!parentProjectItem) {
+    parentProjectItem = app.project.rootItem;
   }
 
-  for (var i = 0; i < parentItem.children.numItems; i++) {
-    var projectItem = parentItem.children[i];
+  for (var i = 0; i < parentProjectItem.children.numItems; i++) {
+    var projectItem = parentProjectItem.children[i];
+
 
     var projectItemMediaPath = projectItem.getMediaPath();
-    if (!projectItemMediaPath) continue;
-
-    if (projectItemMediaPath === filePath) {
-      return projectItem;
+    if (projectItemMediaPath && projectItemMediaPath.replace(/\\/g, "/") === filePath) {
+      saveProjectItemTempReference(referenceId, projectItem)
+      return JSON.stringify({
+        name: projectItem.name,
+        nodeId: projectItem.nodeId,
+        type: projectItem.type,
+      });
     }
 
-    if (projectItem.type === ProjectItemType.BIN) {
-      var foundItem = getProjectItemByNodeId(nodeId, projectItem);
+
+    if (projectItem.type === 2) {
+      var foundItem = getProjectItemBySourcePath(filePath, referenceId, projectItem);
       if (foundItem) {
         return foundItem;
       }
@@ -92,7 +100,7 @@ function getProjectItemBySourcePath(filePath) {
 }
 
 function getRootItem(referenceId) {
-  CSInterfaceX.projectItems[referenceId] = app.project.rootItem
+  saveProjectItemTempReference(referenceId, app.project.rootItem)
   var response = {
     name: app.project.rootItem.name,
     nodeId: app.project.rootItem.nodeId,
@@ -101,11 +109,11 @@ function getRootItem(referenceId) {
   return JSON.stringify(response);
 }
 
-function createBin(name, ParentNodeId, referenceId) {
-  var parentProjectItem = findProjectItemByNodeId(ParentNodeId);
+function createBin(name, parentNodeReferenceId, referenceId) {
+  var parentProjectItem = getProjectItemReference(parentNodeReferenceId)
   if (parentProjectItem) {
     var createdBin = parentProjectItem.createBin(name);
-    CSInterfaceX.projectItems[referenceId] = createdBin
+    saveProjectItemTempReference(referenceId, createdBin)
     var response = { success: true, message: "", nodeId: createdBin.nodeId };
     return JSON.stringify(response);
   } else {
@@ -141,4 +149,59 @@ function importFile(
       message: e.message,
     });
   }
+}
+
+function getProjectItemChildren(referenceId) {
+  var parentProjectItem = getProjectItemReference(referenceId)
+  if (!parentProjectItem) throw new Error("Parent not found");
+  var children = parentProjectItem.children
+  var outputChildren = []
+
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i]
+    outputChildren.push({
+      name: child.name,
+      nodeId: child.nodeId,
+      type: child.type
+    })
+  }
+  return JSON.stringify(outputChildren)
+}
+
+function getChildByName(name, parentReferenceId, childReferenceId) {
+  var parentProjectItem = getProjectItemReference(parentReferenceId)
+  var children = parentProjectItem.children
+  for (var i = 0; i < children.length; i++) {
+    var child = children[i]
+    if (child.name === name) {
+      saveProjectItemTempReference(childReferenceId, child)
+      return JSON.stringify(child)
+    }
+  }
+  return undefined
+}
+
+function saveProjectItemTempReference(referenceId, projectItem) {
+  CSInterfaceX.temp[referenceId] = projectItem
+}
+
+function getProjectItemTempReference(referenceId) {
+  return CSInterfaceX.temp[referenceId]
+}
+
+function deleteProjectItemTempReference(referenceId) {
+  delete CSInterfaceX.temp[referenceId]
+}
+
+function saveProjectItemReference(referenceId) {
+  CSInterfaceX.projectItems[referenceId] = getProjectItemTempReference(referenceId)
+  deleteProjectItemTempReference(referenceId)
+}
+
+function getProjectItemReference(referenceId) {
+  return CSInterfaceX.projectItems[referenceId]
+}
+
+function deleteProjectItemReference(referenceId) {
+  delete CSInterfaceX.projectItems[referenceId]
 }
