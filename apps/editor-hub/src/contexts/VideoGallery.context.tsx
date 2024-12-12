@@ -91,6 +91,20 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
             metadata,
           };
 
+          if(newFileTreeNode.tag === "file"){
+            if(metadata.property_groups?.length! > 0){
+              try{
+                const parsedTagList = JSON.parse(metadata.property_groups![0].fields[0].value)
+                const tagList = Object.keys(parsedTagList)
+                newFileTreeNode.tagList = tagList
+              }catch(e){
+                console.log(newFileTreeNode.name)
+                console.log(newFileTreeNode.metadata!.property_groups![0].fields[0].value)
+                console.error(e)
+              }
+            }
+          }
+
           if (newFileTreeNode.tag === "folder") {
             newFileTreeNode = resolveTreeStructure(
               newFileTreeNode,
@@ -146,7 +160,7 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
     if (!fileTreeNode.temporary_link) {
       const apiClient = new ApiClient();
       const temporary_link = await apiClient.getTemporaryLink(
-        fileTreeNode.metadata.path_lower
+        fileTreeNode.metadata!.path_lower!
       );
       fileTreeNode.temporary_link = temporary_link;
     }

@@ -6,6 +6,7 @@ import { TabbedPage } from "./components/pages/TabbedPage";
 import { PlayCircleFilled, Settings } from "@mui/icons-material";
 import { VideoGallery } from "./components/pages/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
+import { TagsProvider } from "./contexts/Tags.context";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
         <AppBanner></AppBanner>
         <NavBar></NavBar>
         <VideoGalleryProvider>
+        <TagsProvider>
           <TabbedPage pageId={0}>
             <VideoGallery
               tabName="In-game"
@@ -36,6 +38,7 @@ function App() {
               proportion={1}
             ></VideoGallery>
           </TabbedPage>
+        </TagsProvider>
         </VideoGalleryProvider>
       </Box>
     </>

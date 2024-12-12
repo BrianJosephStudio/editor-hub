@@ -1,11 +1,12 @@
 import { SvgIconComponent } from "@mui/icons-material";
-import { Box, Typography } from "@mui/material";
+import { Box, Button, Switch, Typography } from "@mui/material";
 import { ApiClient } from "../../api/ApiClient";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Folder } from "./components/Folder";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { FileTreeNode } from "../../types/app";
 import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
+import { useTags } from "../../contexts/Tags.context";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -31,9 +32,12 @@ export const VideoGallery: React.FC<{
     videoPlayer,
   } = useVideoGallery();
 
+  const { filterByTags, setFilterByTags } = useTags()
+  // const [filterByTags, setFilterByTags] = useState<boolean>(false)
+
   const fetchClickedFolder = async (
     currentFileTree: FileTreeNode,
-    fileTreeNode: FileTreeNode
+    fileTreeNode: FileTreeNode,
   ) => {
     if (!currentFileTree.children || currentFileTree.children.length === 0)
       return;
@@ -52,7 +56,7 @@ export const VideoGallery: React.FC<{
       return;
 
     const newMetadata = await apiClient.getFolderEntriesRecursively(
-      fileTreeNode.metadata.path_lower
+      fileTreeNode.metadata!.path_lower!
     );
     setClipMetadataBatch(newMetadata);
   };
@@ -82,10 +86,11 @@ export const VideoGallery: React.FC<{
     (async () => {
       const fetchedMetadataRaw = await Promise.all(
         fileTree.children!.map((fileTreeNode, index) => {
+          if (!fileTreeNode.metadata) throw new Error(`Missing metadata in fileTreeNode for ${fileTreeNode.name}`);
           if (index > fetchUpfront) return;
 
           return apiClient.getFolderEntriesRecursively(
-            fileTreeNode.metadata.path_lower
+            fileTreeNode.metadata.path_lower!
           );
         })
       );
@@ -97,8 +102,6 @@ export const VideoGallery: React.FC<{
       setClipMetadataBatch(fetchedMetadata);
     })();
   }, [foldersRendered]);
-
-  // useEffect(() => {videoPlayer.current?.pause()}, [activePage]);
 
   return (
     <Box
@@ -152,11 +155,21 @@ export const VideoGallery: React.FC<{
           id={"page:video-gallery-in-game-footage-browser:banner"}
           data-testid={"page:video-gallery-in-game-footage-browser:banner"}
           sx={{
-            backgroundColor: "Gray",
-            paddingY: "0.2rem",
+            display: 'grid',
+            placeItems: 'center',
+            gridTemplateColumns: '1fr 3fr 1fr',
+            height: '3rem'
           }}
         >
-          <Typography>In-game Footage</Typography>
+          <Typography gridColumn={'2/3'}>In-game Footage</Typography>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+          }}>
+            <Typography>Filter by Tags</Typography>
+            <Switch checked={filterByTags} onChange={() => setFilterByTags(currentValue => !currentValue)}></Switch>
+            {/* <Switch></Switch> */}
+          </Box>
         </Box>
         <Box
           component={"ul"}
@@ -190,6 +203,7 @@ export const VideoGallery: React.FC<{
             <Folder
               fileTreeNode={fileTreeNode}
               nodeKey={index}
+              isRootFolder={true}
               onClickCallback={async (setIsLoading) => {
                 setIsLoading(true);
                 await fetchClickedFolder(fileTree, fileTreeNode);
