@@ -5,7 +5,7 @@ import React, { useEffect } from "react";
 import { Folder } from "./components/Folder";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { FileTreeNode } from "../../types/app";
-import scLogoMini from "../../../public/editor-hub-logo-mini.svg";
+import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
