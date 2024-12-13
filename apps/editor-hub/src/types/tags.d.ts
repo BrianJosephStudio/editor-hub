@@ -25,6 +25,7 @@ export interface GenericTag {
 }
 
 export interface TagGroup {
+  groupName: string
   tags: TagObject[];
   keybindGroup: string;
   exclusive: boolean;

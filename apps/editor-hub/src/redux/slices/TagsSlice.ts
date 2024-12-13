@@ -17,12 +17,19 @@ const tagsSlice = createSlice({
         toggleFilterByTags(state) {
             state.filterByTags = !state.filterByTags
         },
-        setActiveTags(state, action: PayloadAction<string[]>) {
-            state.activeTags = action.payload;
+        addActiveTag(state, action: PayloadAction<string>) {
+            const tagIsAlreadyAdded = state.activeTags.find(entry => entry === action.payload)
+            if(tagIsAlreadyAdded) return;
+            state.activeTags.push(action.payload);
+        },
+        removeActiveTag(state, action: PayloadAction<string>) {
+            const tagIndex = state.activeTags.findIndex(entry => entry === action.payload)
+            if(tagIndex === -1) return;
+            state.activeTags.slice(tagIndex, 1);
         },
     },
 });
 
-export const { toggleFilterByTags, setActiveTags } = tagsSlice.actions;
+export const { toggleFilterByTags, addActiveTag, removeActiveTag } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

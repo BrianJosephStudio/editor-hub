@@ -1,11 +1,13 @@
 import "./App.css";
-import { Box } from "@mui/material";
+import { Box, Dialog, DialogContent, DialogTitle, Modal, ModalRoot, Typography } from "@mui/material";
 import { NavBar } from "./components/nav-bar/NavBar";
 import { AppBanner } from "./components/app-banner/AppBanner";
 import { TabbedPage } from "./components/pages/TabbedPage";
 import { PlayCircleFilled, Settings } from "@mui/icons-material";
 import { VideoGallery } from "./components/pages/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
+import { TagsDialog } from "./modals/TagsModal";
+import { TagsProvider } from "./contexts/Tags.context";
 
 function App() {
   return (
@@ -37,9 +39,11 @@ function App() {
             ></VideoGallery>
           </TabbedPage>
         </VideoGalleryProvider>
+        <TagsProvider>
+          <TagsDialog></TagsDialog>
+        </TagsProvider>
       </Box>
     </>
   );
 }
-
 export default App;
