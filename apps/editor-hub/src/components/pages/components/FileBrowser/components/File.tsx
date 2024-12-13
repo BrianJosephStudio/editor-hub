@@ -1,10 +1,13 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { FileTreeNode } from "../../../types/app";
+import { FileTreeNode } from "../../../../../types/app";
 import { Download, PlayArrow, Theaters } from "@mui/icons-material";
-import { useVideoGallery } from "../../../contexts/VideoGallery.context";
+import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
 import { useState } from "react";
-import { Resource } from "../../../business-logic/Resource";
-import { AppPaths } from "../../../business-logic/AppPaths";
+import { Resource } from "../../../../../business-logic/Resource";
+import { AppPaths } from "../../../../../business-logic/AppPaths";
+import { useDispatch } from "react-redux";
+import { setNewVideoSource } from "../../../../../redux/slices/VideoGallerySlice";
+import { ApiClient } from "../../../../../api/ApiClient";
 
 export const File = ({
   fileTreeNode,
@@ -13,29 +16,51 @@ export const File = ({
   fileTreeNode: FileTreeNode;
   nodeKey: number;
 }) => {
-  const { currentTabIndex, setCurrentTabIndex, playVideo } = useVideoGallery();
+  const dispatch = useDispatch()
+  const { videoPlayer, tabIndex } = useVideoGallery();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const tabIndex = currentTabIndex;
-  setCurrentTabIndex((current) => current++);
+  const currentTabIndex = tabIndex.current;
+  tabIndex.current = currentTabIndex + 1
+
+  const playVideo = async (
+  ) => {
+    setIsLoading(true);
+    if (videoPlayer.current && videoPlayer.current.src) {
+      videoPlayer.current.src = "";
+    }
+    if (!fileTreeNode.temporary_link) {
+      const apiClient = new ApiClient();
+      const temporary_link = await apiClient.getTemporaryLink(
+        fileTreeNode.metadata!.path_lower!
+      );
+      const newFileTreeNode: FileTreeNode = {
+        ...fileTreeNode,
+        temporary_link
+      }
+      dispatch(setNewVideoSource(newFileTreeNode))
+    }
+    setIsLoading(false);
+  };
+
 
   return (
     <Box
       component={"li"}
-      tabIndex={tabIndex}
+      tabIndex={currentTabIndex}
       key={nodeKey}
       onDoubleClick={() => {
         const selection = window.getSelection();
         if (selection) {
           selection.removeAllRanges();
         }
-        playVideo(fileTreeNode, setIsLoading);
+        playVideo();
       }}
       onKeyDown={(event) => {
         if (event.key === "Enter") {
           event.preventDefault();
           event.stopPropagation();
-          playVideo(fileTreeNode, setIsLoading);
+          playVideo();
         }
       }}
       sx={{
@@ -64,7 +89,7 @@ export const File = ({
           gap: "0.3rem",
         }}
       >
-        <Theaters></Theaters>
+        <Theaters sx={{fill: 'hsl(40, 100%, 95%)'}}></Theaters>
         <Typography>{fileTreeNode.name}</Typography>
         {isLoading && (
           <CircularProgress
@@ -84,7 +109,7 @@ export const File = ({
         >
           <PlayArrow
             onClick={() => {
-              playVideo(fileTreeNode, setIsLoading);
+              playVideo();
             }}
             fontSize="small"
             sx={{

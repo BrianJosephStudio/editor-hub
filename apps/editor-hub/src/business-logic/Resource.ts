@@ -26,6 +26,7 @@ export class Resource {
   }
 
   download = async () => {
+    if(!this.fileTreeNode.metadata || !this.fileTreeNode.metadata.path_lower) throw new Error("Missing metadata")
     const apiClient = new ApiClient();
     const data = await apiClient.download(
       this.fileTreeNode.metadata.path_lower

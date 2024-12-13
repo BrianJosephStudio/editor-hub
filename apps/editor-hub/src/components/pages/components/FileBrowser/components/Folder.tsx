@@ -1,10 +1,12 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { FileTreeNode } from "../../../types/app";
+import { FileTreeNode } from "../../../../../types/app";
 import { useEffect, useRef, useState } from "react";
 import { Folder as Foldericon } from "@mui/icons-material";
 import { File } from "./File";
-import { useVideoGallery } from "../../../contexts/VideoGallery.context";
-import { useTags } from "../../../contexts/Tags.context";
+import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../../../redux/store";
+import { selectFilteredFileTree } from "../../../../../redux/selectors/FileTreeSelector";
 
 export const Folder = ({
   fileTreeNode,
@@ -23,31 +25,32 @@ export const Folder = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentFetched, setContentFetched] = useState<boolean>(false)
-  const [isVisible, setIsVisible] = useState<boolean>(true)
 
-  const { fileTree, currentTabIndex, setCurrentTabIndex } = useVideoGallery();
-  const { activeTags } = useTags()
+  const filteredFileTree = useSelector(selectFilteredFileTree)
+  const { settings:{fetchUpfront} } = useSelector((state: RootState) => state.videoGallery)
+  
+  const { tabIndex } = useVideoGallery();
 
-  const tabIndex = currentTabIndex;
-  setCurrentTabIndex((current) => current++);
+  const currentTabIndex = tabIndex.current;
+  tabIndex.current = currentTabIndex + 1
 
   useEffect(() => {
-    console.log(fileTreeNode.name, isRootFolder, fileTreeNode.children,)
     if (!isRootFolder) setContentFetched(true)
-    if (isRootFolder && fileTreeNode.children && fileTreeNode.children.length > 0) setContentFetched(true);
-  }, [fileTree])
+    if (isRootFolder && fileTreeNode.children && fileTreeNode.children.length > 0) {
+      setIsLoading(false)
+      setContentFetched(true);
+      return
+    }
 
-  useEffect(() => {
-    if (!childrenContainer.current || !contentFetched) return;
-
-    const visible = childrenContainer.current.querySelector('#file-browser\\:file\\:container')
-    if (visible) return setIsVisible(true);
-    setIsVisible(false)
-  }, [activeTags, fileTree, contentFetched])
+    if(filteredFileTree && filteredFileTree.children){
+      const fetchedUpfrontChildren = [...filteredFileTree.children].filter((_, index) => index < fetchUpfront)
+      if(fetchedUpfrontChildren.find(entry => entry.name === fileTreeNode.name)){
+        setIsLoading(true)
+      }
+    }
+  }, [filteredFileTree])
 
   return (
-    <>
-      {isVisible &&
         <Box
           component={"li"}
           id={"file-browser:folder:container"}
@@ -62,7 +65,7 @@ export const Folder = ({
         >
           <Box
             component={"div"}
-            tabIndex={tabIndex}
+            tabIndex={currentTabIndex}
             onClick={() => {
               setIsOpen(!isOpen);
               if (!onClickCallback) return;
@@ -91,7 +94,7 @@ export const Folder = ({
               },
             }}
           >
-            <Foldericon></Foldericon>
+            <Foldericon sx={{fill: 'hsl(213, 68%, 68%)'}}></Foldericon>
             <Typography>{fileTreeNode.name}</Typography>
             {isLoading && (
               // @ts-ignore
@@ -118,13 +121,12 @@ export const Folder = ({
                   {childTreeNode.tag === "folder" && (
                     <Folder fileTreeNode={childTreeNode} nodeKey={index}></Folder>
                   )}
-                  {childTreeNode.tag === "file" && (activeTags.length === 0 || activeTags.every(tag => childTreeNode.tagList?.includes(tag))) && (
+                  {childTreeNode.tag === "file" && (
                     <File fileTreeNode={childTreeNode} nodeKey={index}></File>
                   )}
                 </>
               ))}
           </Box>
         </Box>
-      }</>
   );
 };

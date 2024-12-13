@@ -6,7 +6,6 @@ import { TabbedPage } from "./components/pages/TabbedPage";
 import { PlayCircleFilled, Settings } from "@mui/icons-material";
 import { VideoGallery } from "./components/pages/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
-import { TagsProvider } from "./contexts/Tags.context";
 
 function App() {
   return (
@@ -17,7 +16,7 @@ function App() {
         data-testid={"editor-hub-container"}
         sx={{
           display: "grid",
-          gridTemplateRows: " 2.4rem 3rem auto",
+          gridTemplateRows: " 2rem 1.6rem auto",
           height: "100vh",
           width: "100vw",
         }}
@@ -25,7 +24,6 @@ function App() {
         <AppBanner></AppBanner>
         <NavBar></NavBar>
         <VideoGalleryProvider>
-        <TagsProvider>
           <TabbedPage pageId={0}>
             <VideoGallery
               tabName="In-game"
@@ -38,7 +36,6 @@ function App() {
               proportion={1}
             ></VideoGallery>
           </TabbedPage>
-        </TagsProvider>
         </VideoGalleryProvider>
       </Box>
     </>
