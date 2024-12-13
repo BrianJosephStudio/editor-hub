@@ -28,7 +28,7 @@ export const fetchInitialMetadata = async (fileTree: FileTreeNode, fetchUpfront:
     .flat()
     .filter((child) => !!child);
 
-    return fetchedMetadata
+  return fetchedMetadata
 }
 
 export const fetchClickedFolderMetadata = async (
@@ -62,10 +62,9 @@ export const fetchClickedFolderMetadata = async (
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
-  isFilteredByTags?: () => void
 ): FileTreeNode => {
   const currentHead = currentFileTreeNode.path;
-  const newFileTreeNode = {...currentFileTreeNode}
+  const newFileTreeNode = { ...currentFileTreeNode }
 
   const children: FileTreeNode[] = newMetadata
     .map((metadata) => {
@@ -84,6 +83,7 @@ export const resolveTreeStructure = (
           name: metadata.name,
           tag: metadata[".tag"],
           path: getMetadataPath(metadata.path_lower!),
+          filtered: false,
           metadata,
         };
 

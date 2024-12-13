@@ -1,9 +1,9 @@
 import { SvgIconComponent } from "@mui/icons-material";
-import { Box, Switch, Typography, useMediaQuery } from "@mui/material";
-import React, { useEffect, useState } from "react";
+import { Box, Switch, Typography } from "@mui/material";
+import React from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
-import { toggleFilterByTags, setActiveTags } from "../../redux/slices/TagsSlice";
+import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
 import { FileBrowser } from "./components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
@@ -17,7 +17,7 @@ export const VideoGallery: React.FC<{
   const dispatch = useDispatch()
   const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
-  
+
   const {
     videoPlayer,
   } = useVideoGallery();
@@ -85,7 +85,7 @@ export const VideoGallery: React.FC<{
             alignItems: 'center',
           }}>
             <Typography fontSize={'0.8rem'} className="hide-on-narrow-screen">Filter by Tags</Typography>
-            <Switch checked={filterByTags} title="Filter by Tags" onChange={() => {dispatch(toggleFilterByTags())}}></Switch>
+            <Switch checked={filterByTags} title="Filter by Tags" onChange={() => { dispatch(toggleFilterByTags()) }}></Switch>
           </Box>
         </Box>
         <FileBrowser></FileBrowser>

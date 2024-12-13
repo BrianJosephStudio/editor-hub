@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FileTreeNode } from '../../types/app';
 
-const initialState: {fileTree: FileTreeNode} = {
-    fileTree:{
+const initialState: { fileTree: FileTreeNode } = {
+    fileTree: {
         name: "root",
         tag: "folder",
         path: "/",
+        filtered: false,
         children: [],
     }
 };

@@ -10,7 +10,7 @@ interface VideoGalleryState {
 
 const initialState: VideoGalleryState = {
     settings: {
-        fetchUpfront: 5
+        fetchUpfront: 2
     },
     currentVideoSource: null
 };
