@@ -29,10 +29,10 @@ export const Folder = ({
   const filteredFileTree = useSelector(selectFilteredFileTree)
   const { settings:{fetchUpfront} } = useSelector((state: RootState) => state.videoGallery)
   
-  const { tabIndex } = useVideoGallery();
+  const { tabIndex, setTabIndex } = useVideoGallery();
 
-  const currentTabIndex = tabIndex.current;
-  tabIndex.current = currentTabIndex + 1
+  const currentTabIndex = tabIndex;
+  setTabIndex(currentValue => currentValue++)
 
   useEffect(() => {
     if (!isRootFolder) setContentFetched(true)

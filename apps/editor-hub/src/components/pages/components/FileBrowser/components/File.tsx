@@ -17,11 +17,11 @@ export const File = ({
   nodeKey: number;
 }) => {
   const dispatch = useDispatch()
-  const { videoPlayer, tabIndex } = useVideoGallery();
+  const { videoPlayer, tabIndex, setTabIndex } = useVideoGallery();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const currentTabIndex = tabIndex.current;
-  tabIndex.current = currentTabIndex + 1
+  const currentTabIndex = tabIndex;
+  setTabIndex(currentValue => currentValue++)
 
   const playVideo = async (
   ) => {

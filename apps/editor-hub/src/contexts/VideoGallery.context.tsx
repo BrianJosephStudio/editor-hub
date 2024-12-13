@@ -2,7 +2,8 @@ import { createContext, useContext, useState, ReactNode, useRef } from "react";
 
 interface VideoGalleryContextProps {
   videoPlayer: React.RefObject<HTMLVideoElement>;
-  tabIndex: React.MutableRefObject<number>;
+  tabIndex: number;
+  setTabIndex: React.Dispatch<React.SetStateAction<number>>
 }
 
 const VideoGalleryContext = createContext<VideoGalleryContextProps | undefined>(
@@ -21,13 +22,14 @@ export const useVideoGallery = () => {
 
 export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
   const videoPlayer = useRef<HTMLVideoElement>(null);
-  const tabIndex = useRef<number>(0);
+  const [tabIndex, setTabIndex] = useState<number>(0)
 
   return (
     <VideoGalleryContext.Provider
       value={{
         videoPlayer,
-        tabIndex
+        tabIndex,
+        setTabIndex
       }}
     >
       {children}
