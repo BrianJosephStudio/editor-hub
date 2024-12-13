@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from "@mui/material";
-import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
+import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { AccountCircle } from "@mui/icons-material";
 import packageJson from "../../../package.json";

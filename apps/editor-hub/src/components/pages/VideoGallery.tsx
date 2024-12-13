@@ -1,6 +1,6 @@
-import { Sell, SvgIconComponent } from "@mui/icons-material";
+import { Sell } from "@mui/icons-material";
 import { Box, IconButton, Switch, Typography } from "@mui/material";
-import React, { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
@@ -11,11 +11,7 @@ import './VideoGallery.css'
 import { TagsProvider } from "../../contexts/Tags.context";
 import { TagsDialog } from "../../modals/TagsModal";
 
-export const VideoGallery: React.FC<{
-  tabName: string;
-  tabIcon: SvgIconComponent;
-  proportion: number;
-}> = () => {
+export const VideoGallery = () => {
   const dispatch = useDispatch()
   const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
@@ -43,19 +39,21 @@ export const VideoGallery: React.FC<{
         minHeight: "0",
       }}
     >
-      <Box
-        ref={videoPlayer}
-        component={"video"}
-        controls
-        autoPlay
-        poster={scLogoMini}
-        src={currentVideoSource?.temporary_link}
-        id={"page:video-gallery:video-player"}
-        data-testid={"page:video-gallery:video-player"}
-        sx={{
-          maxHeight: "50%",
-        }}
-      ></Box>
+      {!!currentVideoSource &&
+        <Box
+          ref={videoPlayer}
+          component={"video"}
+          controls
+          autoPlay
+          // poster={scLogoMini}
+          src={currentVideoSource?.temporary_link}
+          id={"page:video-gallery:video-player"}
+          data-testid={"page:video-gallery:video-player"}
+          sx={{
+            maxHeight: "50%",
+          }}
+        ></Box>
+      }
       <Box
         component={"div"}
         tabIndex={-1}
@@ -90,7 +88,7 @@ export const VideoGallery: React.FC<{
             height: '3rem'
           }}
         >
-          <IconButton onClick={() => setTagModalOpen(true)} sx={{'&:focus':{ outline: 'none'}}}>
+          <IconButton onClick={() => setTagModalOpen(true)} sx={{ '&:focus': { outline: 'none' } }}>
             <Sell color={"primary"}></Sell>
           </IconButton>
           <Typography>In-game Footage</Typography>
