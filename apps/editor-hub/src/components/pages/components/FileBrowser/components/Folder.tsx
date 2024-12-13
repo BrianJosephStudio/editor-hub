@@ -28,7 +28,7 @@ export const Folder = ({
 
   const filteredFileTree = useSelector(selectFilteredFileTree)
   const { settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
-  const { filterByTags } = useSelector((state: RootState) => state.tags)
+  const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
   const { tabIndex, setTabIndex } = useVideoGallery();
 
@@ -52,7 +52,7 @@ export const Folder = ({
   }, [filteredFileTree])
 
   return (
-    <>{(!filterByTags || fileTreeNode.filtered) &&
+    <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
       <Box
         component={"li"}
         id={"file-browser:folder:container"}
