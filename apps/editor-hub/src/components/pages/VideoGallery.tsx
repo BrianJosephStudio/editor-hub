@@ -1,108 +1,26 @@
 import { SvgIconComponent } from "@mui/icons-material";
-import { Box, Button, Switch, Typography } from "@mui/material";
-import { ApiClient } from "../../api/ApiClient";
-import React, { useEffect, useState } from "react";
-import { Folder } from "./components/Folder";
+import { Box, Switch, Typography } from "@mui/material";
+import React from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
-import { FileTreeNode } from "../../types/app";
 import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
-import { useTags } from "../../contexts/Tags.context";
-
-const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
+import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
+import { FileBrowser } from "./components/FileBrowser/FileBrowser";
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from "../../redux/store";
+import './VideoGallery.css'
 
 export const VideoGallery: React.FC<{
   tabName: string;
   tabIcon: SvgIconComponent;
   proportion: number;
 }> = () => {
-  const apiClient = new ApiClient();
+  const dispatch = useDispatch()
+  const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
+  const { filterByTags } = useSelector((state: RootState) => state.tags)
 
   const {
-    currentVideoSource,
-    fileTree,
-    setFileTree,
-    initialFetchDone,
-    setinitialFetchDone,
-    fetchUpfront,
-    foldersRendered,
-    setFoldersRendered,
-    clipMetadataBatch,
-    setClipMetadataBatch,
-    resolveTreeStructure,
     videoPlayer,
   } = useVideoGallery();
-
-  const { filterByTags, setFilterByTags } = useTags()
-  // const [filterByTags, setFilterByTags] = useState<boolean>(false)
-
-  const fetchClickedFolder = async (
-    currentFileTree: FileTreeNode,
-    fileTreeNode: FileTreeNode,
-  ) => {
-    if (!currentFileTree.children || currentFileTree.children.length === 0)
-      return;
-
-    const matchingFileTreeNode = currentFileTree.children.find(
-      (childTreeNode) => {
-        return childTreeNode.path === fileTreeNode.path;
-      }
-    );
-    if (
-      !matchingFileTreeNode ||
-      (matchingFileTreeNode &&
-        matchingFileTreeNode.children &&
-        matchingFileTreeNode.children.length > 0)
-    )
-      return;
-
-    const newMetadata = await apiClient.getFolderEntriesRecursively(
-      fileTreeNode.metadata!.path_lower!
-    );
-    setClipMetadataBatch(newMetadata);
-  };
-
-  useEffect(() => {
-    if (clipMetadataBatch.length === 0) return;
-    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch);
-    setFileTree(builtRoot);
-  }, [clipMetadataBatch]);
-
-  useEffect(() => {
-    if (initialFetchDone) {
-      return;
-    }
-    (async () => {
-      const clipMetadataBatch = await apiClient.getFolderEntries(clipsRootPath);
-      const reversedClipMetadataBatch = clipMetadataBatch.reverse();
-      setFoldersRendered(true);
-      setClipMetadataBatch(reversedClipMetadataBatch);
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (!foldersRendered || initialFetchDone) {
-      return;
-    }
-    (async () => {
-      const fetchedMetadataRaw = await Promise.all(
-        fileTree.children!.map((fileTreeNode, index) => {
-          if (!fileTreeNode.metadata) throw new Error(`Missing metadata in fileTreeNode for ${fileTreeNode.name}`);
-          if (index > fetchUpfront) return;
-
-          return apiClient.getFolderEntriesRecursively(
-            fileTreeNode.metadata.path_lower!
-          );
-        })
-      );
-      const fetchedMetadata = fetchedMetadataRaw
-        .flat()
-        .filter((child) => !!child);
-
-      setinitialFetchDone(true);
-      setClipMetadataBatch(fetchedMetadata);
-    })();
-  }, [foldersRendered]);
-
   return (
     <Box
       component={"div"}
@@ -166,52 +84,11 @@ export const VideoGallery: React.FC<{
             display: 'flex',
             alignItems: 'center',
           }}>
-            <Typography>Filter by Tags</Typography>
-            <Switch checked={filterByTags} onChange={() => setFilterByTags(currentValue => !currentValue)}></Switch>
-            {/* <Switch></Switch> */}
+            <Typography fontSize={'0.8rem'} className="hide-on-narrow-screen">Filter by Tags</Typography>
+            <Switch checked={filterByTags} title="Filter by Tags" onChange={() => { dispatch(toggleFilterByTags()) }}></Switch>
           </Box>
         </Box>
-        <Box
-          component={"ul"}
-          id={"page:video-gallery-in-game-footage-browser:file-browser"}
-          data-testid={
-            "page:video-gallery-in-game-footage-browser:file-browser"
-          }
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            padding: "0",
-            margin: "0",
-            overflowY: "scroll",
-            "&::-webkit-scrollbar": {
-              width: "0.5rem",
-            },
-            "&::-webkit-scrollbar-thumb": {
-              backgroundColor: "gray",
-              borderRadius: "0px",
-            },
-            "&::-webkit-scrollbar-track": {
-              backgroundColor: "transparent",
-            },
-            scrollbarWidth: "thin",
-            "&": {
-              scrollbarColor: "rgba(255, 255, 255, 0.5) transparent",
-            },
-          }}
-        >
-          {fileTree.children!.map((fileTreeNode, index) => (
-            <Folder
-              fileTreeNode={fileTreeNode}
-              nodeKey={index}
-              isRootFolder={true}
-              onClickCallback={async (setIsLoading) => {
-                setIsLoading(true);
-                await fetchClickedFolder(fileTree, fileTreeNode);
-                setIsLoading(false);
-              }}
-            ></Folder>
-          ))}
-        </Box>
+        <FileBrowser></FileBrowser>
       </Box>
     </Box>
   );
