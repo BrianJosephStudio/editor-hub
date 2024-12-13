@@ -24,18 +24,7 @@ function App() {
         <AppBanner></AppBanner>
         <NavBar></NavBar>
         <VideoGalleryProvider>
-          <TabbedPage pageId={0}>
-            <VideoGallery
-              tabName="In-game"
-              tabIcon={PlayCircleFilled}
-              proportion={4}
-            ></VideoGallery>
-            <VideoGallery
-              tabName="Settings"
-              tabIcon={Settings}
-              proportion={1}
-            ></VideoGallery>
-          </TabbedPage>
+            <VideoGallery></VideoGallery>
         </VideoGalleryProvider>
       </Box>
     </>

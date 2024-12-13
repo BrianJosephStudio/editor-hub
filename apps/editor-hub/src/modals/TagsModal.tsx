@@ -1,21 +1,20 @@
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, SxProps, Typography } from "@mui/material"
 import { TagGroup, TagObject } from "../types/tags";
 import { GenericTags } from "../resources/TagSystem";
 import { useTagsContext } from "../contexts/Tags.context";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Sell } from "@mui/icons-material";
+import { Theme } from "@emotion/react";
 
 export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsModal: () => void }) => {
   const { activeTags } = useSelector((state: RootState) => state.tags)
-  const { tagLevel, activeTagGroup } = useTagsContext()
+  const { tagLevel, activeTagGroup, exitTagGroup } = useTagsContext()
   const { removeTag } = useTagsContext()
 
   return (
     <Dialog fullScreen
-      onClose={(_event,
-        reason) =>
-        console.log(reason)}
+      onClose={() => closeTagsModal()}
       fullWidth
       maxWidth={"xl"}
       open={open}
@@ -23,6 +22,7 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
         height: '100%',
         flexGrow: '1',
       }}
+      onClick={() => exitTagGroup()}
     >
       <DialogTitle sx={{
         display: 'grid',
@@ -32,9 +32,9 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
         color: 'white',
         padding: '0.3rem'
       }}>
-        <IconButton onClick={() => closeTagsModal()} sx={{'&:focus':{ outline: 'none'}}}>
-            <Sell color={"primary"}></Sell>
-          </IconButton>
+        <IconButton onClick={() => closeTagsModal()} sx={{ '&:focus': { outline: 'none' } }}>
+          <Sell color={"primary"}></Sell>
+        </IconButton>
         <Typography> Tags Menu</Typography>
       </DialogTitle>
 
@@ -48,15 +48,16 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
             flexWrap: 'wrap',
             placeContent: 'center',
             gap: '0.6rem',
-            // height: '100%'
           }}
         >
-          {activeTags.length === 0 && 
+          {activeTags.length === 0 &&
             <Typography color={'hsl(0, 0%, 60%)'}>No tags selected</Typography>
           }
           {
             activeTags.map((tag) => (
-              <TagObjectItem tagObject={tag} onClick={() => removeTag(tag)}></TagObjectItem>
+              <TagObjectItem tagObject={tag} onClick={() => removeTag(tag)} sx={{
+                backgroundColor: 'hsl(213, 60%, 50%)'
+              }}></TagObjectItem>
             ))
           }
         </Box>
@@ -115,7 +116,8 @@ export const TagGroupItem = ({ tagGroup, keyValue }: { tagGroup: TagGroup, keyVa
     <Box
       key={keyValue}
       component={'div'}
-      onClick={() => {
+      onClick={(event) => {
+        event.stopPropagation()
         enterTagGroup(tagGroup)
       }}
       sx={{
@@ -158,31 +160,34 @@ export const TagsContainer = ({ tagGroup }: { tagGroup: TagGroup }) => {
       // overflow: 'auto'
     }}>
       {tagGroup.tags.map((tagObject) => (
-        <TagObjectItem tagObject={tagObject} onClick={() =>{activateTag(tagObject)}}></TagObjectItem>
+        <TagObjectItem tagObject={tagObject} sx={{backgroundColor: 'hsl(213, 0%, 25%)'}} onClick={() => { activateTag(tagObject) }}></TagObjectItem>
       ))}
     </Box>
   )
 }
 
-const TagObjectItem = ({ tagObject, onClick }: { tagObject: TagObject, onClick: () => void }) => {
+const TagObjectItem = ({ tagObject, sx, onClick }: { tagObject: TagObject, sx?: SxProps<Theme>, onClick: () => void }) => {
 
   return (
     <Box
       component={'div'}
       sx={{
+        ...sx,
         display: 'flex',
         minWidth: '4rem',
         flexDirection: 'column',
         placeItems: 'center',
         padding: '0.4rem',
         borderRadius: '0.4rem',
-        backgroundColor: 'hsl(213, 0%, 25%)',
         cursor: 'pointer',
         '&:hover': {
           backgroundColor: 'hsl(213, 0%, 30%)',
         }
       }}
-      onClick={() => onClick()}
+      onClick={(event) => {
+        event.stopPropagation()
+        onClick()
+      }}
     >
       <Typography color={'white'} fontSize={'1.4rem'} fontWeight={'600'}>{tagObject.keybind.toUpperCase()}</Typography>
       <Typography color={'white'} fontSize={'0.6rem'}>{tagObject.displayName}</Typography>

@@ -93,7 +93,7 @@ export const File = ({
             gap: "0.3rem",
           }}
         >
-          <Theaters sx={{ fill: 'hsl(40, 100%, 95%)' }}></Theaters>
+          <Theaters sx={{ fill: 'white)' }}></Theaters>
           <Typography>{fileTreeNode.name}</Typography>
           {isLoading && (
             <CircularProgress

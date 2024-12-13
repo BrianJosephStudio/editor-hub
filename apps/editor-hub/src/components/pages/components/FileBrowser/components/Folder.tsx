@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Typography, useMediaQuery } from "@mui/material";
 import { FileTreeNode } from "../../../../../types/app";
 import { useEffect, useRef, useState } from "react";
 import { Folder as Foldericon } from "@mui/icons-material";
@@ -7,6 +7,7 @@ import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../../../redux/store";
 import { selectFilteredFileTree } from "../../../../../redux/selectors/FileTreeSelector";
+import './Folder.css'
 
 export const Folder = ({
   fileTreeNode,
@@ -31,6 +32,8 @@ export const Folder = ({
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
   const { tabIndex, setTabIndex } = useVideoGallery();
+
+  const isWideEnough = useMediaQuery(`(max-mid: 350px)`)
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)
@@ -112,9 +115,8 @@ export const Folder = ({
             flexGrow: "1",
             display: isOpen ? "flex" : "none",
             flexDirection: "column",
-            paddingLeft: "1rem",
-
           }}
+          className="folder-tab-size"
         >
           {fileTreeNode.children &&
             fileTreeNode.children.length > 0 &&
