@@ -1,0 +1,8 @@
+.hide-on-narrow-screen {
+    visibility: visible;
+}
+@media(max-width: 720px) {
+    .hide-on-narrow-screen {
+        visibility: hidden;
+    }
+}

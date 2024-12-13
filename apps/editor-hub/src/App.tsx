@@ -16,7 +16,7 @@ function App() {
         data-testid={"editor-hub-container"}
         sx={{
           display: "grid",
-          gridTemplateRows: " 2.4rem 3rem auto",
+          gridTemplateRows: " 2rem 1.6rem auto",
           height: "100vh",
           width: "100vw",
         }}

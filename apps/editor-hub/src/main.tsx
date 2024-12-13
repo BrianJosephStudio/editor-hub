@@ -5,7 +5,9 @@ import App from "./App.tsx";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
 import { UnauthenticatedUser } from "./components/auth-pages/UnauthenticatedUser.tsx";
 import { PageViewerProvider } from "./contexts/PageViewer.context.tsx";
-import {name, version, author} from '../package.json'
+import { name, version, author } from '../package.json'
+import { Provider } from 'react-redux';
+import store from './redux/store'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
 if (!PUBLISHABLE_KEY) {
@@ -19,9 +21,11 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl={"/"}>
       <SignedIn>
-        <PageViewerProvider>
-          <App />
-        </PageViewerProvider>
+        <Provider store={store}>
+          <PageViewerProvider>
+            <App />
+          </PageViewerProvider>
+        </Provider>
       </SignedIn>
 
       <SignedOut>

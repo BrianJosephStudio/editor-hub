@@ -126,6 +126,10 @@ export class ApiClient {
         include_media_info: false,
         include_mounted_folders: true,
         include_non_downloadable_files: true,
+        include_property_groups: {
+          ".tag": "filter_some",
+          filter_some: [tagTemplateId]
+        },
         path: currentFolderPath,
         recursive: true,
       };
