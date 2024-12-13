@@ -18,7 +18,7 @@ export const File = ({
   nodeKey: number;
 }) => {
   const dispatch = useDispatch()
-  const { filterByTags } = useSelector((state: RootState) => state.tags)
+  const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
   const { videoPlayer, tabIndex, setTabIndex } = useVideoGallery();
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -48,7 +48,7 @@ export const File = ({
 
 
   return (
-    <>{(!filterByTags || fileTreeNode.filtered) &&
+    <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
       <Box
         component={"li"}
         tabIndex={currentTabIndex}

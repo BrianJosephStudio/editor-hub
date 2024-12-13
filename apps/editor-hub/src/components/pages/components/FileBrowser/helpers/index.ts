@@ -1,6 +1,8 @@
 import { ApiClient } from "../../../../../api/ApiClient";
+import { GenericTags } from "../../../../../resources/TagSystem";
 import { FileTreeNode } from "../../../../../types/app";
 import { Metadata } from "../../../../../types/dropbox";
+import { TagObject } from "../../../../../types/tags";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -91,7 +93,16 @@ export const resolveTreeStructure = (
           if (metadata.property_groups?.length! > 0) {
             try {
               const parsedTagList = JSON.parse(metadata.property_groups![0].fields[0].value)
-              const tagList = Object.keys(parsedTagList)
+              const tagIdList = Object.keys(parsedTagList)
+              const tagList: TagObject[] = tagIdList.map((tagId => {
+                const matchingTag = Object.values(GenericTags)
+                .flatMap(tagGroup => tagGroup.tags)
+                  .find(tagObject => tagObject.id === tagId)
+
+                if (!matchingTag) throw new Error();
+                return matchingTag
+              }))
+
               newFileTreeNode.tagList = tagList
             } catch (e) {
               console.log(newFileTreeNode.name) //TODO: remove for production

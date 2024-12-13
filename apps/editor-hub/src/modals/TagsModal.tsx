@@ -1,21 +1,74 @@
-import { Box, Dialog, DialogContent, DialogTitle, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material"
 import { TagGroup, TagObject } from "../types/tags";
 import { GenericTags } from "../resources/TagSystem";
 import { useTagsContext } from "../contexts/Tags.context";
+import { useSelector } from "react-redux";
+import { RootState } from "../redux/store";
+import { Sell } from "@mui/icons-material";
 
-export const TagsDialog = () => {
+export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsModal: () => void }) => {
+  const { activeTags } = useSelector((state: RootState) => state.tags)
   const { tagLevel, activeTagGroup } = useTagsContext()
-  
+  const { removeTag } = useTagsContext()
+
   return (
-    <Dialog fullWidth maxWidth={"xl"} open={true}>
+    <Dialog fullScreen
+      onClose={(_event,
+        reason) =>
+        console.log(reason)}
+      fullWidth
+      maxWidth={"xl"}
+      open={open}
+      sx={{
+        height: '100%',
+        flexGrow: '1',
+      }}
+    >
       <DialogTitle sx={{
+        display: 'grid',
+        gridTemplateColumns: '1fr 6fr 1fr',
         backgroundColor: 'hsl(0, 0%, 12%)',
         textAlign: 'center',
         color: 'white',
         padding: '0.3rem'
-      }}>Edit Active Tags</DialogTitle>
+      }}>
+        <IconButton onClick={() => closeTagsModal()} sx={{'&:focus':{ outline: 'none'}}}>
+            <Sell color={"primary"}></Sell>
+          </IconButton>
+        <Typography> Tags Menu</Typography>
+      </DialogTitle>
+
       <DialogContent dividers={true} sx={{
-        backgroundColor: 'hsl(0, 0%, 12%)'
+        backgroundColor: 'hsl(0, 0%, 12%)',
+        paddingY: '2.6rem',
+      }}>
+        <Box
+          sx={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            placeContent: 'center',
+            gap: '0.6rem',
+            // height: '100%'
+          }}
+        >
+          {activeTags.length === 0 && 
+            <Typography color={'hsl(0, 0%, 60%)'}>No tags selected</Typography>
+          }
+          {
+            activeTags.map((tag) => (
+              <TagObjectItem tagObject={tag} onClick={() => removeTag(tag)}></TagObjectItem>
+            ))
+          }
+        </Box>
+      </DialogContent>
+
+      <DialogContent dividers={true} sx={{
+        display: 'flex',
+        backgroundColor: 'hsl(0, 0%, 12%)',
+        placeContent: 'center',
+        padding: '0',
+        flexGrow: '1',
+        height: '100%',
       }}>
         {!tagLevel &&
           <TagGroupsContainer
@@ -36,48 +89,31 @@ export const TagGroupsContainer = ({ tagGroups }: { tagGroups: TagGroup[] }) => 
     <Box sx={{
       display: 'flex',
       flexDirection: 'column',
-      gap: '0.3rem'
+      flexGrow: '1',
     }}>
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(2, 1fr)',
-          gridGap: '0.3rem',
-        }}
-      >
-        {tagGroups.map((tagGroup) => (
-          <>
-            {tagGroup.iterable &&
-              <TagGroupItem tagGroup={tagGroup}></TagGroupItem>
-            }
-          </>
-        ))}
-      </Box>
-      <Box
-        sx={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(3, 1fr)',
+          gridTemplateColumns: 'repeat(6, 1fr)',
           gridTemplateRows: 'repeat(4, 1fr)',
-          gridGap: '0.3rem',
+          flexGrow: '1',
+          // gridGap: '0.3rem',
         }}
       >
-        {Object.values(GenericTags).map((tagGroup) => (
-          <>
-            {!tagGroup.iterable &&
-              <TagGroupItem tagGroup={tagGroup}></TagGroupItem>
-            }
-          </>
+        {Object.values(GenericTags).map((tagGroup, index) => (
+          <TagGroupItem tagGroup={tagGroup} keyValue={index}></TagGroupItem>
         ))}
       </Box>
     </Box>
   )
 }
 
-export const TagGroupItem = ({ tagGroup }: { tagGroup: TagGroup }) => {
+export const TagGroupItem = ({ tagGroup, keyValue }: { tagGroup: TagGroup, keyValue: number }) => {
   const { enterTagGroup } = useTagsContext()
 
   return (
     <Box
+      key={keyValue}
       component={'div'}
       onClick={() => {
         enterTagGroup(tagGroup)
@@ -86,8 +122,14 @@ export const TagGroupItem = ({ tagGroup }: { tagGroup: TagGroup }) => {
         display: 'flex',
         flexDirection: 'column',
         placeItems: 'center',
-        paddingY: '1rem',
-        borderRadius: '0.4rem',
+        placeContent: 'center',
+        gridColumn: keyValue < 2 ? 'span 3' : 'span 2',
+        // paddingY: '0.4rem',
+        flexGrow: '1',
+        // borderRadius: '0.4rem',
+        border: 'solid',
+        borderWidth: '1px',
+        borderColor: 'hsl(0, 0%, 12%)',
         backgroundColor: 'hsl(213, 0%, 25%)',
         cursor: 'pointer',
         '&:hover': {
@@ -102,6 +144,8 @@ export const TagGroupItem = ({ tagGroup }: { tagGroup: TagGroup }) => {
 }
 
 export const TagsContainer = ({ tagGroup }: { tagGroup: TagGroup }) => {
+  const { activateTag } = useTagsContext()
+
   return (
     <Box sx={{
       display: 'flex',
@@ -109,18 +153,22 @@ export const TagsContainer = ({ tagGroup }: { tagGroup: TagGroup }) => {
       placeContent: 'center',
       gap: '0.3rem',
       flexWrap: 'wrap',
+      flexGrow: '1',
+      maxWidth: '700px',
       // overflow: 'auto'
     }}>
-        {tagGroup.tags.map((tagObject) => (
-          <TagObjectItem tagObject={tagObject}></TagObjectItem>
-        ))}
+      {tagGroup.tags.map((tagObject) => (
+        <TagObjectItem tagObject={tagObject} onClick={() =>{activateTag(tagObject)}}></TagObjectItem>
+      ))}
     </Box>
   )
 }
 
-const TagObjectItem = ({tagObject}: { tagObject: TagObject }) => {
-  return(
+const TagObjectItem = ({ tagObject, onClick }: { tagObject: TagObject, onClick: () => void }) => {
+
+  return (
     <Box
+      component={'div'}
       sx={{
         display: 'flex',
         minWidth: '4rem',
@@ -134,6 +182,7 @@ const TagObjectItem = ({tagObject}: { tagObject: TagObject }) => {
           backgroundColor: 'hsl(213, 0%, 30%)',
         }
       }}
+      onClick={() => onClick()}
     >
       <Typography color={'white'} fontSize={'1.4rem'} fontWeight={'600'}>{tagObject.keybind.toUpperCase()}</Typography>
       <Typography color={'white'} fontSize={'0.6rem'}>{tagObject.displayName}</Typography>

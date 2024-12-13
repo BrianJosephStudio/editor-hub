@@ -10,7 +10,7 @@ export const selectFilteredFileTree = createSelector(
   (fileTree, activeTags) => {
     const filterTree = (fileTreeNode: FileTreeNode): FileTreeNode => {
       if (fileTreeNode.tag === "file") {
-        const isIncluded = activeTags.some((tag) => fileTreeNode.tagList?.includes(tag));
+        const isIncluded = activeTags.some((tag) => fileTreeNode.tagList?.find((fileTag) => fileTag.id === tag.id));
         return {
           ...fileTreeNode,
           filtered: isIncluded,

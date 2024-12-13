@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { TagObject } from '../../types/tags';
 
 interface TagsState {
-    activeTags: string[]
+    activeTags: TagObject[]
     filterByTags: boolean
 }
 
 const initialState: TagsState = {
-    activeTags: ["m002"],
+    activeTags: [],
     filterByTags: false
 };
 
@@ -17,15 +18,18 @@ const tagsSlice = createSlice({
         toggleFilterByTags(state) {
             state.filterByTags = !state.filterByTags
         },
-        addActiveTag(state, action: PayloadAction<string>) {
-            const tagIsAlreadyAdded = state.activeTags.find(entry => entry === action.payload)
+        addActiveTag(state, action: PayloadAction<TagObject>) {
+            const tagIsAlreadyAdded = state.activeTags.find(entry => entry.id === action.payload.id)
             if(tagIsAlreadyAdded) return;
-            state.activeTags.push(action.payload);
+            const newTags = [...state.activeTags]
+            newTags.push(action.payload);
+            state.activeTags = newTags
         },
-        removeActiveTag(state, action: PayloadAction<string>) {
-            const tagIndex = state.activeTags.findIndex(entry => entry === action.payload)
+        removeActiveTag(state, action: PayloadAction<TagObject>) {
+            const tagIndex = state.activeTags.findIndex(entry => entry.id === action.payload.id)
             if(tagIndex === -1) return;
-            state.activeTags.slice(tagIndex, 1);
+            const newTags = state.activeTags.filter(tag => tag.id !== action.payload.id)
+            state.activeTags = newTags
         },
     },
 });

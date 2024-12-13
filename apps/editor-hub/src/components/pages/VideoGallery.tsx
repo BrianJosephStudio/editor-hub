@@ -1,6 +1,6 @@
-import { SvgIconComponent } from "@mui/icons-material";
-import { Box, Switch, Typography } from "@mui/material";
-import React from "react";
+import { Sell, SvgIconComponent } from "@mui/icons-material";
+import { Box, IconButton, Switch, Typography } from "@mui/material";
+import React, { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
@@ -8,6 +8,8 @@ import { FileBrowser } from "./components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
 import './VideoGallery.css'
+import { TagsProvider } from "../../contexts/Tags.context";
+import { TagsDialog } from "../../modals/TagsModal";
 
 export const VideoGallery: React.FC<{
   tabName: string;
@@ -17,15 +19,24 @@ export const VideoGallery: React.FC<{
   const dispatch = useDispatch()
   const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
+  const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
 
   const {
     videoPlayer,
   } = useVideoGallery();
+
+  const tagModalToggleListener = (event: KeyboardEvent) => {
+    if (event.key === "t") {
+      setTagModalOpen(currentValue => !currentValue)
+    }
+  }
+
   return (
     <Box
       component={"div"}
       id={"page:video-gallery:container"}
       data-testid={"page:video-gallery:container"}
+      onKeyDown={tagModalToggleListener}
       sx={{
         display: "flex",
         flexDirection: "column",
@@ -79,7 +90,10 @@ export const VideoGallery: React.FC<{
             height: '3rem'
           }}
         >
-          <Typography gridColumn={'2/3'}>In-game Footage</Typography>
+          <IconButton onClick={() => setTagModalOpen(true)} sx={{'&:focus':{ outline: 'none'}}}>
+            <Sell color={"primary"}></Sell>
+          </IconButton>
+          <Typography>In-game Footage</Typography>
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
@@ -90,6 +104,9 @@ export const VideoGallery: React.FC<{
         </Box>
         <FileBrowser></FileBrowser>
       </Box>
+      <TagsProvider>
+        <TagsDialog open={tagsModalOpen} closeTagsModal={() => setTagModalOpen(false)}></TagsDialog>
+      </TagsProvider>
     </Box>
   );
 };

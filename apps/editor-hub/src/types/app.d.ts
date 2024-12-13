@@ -1,4 +1,5 @@
 import { Metadata } from "./dropbox";
+import { TagObject } from "./tags";
 
 export interface FileTreeNode {
   name: string;
@@ -6,7 +7,7 @@ export interface FileTreeNode {
   path: string;
   filtered: boolean
   metadata?: Metadata;
-  tagList?: string[]
+  tagList?: TagObject[]
   children?: FileTreeNode[];
   temporary_link?: string;
 }

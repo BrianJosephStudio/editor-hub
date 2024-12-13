@@ -1,19 +1,21 @@
 import React, { createContext, useContext, useState } from 'react';
-import { TagGroup } from '../types/tags';
+import { TagGroup, TagObject } from '../types/tags';
 import { addActiveTag, removeActiveTag } from '../redux/slices/TagsSlice';
+import { useDispatch } from 'react-redux';
 
 interface TagsContextType {
   tagLevel: boolean;
   activeTagGroup: TagGroup | undefined;
   enterTagGroup: (tagGroup: TagGroup) => void;
   exitTagGroup: () => void;
-  activateTag: (tagObject: TagGroup) => void;
-  removeTag: (tagObject: TagGroup) => void;
+  activateTag: (tagObject: TagObject) => void;
+  removeTag: (tagObject: TagObject) => void;
 }
 
 const TagsContext = createContext<TagsContextType | undefined>(undefined);
 
 export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+    const dispatch = useDispatch()
   const [tagLevel, setTagLevel] = useState<boolean>(false);
   const [activeTagGroup, setActiveTagGroup] = useState<TagGroup | undefined>();
 
@@ -27,13 +29,13 @@ export const TagsProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTagLevel(false);
   };
 
-  const activateTag = (tagObject: TagGroup) => {
-    addActiveTag(tagObject.id);
+  const activateTag = (tagObject: TagObject) => {
+    dispatch(addActiveTag(tagObject));
     setTagLevel(false);
   };
 
-  const removeTag = (tagObject: TagGroup) => {
-    removeActiveTag(tagObject.id);
+  const removeTag = (tagObject: TagObject) => {
+    dispatch(removeActiveTag(tagObject));
     setTagLevel(false);
   };
 
