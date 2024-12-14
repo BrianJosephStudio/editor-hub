@@ -15,6 +15,7 @@ export const UnauthenticatedUser = () => {
             alignItems: "center",
             justifyContent: "center",
             gap: "1rem",
+            placeItems: 'center',
           }}
         >
           <Box
@@ -24,7 +25,7 @@ export const UnauthenticatedUser = () => {
               maxHeight: "3rem",
             }}
           />
-          <Typography variant="h5">Welcome to the Editor Hub!</Typography>
+          {/* <Typography variant="h5">Welcome to the Editor Hub!</Typography> */}
           <Typography
             variant="h6"
             sx={{
@@ -34,7 +35,7 @@ export const UnauthenticatedUser = () => {
             You must be signed in to proceed
           </Typography>
           <SignInButton>
-            <Button variant="contained" size="large" sx={{outline: 'none !important'}}> Sign In</Button>
+            <Button variant="contained" size="medium" sx={{outline: 'none !important'}}> Sign In</Button>
           </SignInButton>
         </Box>
     )

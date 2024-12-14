@@ -1,5 +1,5 @@
-import { ExpandLess, ExpandMore, Sell } from "@mui/icons-material";
-import { Box, IconButton, Switch, Typography } from "@mui/material";
+import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, Widgets } from "@mui/icons-material";
+import { Box, Checkbox, FormControlLabel, IconButton, Typography, useMediaQuery } from "@mui/material";
 import { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
@@ -15,6 +15,8 @@ export const VideoGallery = () => {
   const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
   const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
+
+  const isWideEnough = useMediaQuery('(min-width: 30rem)')
 
   const {
     videoPlayer,
@@ -38,6 +40,7 @@ export const VideoGallery = () => {
         display: "flex",
         flexDirection: "column",
         minHeight: "0",
+        maxWidth: '100vw',
       }}
     >
       {!!videoPlayerExpanded &&
@@ -83,39 +86,47 @@ export const VideoGallery = () => {
           id={"page:video-gallery-in-game-footage-browser:banner"}
           data-testid={"page:video-gallery-in-game-footage-browser:banner"}
           sx={{
-            display: 'grid',
+            display: 'flex',
             placeItems: 'center',
             gridTemplateColumns: '1fr 3fr 1fr',
-            height: '3rem'
+            height: '3rem',
           }}
         >
-          <Box sx={{
-            display: 'flex',
-            alignItems: 'center',
-            // backgroundColor: 'red',
-            width: '100%'
-          }}>
-            {!videoPlayerExpanded &&
-              <IconButton onClick={() => setVideoPlayerExpanded(true)} sx={{ '&:focus': { outline: 'none' } }}>
-                <ExpandMore fontSize={"large"} color={"primary"}></ExpandMore>
-              </IconButton>
-            }
-            {videoPlayerExpanded &&
-              <IconButton onClick={() => setVideoPlayerExpanded(false)} sx={{ '&:focus': { outline: 'none' } }}>
-                <ExpandLess fontSize={"large"} color={"primary"}></ExpandLess>
-              </IconButton>
-            }
-            <IconButton onClick={() => setTagModalOpen(true)} sx={{ '&:focus': { outline: 'none' } }}>
-              <Sell color={"primary"}></Sell>
+          {!videoPlayerExpanded &&
+            <IconButton title="Show Player" onClick={() => setVideoPlayerExpanded(true)} sx={{ '&:focus': { outline: 'none' } }}>
+              <ExpandMore fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandMore>
             </IconButton>
-          </Box>
+          }
+          {videoPlayerExpanded &&
+            <IconButton title="Hide Player" onClick={() => setVideoPlayerExpanded(false)} sx={{ '&:focus': { outline: 'none' } }}>
+              <ExpandLess fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandLess>
+            </IconButton>
+          }
           <Typography>In-game Footage</Typography>
+
           <Box sx={{
             display: 'flex',
             alignItems: 'center',
+            marginLeft: 'auto',
           }}>
-            <Typography fontSize={'0.8rem'} className="hide-on-narrow-screen">Filter by Tags</Typography>
-            <Switch checked={filterByTags} title="Filter by Tags" onChange={() => { dispatch(toggleFilterByTags()) }}></Switch>
+            <FormControlLabel
+              label={
+                isWideEnough ? <Typography fontSize={'0.8rem'}>Tags Menu</Typography> : null
+              }
+              control={
+                <IconButton title="Show Tags Menu" onClick={() => setTagModalOpen(true)} sx={{ '&:focus': { outline: 'none' } }}>
+                  <Widgets color={"primary"} sx={{ maxHeight: '2rem' }}></Widgets>
+                </IconButton>
+              }
+            ></FormControlLabel>
+            <FormControlLabel
+              label={
+                isWideEnough ? <Typography fontSize={'0.8rem'}>Filter by tags</Typography> : null
+              }
+              control={
+                <Checkbox title="Filter by tags" checked={filterByTags} icon={<BookmarkBorder color="primary" />} checkedIcon={<Bookmark />} onChange={() => { dispatch(toggleFilterByTags()) }}></Checkbox>
+              }
+            ></FormControlLabel>
           </Box>
         </Box>
         <FileBrowser></FileBrowser>

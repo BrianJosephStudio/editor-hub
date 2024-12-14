@@ -1,22 +1,26 @@
-import { Box, Dialog, DialogContent, DialogTitle, IconButton, SxProps, Typography } from "@mui/material"
+import { Box, Dialog, DialogContent, DialogTitle, IconButton, SxProps, Typography, useMediaQuery } from "@mui/material"
 import { TagGroup, TagObject } from "../types/tags";
 import { GenericTags } from "../resources/TagSystem";
 import { useTagsContext } from "../contexts/Tags.context";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
-import { Sell } from "@mui/icons-material";
+import { Close } from "@mui/icons-material";
 import { Theme } from "@emotion/react";
+import './TagsModal.css'
 
 export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsModal: () => void }) => {
   const { activeTags } = useSelector((state: RootState) => state.tags)
   const { tagLevel, activeTagGroup, exitTagGroup } = useTagsContext()
   const { removeTag } = useTagsContext()
 
+  const isWideEnough = useMediaQuery('(max-width:40rem),(max-height:32rem)')
+
   return (
-    <Dialog fullScreen
+    <Dialog
+      fullScreen={isWideEnough}
       onClose={() => closeTagsModal()}
-      fullWidth
-      maxWidth={"xl"}
+      fullWidth={true}
+      maxWidth={"md"}
       open={open}
       sx={{
         height: '100%',
@@ -26,29 +30,33 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
     >
       <DialogTitle sx={{
         display: 'grid',
+        placeItems: 'center',
         gridTemplateColumns: '1fr 6fr 1fr',
         backgroundColor: 'hsl(0, 0%, 12%)',
         textAlign: 'center',
         color: 'white',
-        padding: '0.3rem'
+        padding: '0rem'
       }}>
+        <Typography sx={{gridColumn: '2/3'}}> Tags Menu</Typography>
         <IconButton onClick={() => closeTagsModal()} sx={{ '&:focus': { outline: 'none' } }}>
-          <Sell color={"primary"}></Sell>
+          <Close color={"primary"}></Close>
         </IconButton>
-        <Typography> Tags Menu</Typography>
       </DialogTitle>
 
       <DialogContent dividers={true} sx={{
         backgroundColor: 'hsl(0, 0%, 12%)',
-        paddingY: '2.6rem',
-      }}>
+        minHeight: '5rem'
+      }}
+        className="scroll-bar"
+      >
         <Box
           sx={{
             display: 'flex',
             flexWrap: 'wrap',
             placeContent: 'center',
-            gap: '0.6rem',
+            gap: '0.3rem',
           }}
+          component={'div'}
         >
           {activeTags.length === 0 &&
             <Typography color={'hsl(0, 0%, 60%)'}>No tags selected</Typography>
@@ -68,12 +76,9 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
         backgroundColor: 'hsl(0, 0%, 12%)',
         placeContent: 'center',
         padding: '0',
-        flexGrow: '1',
-        height: '100%',
       }}>
         {!tagLevel &&
           <TagGroupsContainer
-            tagGroups={Object.values(GenericTags)}
           ></TagGroupsContainer>
         }
         {tagLevel && activeTagGroup &&
@@ -85,26 +90,19 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
     </Dialog>)
 }
 
-export const TagGroupsContainer = ({ tagGroups }: { tagGroups: TagGroup[] }) => {
+export const TagGroupsContainer = () => {
   return (
-    <Box sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      flexGrow: '1',
-    }}>
       <Box
         sx={{
           display: 'grid',
           gridTemplateColumns: 'repeat(6, 1fr)',
           gridTemplateRows: 'repeat(4, 1fr)',
           flexGrow: '1',
-          // gridGap: '0.3rem',
         }}
       >
         {Object.values(GenericTags).map((tagGroup, index) => (
           <TagGroupItem tagGroup={tagGroup} keyValue={index}></TagGroupItem>
         ))}
-      </Box>
     </Box>
   )
 }
@@ -126,9 +124,7 @@ export const TagGroupItem = ({ tagGroup, keyValue }: { tagGroup: TagGroup, keyVa
         placeItems: 'center',
         placeContent: 'center',
         gridColumn: keyValue < 2 ? 'span 3' : 'span 2',
-        // paddingY: '0.4rem',
         flexGrow: '1',
-        // borderRadius: '0.4rem',
         border: 'solid',
         borderWidth: '1px',
         borderColor: 'hsl(0, 0%, 12%)',
@@ -156,8 +152,8 @@ export const TagsContainer = ({ tagGroup }: { tagGroup: TagGroup }) => {
       gap: '0.3rem',
       flexWrap: 'wrap',
       flexGrow: '1',
-      maxWidth: '700px',
-      // overflow: 'auto'
+      maxWidth: '60rem',
+      padding: '1rem',
     }}>
       {tagGroup.tags.map((tagObject) => (
         <TagObjectItem tagObject={tagObject} sx={{backgroundColor: 'hsl(213, 0%, 25%)'}} onClick={() => { activateTag(tagObject) }}></TagObjectItem>

@@ -8,6 +8,7 @@ export const AgentTags: TagObject[] = [
     {tag:"brimstone",displayName:"Brimstone",description:"Player is playing Brimstone", unique: true, timeless: true, protected: true, keybind: "", id: "ag002"},
     {tag:"breach",displayName:"Breach",description:"Player is playing Breach", unique: true, timeless: true, protected: true, keybind: "", id: "ag003"},
     {tag:"chamber",displayName:"Chamber",description:"Player is playing Chamber", unique: true, timeless: true, protected: true, keybind: "", id: "ag004"},
+    {tag:"clove",displayName:"Clove",description:"Player is playing Clove", unique: true, timeless: true, protected: true, keybind: "q", id: "ag024"},
     {tag:"cypher",displayName:"Cypher",description:"Player is playing Cypher", unique: true, timeless: true, protected: true, keybind: "", id: "ag005"},
     {tag:"deadlock",displayName:"Deadlock",description:"Player is playing Deadlock", unique: true, timeless: true, protected: true, keybind: "", id: "ag006"},
     {tag:"fade",displayName:"Fade",description:"Player is playing Fade", unique: true, timeless: true, protected: true, keybind: "", id: "ag007"},
