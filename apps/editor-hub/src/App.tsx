@@ -2,8 +2,6 @@ import "./App.css";
 import { Box } from "@mui/material";
 import { NavBar } from "./components/nav-bar/NavBar";
 import { AppBanner } from "./components/app-banner/AppBanner";
-import { TabbedPage } from "./components/pages/TabbedPage";
-import { PlayCircleFilled, Settings } from "@mui/icons-material";
 import { VideoGallery } from "./components/pages/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
 
@@ -15,14 +13,15 @@ function App() {
         id="editor-hub-container"
         data-testid={"editor-hub-container"}
         sx={{
-          display: "grid",
-          gridTemplateRows: " 2rem 1.6rem auto",
+          display: "flex",
+          flexDirection: 'column',
+          gridTemplateRows: " 3rem auto",
           height: "100vh",
           width: "100vw",
         }}
       >
         <AppBanner></AppBanner>
-        <NavBar></NavBar>
+        {/* <NavBar></NavBar> */}
         <VideoGalleryProvider>
             <VideoGallery></VideoGallery>
         </VideoGalleryProvider>
