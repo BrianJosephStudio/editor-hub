@@ -1,8 +1,7 @@
-import { Sell } from "@mui/icons-material";
+import { ExpandLess, ExpandMore, Sell } from "@mui/icons-material";
 import { Box, IconButton, Switch, Typography } from "@mui/material";
 import { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
-import scLogoMini from "../../../public/editor-hub-logo-mini-gray-scale.svg";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
 import { FileBrowser } from "./components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
@@ -19,6 +18,8 @@ export const VideoGallery = () => {
 
   const {
     videoPlayer,
+    videoPlayerExpanded,
+    setVideoPlayerExpanded,
   } = useVideoGallery();
 
   const tagModalToggleListener = (event: KeyboardEvent) => {
@@ -39,7 +40,7 @@ export const VideoGallery = () => {
         minHeight: "0",
       }}
     >
-      {!!currentVideoSource &&
+      {!!videoPlayerExpanded &&
         <Box
           ref={videoPlayer}
           component={"video"}
@@ -88,9 +89,26 @@ export const VideoGallery = () => {
             height: '3rem'
           }}
         >
-          <IconButton onClick={() => setTagModalOpen(true)} sx={{ '&:focus': { outline: 'none' } }}>
-            <Sell color={"primary"}></Sell>
-          </IconButton>
+          <Box sx={{
+            display: 'flex',
+            alignItems: 'center',
+            // backgroundColor: 'red',
+            width: '100%'
+          }}>
+            {!videoPlayerExpanded &&
+              <IconButton onClick={() => setVideoPlayerExpanded(true)} sx={{ '&:focus': { outline: 'none' } }}>
+                <ExpandMore fontSize={"large"} color={"primary"}></ExpandMore>
+              </IconButton>
+            }
+            {videoPlayerExpanded &&
+              <IconButton onClick={() => setVideoPlayerExpanded(false)} sx={{ '&:focus': { outline: 'none' } }}>
+                <ExpandLess fontSize={"large"} color={"primary"}></ExpandLess>
+              </IconButton>
+            }
+            <IconButton onClick={() => setTagModalOpen(true)} sx={{ '&:focus': { outline: 'none' } }}>
+              <Sell color={"primary"}></Sell>
+            </IconButton>
+          </Box>
           <Typography>In-game Footage</Typography>
           <Box sx={{
             display: 'flex',
