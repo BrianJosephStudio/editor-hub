@@ -20,7 +20,7 @@ export const File = ({
   const dispatch = useDispatch()
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
-  const { videoPlayer, tabIndex, setTabIndex } = useVideoGallery();
+  const { videoPlayer, tabIndex, setTabIndex, setVideoPlayerExpanded } = useVideoGallery();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const currentTabIndex = tabIndex;
@@ -42,6 +42,7 @@ export const File = ({
         temporary_link
       }
       dispatch(setNewVideoSource(newFileTreeNode))
+      setVideoPlayerExpanded(true)
     }
     setIsLoading(false);
   };
