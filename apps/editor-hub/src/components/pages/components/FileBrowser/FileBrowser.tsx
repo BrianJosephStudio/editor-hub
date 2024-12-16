@@ -8,21 +8,36 @@ import { fetchClickedFolderMetadata, fetchInitialMetadata, fetchRootFolders, res
 import { setNewTree } from "../../../../redux/slices/FileTreeSlice";
 import { selectFilteredFileTree } from "../../../../redux/selectors/FileTreeSelector";
 import './FileBrowser.css'
+import { setGenericTags } from "../../../../redux/slices/TagsSlice";
+import { TagSystem } from "../../../../types/tags";
+import axios from "axios";
+
+const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 
 export const FileBrowser = () => {
   const dispatch = useDispatch();
   const { fileTree } = useSelector((state: RootState) => state.fileTree)
   const { settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
+  const filteredFileTree = useSelector(selectFilteredFileTree)
+  const { genericTags } = useSelector((state: RootState) => state.tags)
+
   const [initialFetchDone, setinitialFetchDone] = useState<boolean>(false);
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
-  const filteredFileTree = useSelector(selectFilteredFileTree)
-
   const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
+
+
+  useEffect(() => {
+    const fetchTagSystem = async () => {
+      const { data: { GenericTags } } = await axios.get<{ GenericTags: TagSystem }>(`${resourcesHost}/tag-system`)
+      dispatch(setGenericTags(GenericTags))
+    }
+    fetchTagSystem()
+  }, [])
 
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
-    if (clipMetadataBatch.length === 0) return;
-    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch);
+    if (clipMetadataBatch.length === 0 || !genericTags) return;
+    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, genericTags);
     dispatch(setNewTree(builtRoot))
     setFoldersRendered(true);
   }, [clipMetadataBatch]);

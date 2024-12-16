@@ -1,6 +1,7 @@
 require("dotenv").config({ path: `.env.${process.env.NODE_ENV}` });
 import express from "express";
 import { router as apiRoutesV1 } from "./routes/valorant/v1/api.routes";
+import { router as resourcesRoutes} from "./routes/resources/tagSystem.routes"
 // import { router as apiRoutesV2 } from './routes/valorant/v2/api.routes'
 import { router as authRoutes } from "./routes/oauth/oauth.api.routes";
 import cors from "cors";
@@ -24,6 +25,7 @@ app.use("/", (req, _res, next) => {
 app.use("/authorization", authRoutes);
 app.use("/api", apiRoutesV1)
 app.use("/api/v2", clipTaggerAuthorizationFilter, apiRoutesV1)
+app.use("/resources", resourcesRoutes)
 app.use("/project-manager", projectManagerRoutes);
 
 app.get("/health", (_req, res) => res.send("ok"));

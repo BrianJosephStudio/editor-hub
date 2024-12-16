@@ -22,7 +22,7 @@ export const UnauthenticatedUser = () => {
             component={"img"}
             src={clipTaggerLogo}
             sx={{
-              maxHeight: "3rem",
+              maxHeight: "2rem",
             }}
           />
           {/* <Typography variant="h5">Welcome to the Editor Hub!</Typography> */}
@@ -30,6 +30,7 @@ export const UnauthenticatedUser = () => {
             variant="h6"
             sx={{
               fontWeight: "200",
+              fontSize: '1rem'
             }}
           >
             You must be signed in to proceed

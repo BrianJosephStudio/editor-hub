@@ -1,7 +1,4 @@
-import { TagGroup, TagObject } from "../types/tags"
-interface TagSystem {
-    [name: string]: TagGroup
-}
+import { TagGroup, TagObject, TagSystem } from "../types/tags"
 
 export const AgentTags: TagObject[] = [
     {tag:"astra",displayName:"Astra",description:"Player is playing Astra", unique: true, timeless: true, protected: true, keybind: "a", id: "ag001"},
