@@ -1,9 +1,9 @@
-import { TagGroup, TagObject, TagSystem } from "../types/tags"
+import { TagObject, TagSystem } from "../types/tags"
 
 export const AgentTags: TagObject[] = [
     {tag:"astra",displayName:"Astra",description:"Player is playing Astra", unique: true, timeless: true, protected: true, keybind: "a", id: "ag001"},
-    {tag:"brimstone",displayName:"Brimstone",description:"Player is playing Brimstone", unique: true, timeless: true, protected: true, keybind: "b", id: "ag002"},
     {tag:"breach",displayName:"Breach",description:"Player is playing Breach", unique: true, timeless: true, protected: true, keybind: "m", id: "ag003"},
+    {tag:"brimstone",displayName:"Brimstone",description:"Player is playing Brimstone", unique: true, timeless: true, protected: true, keybind: "b", id: "ag002"},
     {tag:"chamber",displayName:"Chamber",description:"Player is playing Chamber", unique: true, timeless: true, protected: true, keybind: "c", id: "ag004"},
     {tag:"clove",displayName:"Clove",description:"Player is playing Clove", unique: true, timeless: true, protected: true, keybind: "q", id: "ag024"},
     {tag:"cypher",displayName:"Cypher",description:"Player is playing Cypher", unique: true, timeless: true, protected: true, keybind: "x", id: "ag005"},
@@ -24,6 +24,7 @@ export const AgentTags: TagObject[] = [
     {tag:"skye",displayName:"Skye",description:"Player is playing Skye", unique: true, timeless: true, protected: true, keybind: "s", id: "ag020"},
     {tag:"sova",displayName:"Sova",description:"Player is playing Sova", unique: true, timeless: true, protected: true, keybind: "z", id: "ag021"},
     {tag:"viper",displayName:"Viper",description:"Player is playing Viper", unique: true, timeless: true, protected: true, keybind: "v", id: "ag022"},
+    {tag:"vyse",displayName:"Vyse",description:"Player is playing Vyse", unique: true, timeless: true, protected: true, keybind: "v", id: "ag025"},
     {tag:"yoru",displayName:"Yoru",description:"Player is playing Yoru", unique: true, timeless: true, protected: true, keybind: "y", id: "ag023"}
 ]
 export const MapTags: TagObject[] = [
