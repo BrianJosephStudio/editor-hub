@@ -1,8 +1,7 @@
 import { ApiClient } from "../../../../../api/ApiClient";
-import { GenericTags } from "../../../../../resources/TagSystem";
 import { FileTreeNode } from "../../../../../types/app";
 import { Metadata } from "../../../../../types/dropbox";
-import { TagObject } from "../../../../../types/tags";
+import { TagObject, TagSystem } from "../../../../../types/tags";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 
@@ -64,6 +63,7 @@ export const fetchClickedFolderMetadata = async (
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
+  genericTags: TagSystem
 ): FileTreeNode => {
   const currentHead = currentFileTreeNode.path;
   const newFileTreeNode = { ...currentFileTreeNode }
@@ -95,7 +95,7 @@ export const resolveTreeStructure = (
               const parsedTagList = JSON.parse(metadata.property_groups![0].fields[0].value)
               const tagIdList = Object.keys(parsedTagList)
               const tagList: TagObject[] = tagIdList.map((tagId => {
-                const matchingTag = Object.values(GenericTags)
+                const matchingTag = Object.values(genericTags)
                 .flatMap(tagGroup => tagGroup.tags)
                   .find(tagObject => tagObject.id === tagId)
 
@@ -115,7 +115,8 @@ export const resolveTreeStructure = (
         if (newFileTreeNode.tag === "folder") {
           newFileTreeNode = resolveTreeStructure(
             newFileTreeNode,
-            newMetadata
+            newMetadata,
+            genericTags
           );
         }
 

@@ -51,3 +51,7 @@ export interface TimeEntry {
 export interface LabeledTagReference {
   [tagId: string]: TimeEntry[];
 }
+
+interface TagSystem {
+  [name: string]: TagGroup
+}
