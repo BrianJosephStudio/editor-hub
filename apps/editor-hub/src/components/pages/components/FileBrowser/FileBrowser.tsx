@@ -1,43 +1,38 @@
 import { Box } from "@mui/material";
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from "../../../../redux/store";
 import { Folder } from './components/Folder'
 import { Metadata } from "../../../../types/dropbox";
 import { useEffect, useState } from "react";
 import { fetchClickedFolderMetadata, fetchInitialMetadata, fetchRootFolders, resolveTreeStructure } from "./helpers";
-import { setNewTree, setInitialFetchDone } from "../../../../redux/slices/FileTreeSlice";
-import { selectFilteredFileTree } from "../../../../redux/selectors/FileTreeSelector";
 import './FileBrowser.css'
-import { setGenericTags } from "../../../../redux/slices/TagsSlice";
 import { TagSystem } from "../../../../types/tags";
-import axios from "axios";
+import { FileTreeNode } from "../../../../types/app";
 
-const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 
-export const FileBrowser = () => {
-  const dispatch = useDispatch();
-  const { fileTree, initialFetchDone } = useSelector((state: RootState) => state.fileTree)
-  const { settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
-  const filteredFileTree = useSelector(selectFilteredFileTree)
-  const { genericTags } = useSelector((state: RootState) => state.tags)
-
+export const FileBrowser = ({
+  fileTree,
+  filteredFileTree,
+  initialFetchDone,
+  fetchUpfront,
+  genericTags,
+  setNewFileTree,
+  setInitialFetchDone,
+}: {
+  fileTree: FileTreeNode
+  filteredFileTree: FileTreeNode
+  initialFetchDone: boolean
+  fetchUpfront: number
+  genericTags?: TagSystem
+  setNewFileTree: (newFileTree: FileTreeNode) => void
+  setInitialFetchDone: () => void
+}) => {
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
   const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
-
-
-  useEffect(() => {
-    const fetchTagSystem = async () => {
-      const { data: { GenericTags } } = await axios.get<{ GenericTags: TagSystem }>(`${resourcesHost}/tag-system`)
-      dispatch(setGenericTags(GenericTags))
-    }
-    fetchTagSystem()
-  }, [])
 
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
     if (clipMetadataBatch.length === 0 || !genericTags) return;
     const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, genericTags);
-    dispatch(setNewTree(builtRoot))
+    setNewFileTree(builtRoot)
     setFoldersRendered(true);
   }, [clipMetadataBatch]);
 
@@ -57,7 +52,7 @@ export const FileBrowser = () => {
     fetchInitialMetadata(filteredFileTree, fetchUpfront)
       .then(fetchedMetadata => {
         setClipMetadataBatch(fetchedMetadata);
-        dispatch(setInitialFetchDone());
+        setInitialFetchDone();
       })
   }, [foldersRendered]);
 

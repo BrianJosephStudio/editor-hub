@@ -1,6 +1,6 @@
 import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, Widgets } from "@mui/icons-material";
 import { Box, Checkbox, FormControlLabel, IconButton, Typography, useMediaQuery } from "@mui/material";
-import { KeyboardEvent, useState } from "react";
+import { KeyboardEvent, useEffect, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
 import { FileBrowser } from "./components/FileBrowser/FileBrowser";
@@ -9,14 +9,26 @@ import { RootState } from "../../redux/store";
 import './VideoGallery.css'
 import { TagsProvider } from "../../contexts/Tags.context";
 import { TagsDialog } from "../../modals/TagsModal";
+import { selectFilteredFileTree } from "../../redux/selectors/FileTreeSelector";
+import { setGenericTags } from "../../redux/slices/TagsSlice";
+import axios from "axios";
+import { TagSystem } from "../../types/tags";
+import { setNewTree, setInitialFetchDone } from "../../redux/slices/FileTreeSlice";
+
+const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 
 export const VideoGallery = () => {
   const dispatch = useDispatch()
-  const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
+  const { currentVideoSource, settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
+  const { fileTree, initialFetchDone } = useSelector((state: RootState) => state.fileTree)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
+  const filteredFileTree = useSelector(selectFilteredFileTree)
+  const { genericTags } = useSelector((state: RootState) => state.tags)
+
   const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
 
   const isWideEnough = useMediaQuery('(min-width: 30rem)')
+
 
   const {
     videoPlayer,
@@ -29,6 +41,14 @@ export const VideoGallery = () => {
       setTagModalOpen(currentValue => !currentValue)
     }
   }
+
+  useEffect(() => {
+    const fetchTagSystem = async () => {
+      const { data: { GenericTags } } = await axios.get<{ GenericTags: TagSystem }>(`${resourcesHost}/tag-system`)
+      dispatch(setGenericTags(GenericTags))
+    }
+    fetchTagSystem()
+  }, [])
 
   return (
     <Box
@@ -129,7 +149,16 @@ export const VideoGallery = () => {
             ></FormControlLabel>
           </Box>
         </Box>
-        <FileBrowser></FileBrowser>
+        <FileBrowser
+          fileTree={fileTree}
+          filteredFileTree={filteredFileTree}
+          initialFetchDone={initialFetchDone}
+          fetchUpfront={fetchUpfront}
+          genericTags={genericTags}
+          setNewFileTree={(newFileTree) => dispatch(setNewTree(newFileTree))
+          }
+          setInitialFetchDone={() => dispatch(setInitialFetchDone())}
+        ></FileBrowser>
       </Box>
       <TagsProvider>
         <TagsDialog open={tagsModalOpen} closeTagsModal={() => setTagModalOpen(false)}></TagsDialog>

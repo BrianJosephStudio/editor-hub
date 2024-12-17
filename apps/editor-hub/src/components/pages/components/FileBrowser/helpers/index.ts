@@ -63,7 +63,7 @@ export const fetchClickedFolderMetadata = async (
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
-  genericTags: TagSystem
+  genericTags?: TagSystem
 ): FileTreeNode => {
   const currentHead = currentFileTreeNode.path;
   const newFileTreeNode = { ...currentFileTreeNode }
@@ -89,14 +89,14 @@ export const resolveTreeStructure = (
           metadata,
         };
 
-        if (newFileTreeNode.tag === "file") {
+        if (newFileTreeNode.tag === "file" && genericTags) {
           if (metadata.property_groups?.length! > 0) {
             try {
               const parsedTagList = JSON.parse(metadata.property_groups![0].fields[0].value)
               const tagIdList = Object.keys(parsedTagList)
               const tagList: TagObject[] = tagIdList.map((tagId => {
                 const matchingTag = Object.values(genericTags)
-                .flatMap(tagGroup => tagGroup.tags)
+                  .flatMap(tagGroup => tagGroup.tags)
                   .find(tagObject => tagObject.id === tagId)
 
                 if (!matchingTag) throw new Error();
