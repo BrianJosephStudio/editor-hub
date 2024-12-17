@@ -5,7 +5,7 @@ import { Folder } from './components/Folder'
 import { Metadata } from "../../../../types/dropbox";
 import { useEffect, useState } from "react";
 import { fetchClickedFolderMetadata, fetchInitialMetadata, fetchRootFolders, resolveTreeStructure } from "./helpers";
-import { setNewTree } from "../../../../redux/slices/FileTreeSlice";
+import { setNewTree, setInitialFetchDone } from "../../../../redux/slices/FileTreeSlice";
 import { selectFilteredFileTree } from "../../../../redux/selectors/FileTreeSelector";
 import './FileBrowser.css'
 import { setGenericTags } from "../../../../redux/slices/TagsSlice";
@@ -16,12 +16,11 @@ const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 
 export const FileBrowser = () => {
   const dispatch = useDispatch();
-  const { fileTree } = useSelector((state: RootState) => state.fileTree)
+  const { fileTree, initialFetchDone } = useSelector((state: RootState) => state.fileTree)
   const { settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
   const filteredFileTree = useSelector(selectFilteredFileTree)
   const { genericTags } = useSelector((state: RootState) => state.tags)
 
-  const [initialFetchDone, setinitialFetchDone] = useState<boolean>(false);
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
   const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
 
@@ -58,7 +57,7 @@ export const FileBrowser = () => {
     fetchInitialMetadata(filteredFileTree, fetchUpfront)
       .then(fetchedMetadata => {
         setClipMetadataBatch(fetchedMetadata);
-        setinitialFetchDone(true);
+        dispatch(setInitialFetchDone());
       })
   }, [foldersRendered]);
 
