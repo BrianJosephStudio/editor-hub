@@ -1,9 +1,9 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
 
 interface AudioGalleryContextProps {
-  videoPlayer: React.RefObject<HTMLVideoElement>;
-  videoPlayerExpanded: boolean;
-  setVideoPlayerExpanded: React.Dispatch<React.SetStateAction<boolean>>
+  audioPlayer: React.RefObject<HTMLAudioElement>;
+  audioPlayerExpanded: boolean;
+  setAudioPlayerExpanded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 const AudioGalleryContext = createContext<AudioGalleryContextProps | undefined>(
@@ -21,15 +21,15 @@ export const useAudioGallery = () => {
 };
 
 export const AudioGalleryProvider = ({ children }: { children: ReactNode }) => {
-  const videoPlayer = useRef<HTMLVideoElement>(null);
-  const [videoPlayerExpanded, setVideoPlayerExpanded] = useState<boolean>(false)
+  const audioPlayer = useRef<HTMLAudioElement>(null);
+  const [audioPlayerExpanded, setAudioPlayerExpanded] = useState<boolean>(false)
 
   return (
     <AudioGalleryContext.Provider
       value={{
-        videoPlayer,
-        videoPlayerExpanded,
-        setVideoPlayerExpanded,
+        audioPlayer,
+        audioPlayerExpanded,
+        setAudioPlayerExpanded,
       }}
     >
       {children}

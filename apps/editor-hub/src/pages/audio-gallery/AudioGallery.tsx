@@ -20,9 +20,9 @@ export const AudioGallery = () => {
   const { genericTags } = useSelector((state: RootState) => state.tags)
 
   const {
-    videoPlayer,
-    videoPlayerExpanded,
-    setVideoPlayerExpanded,
+    audioPlayer,
+    audioPlayerExpanded,
+    setAudioPlayerExpanded,
   } = useAudioGallery();
 
   return (
@@ -37,10 +37,10 @@ export const AudioGallery = () => {
         maxWidth: '100vw',
       }}
     >
-      {!!videoPlayerExpanded &&
+      {!!audioPlayerExpanded &&
         <Box
-          ref={videoPlayer}
-          component={"video"}
+          ref={audioPlayer}
+          component={"audio"}
           controls
           autoPlay
           src={currentAudioSource?.temporary_link}
@@ -48,6 +48,7 @@ export const AudioGallery = () => {
           data-testid={"page:video-gallery:video-player"}
           sx={{
             maxHeight: "50%",
+            width: '100%'
           }}
         ></Box>
       }
@@ -66,11 +67,11 @@ export const AudioGallery = () => {
           if (event.key === " ") {
             event.preventDefault();
             event.stopPropagation;
-            if (!videoPlayer.current?.src) return;
-            if (videoPlayer.current!.paused) {
-              return videoPlayer.current?.play();
+            if (!audioPlayer.current?.src) return;
+            if (audioPlayer.current!.paused) {
+              return audioPlayer.current?.play();
             }
-            videoPlayer.current!.pause();
+            audioPlayer.current!.pause();
           }
         }}
       >
@@ -85,13 +86,13 @@ export const AudioGallery = () => {
             height: '3rem',
           }}
         >
-          {!videoPlayerExpanded &&
-            <IconButton title="Show Player" onClick={() => setVideoPlayerExpanded(true)} sx={{ '&:focus': { outline: 'none' } }}>
+          {!audioPlayerExpanded &&
+            <IconButton title="Show Player" onClick={() => setAudioPlayerExpanded(true)} sx={{ '&:focus': { outline: 'none' } }}>
               <ExpandMore fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandMore>
             </IconButton>
           }
-          {videoPlayerExpanded &&
-            <IconButton title="Hide Player" onClick={() => setVideoPlayerExpanded(false)} sx={{ '&:focus': { outline: 'none' } }}>
+          {audioPlayerExpanded &&
+            <IconButton title="Hide Player" onClick={() => setAudioPlayerExpanded(false)} sx={{ '&:focus': { outline: 'none' } }}>
               <ExpandLess fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandLess>
             </IconButton>
           }
@@ -104,9 +105,9 @@ export const AudioGallery = () => {
           setNewFileTree={(newFileTree) => dispatch(setNewSoundTrackTree(newFileTree))
           }
           onSourceChange={async (fileTreeNode) => {
-            if (videoPlayer.current && videoPlayer.current.src) videoPlayer.current.src = "";
+            if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
 
-            setVideoPlayerExpanded(true)
+            setAudioPlayerExpanded(true)
             if (!fileTreeNode.temporary_link) {
               const apiClient = new ApiClient();
               const temporary_link = await apiClient.getTemporaryLink(
