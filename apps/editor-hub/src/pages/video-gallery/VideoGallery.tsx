@@ -3,7 +3,7 @@ import { Box, Checkbox, FormControlLabel, IconButton, Typography, useMediaQuery 
 import { KeyboardEvent, useEffect, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
-import { FileBrowser } from "./components/FileBrowser/FileBrowser";
+import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
 import './VideoGallery.css'

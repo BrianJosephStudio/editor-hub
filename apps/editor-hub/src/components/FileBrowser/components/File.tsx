@@ -1,14 +1,14 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { FileTreeNode } from "../../../../../types/app";
+import { FileTreeNode } from "../../../types/app";
 import { Download, PlayArrow, Theaters } from "@mui/icons-material";
-import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
+import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 import { useState } from "react";
-import { Resource } from "../../../../../business-logic/Resource";
-import { AppPaths } from "../../../../../business-logic/AppPaths";
+import { Resource } from "../../../business-logic/Resource";
+import { AppPaths } from "../../../business-logic/AppPaths";
 import { useDispatch, useSelector } from "react-redux";
-import { setNewVideoSource } from "../../../../../redux/slices/VideoGallerySlice";
-import { ApiClient } from "../../../../../api/ApiClient";
-import { RootState } from "../../../../../redux/store";
+import { setNewVideoSource } from "../../../redux/slices/VideoGallerySlice";
+import { ApiClient } from "../../../api/ApiClient";
+import { RootState } from "../../../redux/store";
 
 export const File = ({
   fileTreeNode,

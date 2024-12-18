@@ -1,7 +1,7 @@
-import { ApiClient } from "../../../../../api/ApiClient";
-import { FileTreeNode } from "../../../../../types/app";
-import { Metadata } from "../../../../../types/dropbox";
-import { TagObject, TagSystem } from "../../../../../types/tags";
+import { ApiClient } from "../api/ApiClient";
+import { FileTreeNode } from "../types/app";
+import { Metadata } from "../types/dropbox";
+import { TagObject, TagSystem } from "../types/tags";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 

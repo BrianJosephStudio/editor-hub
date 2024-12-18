@@ -1,12 +1,12 @@
 import { Box, CircularProgress, Typography, useMediaQuery } from "@mui/material";
-import { FileTreeNode } from "../../../../../types/app";
+import { FileTreeNode } from "../../../types/app";
 import { useEffect, useRef, useState } from "react";
 import { Folder as Foldericon } from "@mui/icons-material";
 import { File } from "./File";
-import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
+import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 import { useSelector } from "react-redux";
-import { RootState } from "../../../../../redux/store";
-import { selectFilteredFileTree } from "../../../../../redux/selectors/FileTreeSelector";
+import { RootState } from "../../../redux/store";
+import { selectFilteredFileTree } from "../../../redux/selectors/FileTreeSelector";
 import './Folder.css'
 
 export const Folder = ({
@@ -33,7 +33,7 @@ export const Folder = ({
 
   const { tabIndex, setTabIndex } = useVideoGallery();
 
-  const isWideEnough = useMediaQuery(`(max-mid: 350px)`)
+  const isWideEnough = useMediaQuery(`(max-mid:350px)`)
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)

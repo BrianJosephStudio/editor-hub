@@ -1,9 +1,9 @@
 import "./App.css";
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import { BrowserRouter, Navigate } from "react-router";
 import { Routes, Route } from "react-router-dom"
 import { NavBar } from "./components/nav-bar/NavBar";
-import { VideoGallery } from "./components/pages/VideoGallery";
+import { VideoGallery } from "./pages/video-gallery/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
 
 function App() {

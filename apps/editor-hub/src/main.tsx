@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { UnauthenticatedUser } from "./components/auth-pages/UnauthenticatedUser.tsx";
+import { UnauthenticatedUser } from "./components/auth-screens/UnauthenticatedUser.tsx";
 import { name, version, author } from '../package.json'
 import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store'
