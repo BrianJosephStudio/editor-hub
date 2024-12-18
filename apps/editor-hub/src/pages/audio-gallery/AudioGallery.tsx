@@ -4,7 +4,7 @@ import { useAudioGallery } from "../../contexts/AudioGallery.context";
 import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
-import { setNewSoundTrackTree, setInitialSoundTrackFetchDone } from "../../redux/slices/FileTreeSlice";
+import { setNewSoundTrackTree } from "../../redux/slices/FileTreeSlice";
 import { setNewAudioSource } from "../../redux/slices/AudioGallerySlice";
 import { FileTreeNode } from "../../types/app";
 import { ApiClient } from "../../api/ApiClient";
@@ -16,7 +16,7 @@ if (!soundTracksRootPath) throw new Error("Missing envs");
 export const AudioGallery = () => {
   const dispatch = useDispatch()
   const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
-  const { soundTrackFileTree, initialSoundTrackFetchDone } = useSelector((state: RootState) => state.fileTree)
+  const { soundTrackFileTree } = useSelector((state: RootState) => state.fileTree)
   const { genericTags } = useSelector((state: RootState) => state.tags)
 
   const {
@@ -99,12 +99,10 @@ export const AudioGallery = () => {
         </Box>
         <FileBrowser
           fileTree={soundTrackFileTree}
-          initialFetchDone={initialSoundTrackFetchDone}
           rootPath={soundTracksRootPath}
           genericTags={genericTags}
           setNewFileTree={(newFileTree) => dispatch(setNewSoundTrackTree(newFileTree))
           }
-          setInitialFetchDone={() => dispatch(setInitialSoundTrackFetchDone())}
           onSourceChange={async (fileTreeNode) => {
             if (videoPlayer.current && videoPlayer.current.src) videoPlayer.current.src = "";
 

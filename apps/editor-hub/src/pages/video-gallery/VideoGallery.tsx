@@ -12,7 +12,7 @@ import { selectFilteredIngameFootageFileTree } from "../../redux/selectors/FileT
 import { setGenericTags } from "../../redux/slices/TagsSlice";
 import axios from "axios";
 import { TagSystem } from "../../types/tags";
-import { setNewInGameFootageTree, setInitialInGameFootageFetchDone } from "../../redux/slices/FileTreeSlice";
+import { setNewInGameFootageTree } from "../../redux/slices/FileTreeSlice";
 import { ApiClient } from "../../api/ApiClient";
 import { FileTreeNode } from "../../types/app";
 import { setNewVideoSource } from "../../redux/slices/VideoGallerySlice";
@@ -25,7 +25,6 @@ if (!resourcesHost || !ingameFootageRootPath) throw new Error("Missing envs");
 export const VideoGallery = () => {
   const dispatch = useDispatch()
   const { currentVideoSource, settings: { fetchUpFront } } = useSelector((state: RootState) => state.videoGallery)
-  const { inGameFootageFileTree, initialInGameFootageFetchDone } = useSelector((state: RootState) => state.fileTree)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
   const filteredFileTree = useSelector(selectFilteredIngameFootageFileTree)
   const { genericTags } = useSelector((state: RootState) => state.tags)
@@ -155,13 +154,11 @@ export const VideoGallery = () => {
         </Box>
         <FileBrowser
           fileTree={filteredFileTree}
-          initialFetchDone={initialInGameFootageFetchDone}
           rootPath={ingameFootageRootPath}
           fetchUpFront={fetchUpFront}
           genericTags={genericTags}
           setNewFileTree={(newFileTree) => dispatch(setNewInGameFootageTree(newFileTree))
           }
-          setInitialFetchDone={() => dispatch(setInitialInGameFootageFetchDone())}
           onSourceChange={async (fileTreeNode) => {
             if (videoPlayer.current && videoPlayer.current.src) videoPlayer.current.src = "";
 

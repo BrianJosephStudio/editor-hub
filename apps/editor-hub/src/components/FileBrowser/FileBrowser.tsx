@@ -10,21 +10,17 @@ import { FileTreeNode } from "../../types/app";
 
 export const FileBrowser = ({
   fileTree,
-  initialFetchDone,
   fetchUpFront,
   rootPath,
   genericTags,
   setNewFileTree,
-  setInitialFetchDone,
   onSourceChange,
 }: {
   fileTree: FileTreeNode
-  initialFetchDone: boolean
   fetchUpFront?: number
   rootPath: string
   genericTags?: TagSystem
   setNewFileTree: (newFileTree: FileTreeNode) => void
-  setInitialFetchDone: () => void
   onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
 }) => {
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
@@ -40,6 +36,8 @@ export const FileBrowser = ({
 
   //This hook fetches patch(root) folders when the component is first rendered
   useEffect(() => {
+    const initialFetchDone = fileTree.children && fileTree.children.length> 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
+
     if (initialFetchDone) return;
 
     fetchRootFolders(rootPath)
@@ -50,11 +48,12 @@ export const FileBrowser = ({
 
   //This hook fetches the initial metadata
   useEffect(() => {
-    if (!foldersRendered || initialFetchDone || !fileTree) return;
+    const rootFoldersRendered = !fileTree.children || fileTree.children.length == 0
+    const initialFetchDone = fileTree.children && fileTree.children.length> 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
+    if (rootFoldersRendered || initialFetchDone || !fileTree) return;
     fetchInitialMetadata(fileTree, fetchUpFront)
       .then(fetchedMetadata => {
         setClipMetadataBatch(fetchedMetadata);
-        setInitialFetchDone();
       })
   }, [foldersRendered]);
 
