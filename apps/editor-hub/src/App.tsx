@@ -1,13 +1,17 @@
 import "./App.css";
 import { Box } from "@mui/material";
+import { BrowserRouter, Navigate } from "react-router";
+import { Routes, Route } from "react-router-dom"
 import { NavBar } from "./components/nav-bar/NavBar";
-import { AppBanner } from "./components/app-banner/AppBanner";
-import { VideoGallery } from "./components/pages/VideoGallery";
+import { VideoGallery } from "./pages/video-gallery/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
+import { AudioGalleryProvider } from "./contexts/AudioGallery.context";
+import { AudioGallery } from "./pages/audio-gallery/AudioGallery";
+import { FileBrowserProvider } from "./contexts/FileBrowser.context";
 
 function App() {
   return (
-    <>
+    <BrowserRouter basename="editor-hub">
       <Box
         component={"div"}
         id="editor-hub-container"
@@ -20,13 +24,27 @@ function App() {
           width: "100vw",
         }}
       >
-        <AppBanner></AppBanner>
-        {/* <NavBar></NavBar> */}
-        <VideoGalleryProvider>
-            <VideoGallery></VideoGallery>
-        </VideoGalleryProvider>
+        <NavBar></NavBar>
+        <FileBrowserProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/video-gallery" />} />
+
+            <Route path="video-gallery" element={
+              <VideoGalleryProvider>
+                <VideoGallery></VideoGallery>
+              </VideoGalleryProvider>
+            }>
+            </Route>
+            <Route path="audio-gallery" element={
+              <AudioGalleryProvider>
+                <AudioGallery></AudioGallery>
+              </AudioGalleryProvider>
+            }>
+            </Route>
+          </Routes>
+        </FileBrowserProvider>
       </Box>
-    </>
+    </BrowserRouter>
   );
 }
 export default App;

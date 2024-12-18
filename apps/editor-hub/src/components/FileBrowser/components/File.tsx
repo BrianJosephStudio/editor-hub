@@ -1,26 +1,25 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
-import { FileTreeNode } from "../../../../../types/app";
+import { FileTreeNode } from "../../../types/app";
 import { Download, PlayArrow, Theaters } from "@mui/icons-material";
-import { useVideoGallery } from "../../../../../contexts/VideoGallery.context";
 import { useState } from "react";
-import { Resource } from "../../../../../business-logic/Resource";
-import { AppPaths } from "../../../../../business-logic/AppPaths";
-import { useDispatch, useSelector } from "react-redux";
-import { setNewVideoSource } from "../../../../../redux/slices/VideoGallerySlice";
-import { ApiClient } from "../../../../../api/ApiClient";
-import { RootState } from "../../../../../redux/store";
+import { Resource } from "../../../business-logic/Resource";
+import { AppPaths } from "../../../business-logic/AppPaths";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../redux/store";
+import { useFileBrowser } from "../../../contexts/FileBrowser.context";
 
 export const File = ({
   fileTreeNode,
   nodeKey,
+  onSourceChange
 }: {
   fileTreeNode: FileTreeNode;
   nodeKey: number;
+  onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
 }) => {
-  const dispatch = useDispatch()
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
-  const { videoPlayer, tabIndex, setTabIndex, setVideoPlayerExpanded } = useVideoGallery();
+  const { tabIndex, setTabIndex } = useFileBrowser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const currentTabIndex = tabIndex;
@@ -29,21 +28,7 @@ export const File = ({
   const playVideo = async (
   ) => {
     setIsLoading(true);
-    if (videoPlayer.current && videoPlayer.current.src) {
-      videoPlayer.current.src = "";
-    }
-    if (!fileTreeNode.temporary_link) {
-      const apiClient = new ApiClient();
-      const temporary_link = await apiClient.getTemporaryLink(
-        fileTreeNode.metadata!.path_lower!
-      );
-      const newFileTreeNode: FileTreeNode = {
-        ...fileTreeNode,
-        temporary_link
-      }
-      dispatch(setNewVideoSource(newFileTreeNode))
-      setVideoPlayerExpanded(true)
-    }
+    await onSourceChange(fileTreeNode)
     setIsLoading(false);
   };
 

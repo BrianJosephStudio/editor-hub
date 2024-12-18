@@ -1,8 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FileTreeNode } from '../../types/app';
 
-const initialState: { fileTree: FileTreeNode } = {
-    fileTree: {
+const initialState: {
+    inGameFootageFileTree: FileTreeNode
+    soundTrackFileTree: FileTreeNode
+} = {
+    inGameFootageFileTree: {
+        name: "root",
+        tag: "folder",
+        path: "/",
+        filtered: false,
+        children: [],
+    },
+    soundTrackFileTree: {
         name: "root",
         tag: "folder",
         path: "/",
@@ -15,12 +25,18 @@ const fileTreeSlice = createSlice({
     name: 'file tree',
     initialState,
     reducers: {
-        setNewTree(state, action: PayloadAction<FileTreeNode>) {
-            state.fileTree = action.payload;
+        setNewInGameFootageTree(state, action: PayloadAction<FileTreeNode>) {
+            state.inGameFootageFileTree = action.payload;
+        },
+        setNewSoundTrackTree(state, action: PayloadAction<FileTreeNode>) {
+            state.soundTrackFileTree = action.payload;
         },
     },
 });
 
-export const { setNewTree } = fileTreeSlice.actions;
+export const {
+    setNewInGameFootageTree,
+    setNewSoundTrackTree,
+} = fileTreeSlice.actions;
 
 export default fileTreeSlice.reducer;

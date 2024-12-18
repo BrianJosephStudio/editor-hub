@@ -3,10 +3,9 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.tsx";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { UnauthenticatedUser } from "./components/auth-pages/UnauthenticatedUser.tsx";
-import { PageViewerProvider } from "./contexts/PageViewer.context.tsx";
+import { UnauthenticatedUser } from "./components/auth-screens/UnauthenticatedUser.tsx";
 import { name, version, author } from '../package.json'
-import { Provider } from 'react-redux';
+import { Provider as ReduxProvider } from 'react-redux';
 import store from './redux/store'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;
@@ -19,13 +18,11 @@ console.log("author:", author)
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl={"/"}>
+    <ClerkProvider publishableKey={PUBLISHABLE_KEY} afterSignOutUrl={"/editor-hub"}>
       <SignedIn>
-        <Provider store={store}>
-          <PageViewerProvider>
+        <ReduxProvider store={store}>
             <App />
-          </PageViewerProvider>
-        </Provider>
+        </ReduxProvider>
       </SignedIn>
 
       <SignedOut>
