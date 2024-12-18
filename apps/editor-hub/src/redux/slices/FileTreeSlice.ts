@@ -1,9 +1,22 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { FileTreeNode } from '../../types/app';
 
-const initialState: { initialFetchDone: boolean; fileTree: FileTreeNode } = {
-    initialFetchDone: false,
-    fileTree: {
+const initialState: {
+    initialInGameFootageFetchDone: boolean;
+    initialSoundTrackFetchDone: boolean;
+    inGameFootageFileTree: FileTreeNode
+    soundTrackFileTree: FileTreeNode
+} = {
+    initialInGameFootageFetchDone: false,
+    initialSoundTrackFetchDone: false,
+    inGameFootageFileTree: {
+        name: "root",
+        tag: "folder",
+        path: "/",
+        filtered: false,
+        children: [],
+    },
+    soundTrackFileTree: {
         name: "root",
         tag: "folder",
         path: "/",
@@ -16,15 +29,26 @@ const fileTreeSlice = createSlice({
     name: 'file tree',
     initialState,
     reducers: {
-        setNewTree(state, action: PayloadAction<FileTreeNode>) {
-            state.fileTree = action.payload;
+        setNewInGameFootageTree(state, action: PayloadAction<FileTreeNode>) {
+            state.inGameFootageFileTree = action.payload;
         },
-        setInitialFetchDone(state){
-            state.initialFetchDone = true
+        setInitialInGameFootageFetchDone(state) {
+            state.initialInGameFootageFetchDone = true
+        },
+        setNewSoundTrackTree(state, action: PayloadAction<FileTreeNode>) {
+            state.soundTrackFileTree = action.payload;
+        },
+        setInitialSoundTrackFetchDone(state) {
+            state.initialSoundTrackFetchDone = true
         }
     },
 });
 
-export const { setNewTree, setInitialFetchDone} = fileTreeSlice.actions;
+export const {
+    setNewInGameFootageTree,
+    setInitialInGameFootageFetchDone,
+    setNewSoundTrackTree,
+    setInitialSoundTrackFetchDone
+} = fileTreeSlice.actions;
 
 export default fileTreeSlice.reducer;

@@ -3,22 +3,20 @@ import { FileTreeNode } from "../types/app";
 import { Metadata } from "../types/dropbox";
 import { TagObject, TagSystem } from "../types/tags";
 
-const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
-
-export const fetchRootFolders = async (): Promise<Metadata[]> => {
+export const fetchRootFolders = async (rootPath: string): Promise<Metadata[]> => {
   const apiClient = new ApiClient();
-  const clipMetadataBatch = await apiClient.getFolderEntries(clipsRootPath);
+  const clipMetadataBatch = await apiClient.getFolderEntries(rootPath);
   const reversedClipMetadataBatch = clipMetadataBatch.reverse();
 
   return reversedClipMetadataBatch
 }
 
-export const fetchInitialMetadata = async (fileTree: FileTreeNode, fetchUpfront: number): Promise<Metadata[]> => {
+export const fetchInitialMetadata = async (fileTree: FileTreeNode, fetchUpFront?: number): Promise<Metadata[]> => {
   const apiClient = new ApiClient();
   const fetchedMetadataRaw = await Promise.all(
     fileTree.children!.map((fileTreeNode, index) => {
       if (!fileTreeNode.metadata) throw new Error(`Missing metadata in fileTreeNode for ${fileTreeNode.name}`);
-      if (index >= fetchUpfront) return;
+      if (fetchUpFront && index >= fetchUpFront) return;
 
       return apiClient.getFolderEntriesRecursively(
         fileTreeNode.metadata.path_lower!
@@ -63,6 +61,7 @@ export const fetchClickedFolderMetadata = async (
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
+  rootPath: string,
   genericTags?: TagSystem
 ): FileTreeNode => {
   const currentHead = currentFileTreeNode.path;
@@ -72,7 +71,7 @@ export const resolveTreeStructure = (
     .map((metadata) => {
       const currentHeadLength = currentHead.split("/").filter(Boolean).length;
 
-      const metadataPath = getMetadataPath(metadata.path_lower!);
+      const metadataPath = getMetadataPath(rootPath, metadata.path_lower!);
       const metadataLength = metadataPath.split("/").filter(Boolean).length;
 
       const parentFolder = metadataPath.replace(/\/[^/]*$/, "");
@@ -84,7 +83,7 @@ export const resolveTreeStructure = (
         let newFileTreeNode: FileTreeNode = {
           name: metadata.name,
           tag: metadata[".tag"],
-          path: getMetadataPath(metadata.path_lower!),
+          path: getMetadataPath(rootPath, metadata.path_lower!),
           filtered: false,
           metadata,
         };
@@ -116,6 +115,7 @@ export const resolveTreeStructure = (
           newFileTreeNode = resolveTreeStructure(
             newFileTreeNode,
             newMetadata,
+            rootPath,
             genericTags
           );
         }
@@ -148,6 +148,6 @@ export const resolveTreeStructure = (
   return newFileTreeNode;
 };
 
-const getMetadataPath = (path: string) => {
-  return path.replace(clipsRootPath.toLowerCase(), "");
+const getMetadataPath = (ootPath: string, path: string) => {
+  return path.replace(ootPath.toLowerCase(), "");
 };

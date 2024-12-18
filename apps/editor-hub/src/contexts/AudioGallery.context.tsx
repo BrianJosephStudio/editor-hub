@@ -1,31 +1,31 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
 
-interface VideoGalleryContextProps {
+interface AudioGalleryContextProps {
   videoPlayer: React.RefObject<HTMLVideoElement>;
   videoPlayerExpanded: boolean;
   setVideoPlayerExpanded: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const VideoGalleryContext = createContext<VideoGalleryContextProps | undefined>(
+const AudioGalleryContext = createContext<AudioGalleryContextProps | undefined>(
   undefined
 );
 
-export const useVideoGallery = () => {
-  const context = useContext(VideoGalleryContext);
+export const useAudioGallery = () => {
+  const context = useContext(AudioGalleryContext);
   if (!context) {
     throw new Error(
-      "useVideoGallery must be used within a VideoGalleryProvider"
+      "useAudioGallery must be used within a AudioGalleryProvider"
     );
   }
   return context;
 };
 
-export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
+export const AudioGalleryProvider = ({ children }: { children: ReactNode }) => {
   const videoPlayer = useRef<HTMLVideoElement>(null);
   const [videoPlayerExpanded, setVideoPlayerExpanded] = useState<boolean>(false)
 
   return (
-    <VideoGalleryContext.Provider
+    <AudioGalleryContext.Provider
       value={{
         videoPlayer,
         videoPlayerExpanded,
@@ -33,6 +33,6 @@ export const VideoGalleryProvider = ({ children }: { children: ReactNode }) => {
       }}
     >
       {children}
-    </VideoGalleryContext.Provider>
+    </AudioGalleryContext.Provider>
   );
 };

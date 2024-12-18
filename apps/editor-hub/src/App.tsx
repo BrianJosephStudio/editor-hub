@@ -5,6 +5,9 @@ import { Routes, Route } from "react-router-dom"
 import { NavBar } from "./components/nav-bar/NavBar";
 import { VideoGallery } from "./pages/video-gallery/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
+import { AudioGalleryProvider } from "./contexts/AudioGallery.context";
+import { AudioGallery } from "./pages/audio-gallery/AudioGallery";
+import { FileBrowserProvider } from "./contexts/FileBrowser.context";
 
 function App() {
   return (
@@ -22,19 +25,24 @@ function App() {
         }}
       >
         <NavBar></NavBar>
-        <Routes>
-          <Route path="/" element={<Navigate to="/video-gallery" />} />
-          <Route path="video-gallery" element={
-            <VideoGalleryProvider>
-              <VideoGallery></VideoGallery>
-            </VideoGalleryProvider>
-          }>
+        <FileBrowserProvider>
+          <Routes>
+            <Route path="/" element={<Navigate to="/video-gallery" />} />
 
-          </Route>
-
-          <Route path="audio-gallery" element={<Typography>Audio Tools</Typography>}>
-          </Route>
-        </Routes>
+            <Route path="video-gallery" element={
+              <VideoGalleryProvider>
+                <VideoGallery></VideoGallery>
+              </VideoGalleryProvider>
+            }>
+            </Route>
+            <Route path="audio-gallery" element={
+              <AudioGalleryProvider>
+                <AudioGallery></AudioGallery>
+              </AudioGalleryProvider>
+            }>
+            </Route>
+          </Routes>
+        </FileBrowserProvider>
       </Box>
     </BrowserRouter>
   );

@@ -2,11 +2,11 @@ import { createSelector } from "reselect";
 import { RootState } from "../store";
 import { FileTreeNode } from "../../types/app";
 
-const selectFileTree = (state: RootState) => state.fileTree.fileTree;
+const selectIngameFootageFileTree = (state: RootState) => state.fileTree.inGameFootageFileTree;
 const selectActiveTags = (state: RootState) => state.tags.activeTags;
 
-export const selectFilteredFileTree = createSelector(
-  [selectFileTree, selectActiveTags],
+export const selectFilteredIngameFootageFileTree = createSelector(
+  [selectIngameFootageFileTree, selectActiveTags],
   (fileTree, activeTags) => {
     const filterTree = (fileTreeNode: FileTreeNode): FileTreeNode => {
       if (fileTreeNode.tag === "file") {

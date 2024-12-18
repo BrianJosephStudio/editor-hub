@@ -12,35 +12,45 @@ export const FileBrowser = ({
   fileTree,
   filteredFileTree,
   initialFetchDone,
-  fetchUpfront,
+  fetchUpFront,
+  rootPath,
   genericTags,
   setNewFileTree,
   setInitialFetchDone,
+  onSourceChange,
 }: {
   fileTree: FileTreeNode
-  filteredFileTree: FileTreeNode
+  filteredFileTree?: FileTreeNode
   initialFetchDone: boolean
-  fetchUpfront: number
+  fetchUpFront?: number
+  rootPath: string
   genericTags?: TagSystem
   setNewFileTree: (newFileTree: FileTreeNode) => void
   setInitialFetchDone: () => void
+  onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
 }) => {
   const [foldersRendered, setFoldersRendered] = useState<boolean>(false);
   const [clipMetadataBatch, setClipMetadataBatch] = useState<Metadata[]>([]);
+  const [targetTree, setTargetTree] = useState<FileTreeNode>()
+
+  useEffect(() => {
+    if (filteredFileTree) return setTargetTree(filteredFileTree);
+    setTargetTree(fileTree)
+  }, [fileTree, filteredFileTree])
 
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
-    if (clipMetadataBatch.length === 0 || !genericTags) return;
-    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, genericTags);
+    if (clipMetadataBatch.length === 0 || !genericTags || !targetTree) return;
+    const builtRoot = resolveTreeStructure(targetTree, clipMetadataBatch, rootPath, genericTags);
     setNewFileTree(builtRoot)
     setFoldersRendered(true);
-  }, [clipMetadataBatch]);
+  }, [clipMetadataBatch, targetTree]);
 
   //This hook fetches patch(root) folders when the component is first rendered
   useEffect(() => {
     if (initialFetchDone) return;
 
-    fetchRootFolders()
+    fetchRootFolders(rootPath)
       .then(clipMetadataBatch => {
         setClipMetadataBatch(clipMetadataBatch);
       })
@@ -48,8 +58,8 @@ export const FileBrowser = ({
 
   //This hook fetches the initial metadata
   useEffect(() => {
-    if (!foldersRendered || initialFetchDone) return;
-    fetchInitialMetadata(filteredFileTree, fetchUpfront)
+    if (!foldersRendered || initialFetchDone || !targetTree) return;
+    fetchInitialMetadata(targetTree, fetchUpFront)
       .then(fetchedMetadata => {
         setClipMetadataBatch(fetchedMetadata);
         setInitialFetchDone();
@@ -71,17 +81,19 @@ export const FileBrowser = ({
     }}
     className="scroll-bar"
   >
-    {filteredFileTree && filteredFileTree.children && filteredFileTree.children.map((fileTreeNode, index) => (
+    {targetTree && targetTree.children && targetTree.children.map((fileTreeNode, index) => (
       <Folder
         fileTreeNode={fileTreeNode}
         nodeKey={index}
         isRootFolder={true}
+        fetchUpFront={fetchUpFront}
         onClickCallback={async (setIsLoading) => {
           setIsLoading(true);
-          const newMetadata = await fetchClickedFolderMetadata(filteredFileTree, fileTreeNode);
+          const newMetadata = await fetchClickedFolderMetadata(targetTree, fileTreeNode);
           setClipMetadataBatch(newMetadata ?? [])
           setIsLoading(false);
         }}
+        onSourceChange={onSourceChange}
       ></Folder>
     ))}
   </Box>)

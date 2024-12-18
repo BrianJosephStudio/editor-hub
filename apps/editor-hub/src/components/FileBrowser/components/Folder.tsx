@@ -1,58 +1,53 @@
-import { Box, CircularProgress, Typography, useMediaQuery } from "@mui/material";
+import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
 import { useEffect, useRef, useState } from "react";
 import { Folder as Foldericon } from "@mui/icons-material";
 import { File } from "./File";
-import { useVideoGallery } from "../../../contexts/VideoGallery.context";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
-import { selectFilteredFileTree } from "../../../redux/selectors/FileTreeSelector";
 import './Folder.css'
+import { useFileBrowser } from "../../../contexts/FileBrowser.context";
 
 export const Folder = ({
   fileTreeNode,
   nodeKey,
   isRootFolder = false,
+  fetchUpFront,
   onClickCallback,
+  onSourceChange
 }: {
   fileTreeNode: FileTreeNode;
   nodeKey: number;
   isRootFolder?: boolean;
+  fetchUpFront?: number
   onClickCallback?: (
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
   ) => Promise<void>;
+  onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
 }) => {
   const childrenContainer = useRef<HTMLUListElement>(null)
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentFetched, setContentFetched] = useState<boolean>(false)
 
-  const filteredFileTree = useSelector(selectFilteredFileTree)
-  const { settings: { fetchUpfront } } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
-  const { tabIndex, setTabIndex } = useVideoGallery();
-
-  const isWideEnough = useMediaQuery(`(max-mid:350px)`)
+  const { tabIndex, setTabIndex } = useFileBrowser();
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)
 
   useEffect(() => {
-    if (!isRootFolder) setContentFetched(true)
-    if (isRootFolder && fileTreeNode.children && fileTreeNode.children.length > 0) {
+    if (!isRootFolder) return setContentFetched(true);
+
+    if (fileTreeNode.children && fileTreeNode.children.length > 0) {
       setIsLoading(false)
       setContentFetched(true);
       return
     }
 
-    if (filteredFileTree && filteredFileTree.children) {
-      const fetchedUpfrontChildren = [...filteredFileTree.children].filter((_, index) => index < fetchUpfront)
-      if (fetchedUpfrontChildren.find(entry => entry.name === fileTreeNode.name)) {
-        setIsLoading(true)
-      }
-    }
-  }, [filteredFileTree])
+    if ((fetchUpFront && nodeKey < fetchUpFront) || !fetchUpFront) return setIsLoading(true);
+  }, [fileTreeNode])
 
   return (
     <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
@@ -123,10 +118,18 @@ export const Folder = ({
             fileTreeNode.children.map((childTreeNode, index) => (
               <>
                 {childTreeNode.tag === "folder" && (
-                  <Folder fileTreeNode={childTreeNode} nodeKey={index}></Folder>
+                  <Folder
+                    fileTreeNode={childTreeNode}
+                    onSourceChange={onSourceChange}
+                    nodeKey={index}
+                  ></Folder>
                 )}
                 {childTreeNode.tag === "file" && (
-                  <File fileTreeNode={childTreeNode} nodeKey={index}></File>
+                  <File
+                    fileTreeNode={childTreeNode}
+                    onSourceChange={onSourceChange}
+                    nodeKey={index}
+                  ></File>
                 )}
               </>
             ))}

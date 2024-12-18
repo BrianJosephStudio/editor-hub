@@ -3,28 +3,25 @@ import { TagReference } from "../types/tags";
 import { ListFolderResponse, Metadata } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
-const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 const tagTemplateId = import.meta.env.VITE_TAG_TEMPLATE_ID as string;
 
-if (!clipsRootPath || !apiHost) throw new Error("Missing envs");
+if (!tagTemplateId || !apiHost) throw new Error("Missing envs");
 
 export class ApiClient {
   private apiHost: string;
-  private clipsRootPath: string;
 
   constructor() {
     this.apiHost = apiHost;
-    this.clipsRootPath = clipsRootPath;
   }
-  public getTemporaryLink = async (targetClip: string): Promise<string> => {
-    const path = targetClip.replace(this.clipsRootPath.toLowerCase(), "");
+  public getTemporaryLink = async (rootPath: string, targetClip: string): Promise<string> => {
+    const path = targetClip.replace(rootPath.toLowerCase(), "");
     const url = `${this.apiHost}/get_temporary_link`;
     const headers = {
       "Content-Type": "application/json",
     };
 
     const body = {
-      path: `${this.clipsRootPath}${path}`,
+      path: `${rootPath}${path}`,
     };
 
     const {
@@ -162,7 +159,7 @@ export class ApiClient {
   public download = async (path: string) => {
     const url = `${this.apiHost}/download`;
     const headers = {
-        'Dropbox-API-Arg': JSON.stringify({ path })
+      'Dropbox-API-Arg': JSON.stringify({ path })
     };
 
     const {

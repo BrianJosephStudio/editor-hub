@@ -3,14 +3,14 @@ import { FileTreeNode } from '../../types/app';
 
 interface VideoGalleryState {
     settings: {
-        fetchUpfront: number
+        fetchUpFront: number
     }
     currentVideoSource: FileTreeNode | null
 }
 
 const initialState: VideoGalleryState = {
     settings: {
-        fetchUpfront: 2
+        fetchUpFront: 2
     },
     currentVideoSource: null
 };
@@ -23,7 +23,7 @@ const videoGallerySettingsSlice = createSlice({
             state.currentVideoSource = action.payload
         },
         setFetchUpfront(state, action: PayloadAction<number>) {
-            state.settings.fetchUpfront = action.payload;
+            state.settings.fetchUpFront = action.payload;
         },
     },
 });
