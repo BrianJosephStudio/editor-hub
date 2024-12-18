@@ -154,8 +154,7 @@ export const VideoGallery = () => {
           </Box>
         </Box>
         <FileBrowser
-          fileTree={inGameFootageFileTree}
-          filteredFileTree={filteredFileTree}
+          fileTree={filteredFileTree}
           initialFetchDone={initialInGameFootageFetchDone}
           rootPath={ingameFootageRootPath}
           fetchUpFront={fetchUpFront}
