@@ -3,7 +3,8 @@ import { FileTreeNode } from '../../types/app';
 
 const initialState: {
     inGameFootageFileTree: FileTreeNode
-    soundTrackFileTree: FileTreeNode
+    musicTrackFileTree: FileTreeNode
+    sfxFileTree: FileTreeNode
 } = {
     inGameFootageFileTree: {
         name: "root",
@@ -12,7 +13,14 @@ const initialState: {
         filtered: false,
         children: [],
     },
-    soundTrackFileTree: {
+    musicTrackFileTree: {
+        name: "root",
+        tag: "folder",
+        path: "/",
+        filtered: false,
+        children: [],
+    },
+    sfxFileTree: {
         name: "root",
         tag: "folder",
         path: "/",
@@ -28,15 +36,19 @@ const fileTreeSlice = createSlice({
         setNewInGameFootageTree(state, action: PayloadAction<FileTreeNode>) {
             state.inGameFootageFileTree = action.payload;
         },
-        setNewSoundTrackTree(state, action: PayloadAction<FileTreeNode>) {
-            state.soundTrackFileTree = action.payload;
+        setNewMusicTrackTree(state, action: PayloadAction<FileTreeNode>) {
+            state.musicTrackFileTree = action.payload;
+        },
+        setNewSfxTrackTree(state, action: PayloadAction<FileTreeNode>) {
+            state.sfxFileTree = action.payload;
         },
     },
 });
 
 export const {
     setNewInGameFootageTree,
-    setNewSoundTrackTree,
+    setNewMusicTrackTree,
+    setNewSfxTrackTree,
 } = fileTreeSlice.actions;
 
 export default fileTreeSlice.reducer;

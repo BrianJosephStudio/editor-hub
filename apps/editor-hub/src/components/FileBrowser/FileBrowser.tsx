@@ -28,15 +28,15 @@ export const FileBrowser = ({
 
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
-    if (clipMetadataBatch.length === 0 || !genericTags || !fileTree) return;
-    const builtRoot = resolveTreeStructure( fileTree, clipMetadataBatch, rootPath, genericTags);
+    if (clipMetadataBatch.length === 0 || !fileTree) return;
+    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, rootPath, genericTags);
     setNewFileTree(builtRoot)
     setFoldersRendered(true);
   }, [clipMetadataBatch]);
 
   //This hook fetches patch(root) folders when the component is first rendered
   useEffect(() => {
-    const initialFetchDone = fileTree.children && fileTree.children.length> 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
+    const initialFetchDone = fileTree.children && fileTree.children.length > 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
 
     if (initialFetchDone) return;
 
@@ -49,7 +49,7 @@ export const FileBrowser = ({
   //This hook fetches the initial metadata
   useEffect(() => {
     const rootFoldersRendered = !fileTree.children || fileTree.children.length == 0
-    const initialFetchDone = fileTree.children && fileTree.children.length> 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
+    const initialFetchDone = fileTree.children && fileTree.children.length > 0 && fileTree.children[0].children && fileTree.children[0].children.length > 0
     if (rootFoldersRendered || initialFetchDone || !fileTree) return;
     fetchInitialMetadata(fileTree, fetchUpFront)
       .then(fetchedMetadata => {

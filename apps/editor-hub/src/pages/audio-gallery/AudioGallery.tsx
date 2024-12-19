@@ -1,23 +1,26 @@
-import { ExpandLess, ExpandMore, } from "@mui/icons-material";
-import { Box, IconButton, Typography, } from "@mui/material";
+import { Audiotrack, ExpandLess, ExpandMore, GraphicEq, Headset, } from "@mui/icons-material";
+import { Box, IconButton, ListItemText } from "@mui/material";
+import { List, ListItem } from '@mui/joy'
 import { useAudioGallery } from "../../contexts/AudioGallery.context";
 import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from "../../redux/store";
-import { setNewSoundTrackTree } from "../../redux/slices/FileTreeSlice";
+import { setNewMusicTrackTree, setNewSfxTrackTree } from "../../redux/slices/FileTreeSlice";
 import { setNewAudioSource } from "../../redux/slices/AudioGallerySlice";
 import { FileTreeNode } from "../../types/app";
 import { ApiClient } from "../../api/ApiClient";
+import { useState } from "react";
 
-const soundTracksRootPath = import.meta.env.VITE_SOUNDTRACKS_ROOT_FOLDER as string;
+const musicTracksRootPath = import.meta.env.VITE_MUSICTRACKS_ROOT_FOLDER as string;
+const sfxRootPath = import.meta.env.VITE_SFX_ROOT_FOLDER as string;
 
-if (!soundTracksRootPath) throw new Error("Missing envs");
+if (!musicTracksRootPath || !sfxRootPath) throw new Error("Missing envs");
 
 export const AudioGallery = () => {
   const dispatch = useDispatch()
   const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
-  const { soundTrackFileTree } = useSelector((state: RootState) => state.fileTree)
-  const { genericTags } = useSelector((state: RootState) => state.tags)
+  const { musicTrackFileTree, sfxFileTree } = useSelector((state: RootState) => state.fileTree)
+  const [tab, setTab] = useState<"music" | "sfx">("music")
 
   const {
     audioPlayer,
@@ -96,34 +99,82 @@ export const AudioGallery = () => {
               <ExpandLess fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandLess>
             </IconButton>
           }
-          <Typography>Sound Tracks</Typography>
-        </Box>
-        <FileBrowser
-          fileTree={soundTrackFileTree}
-          rootPath={soundTracksRootPath}
-          genericTags={genericTags}
-          setNewFileTree={(newFileTree) => dispatch(setNewSoundTrackTree(newFileTree))
-          }
-          onSourceChange={async (fileTreeNode) => {
-            if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
 
-            setAudioPlayerExpanded(true)
-            if (!fileTreeNode.temporary_link) {
-              const apiClient = new ApiClient();
-              const temporary_link = await apiClient.getTemporaryLink(
-                soundTracksRootPath,
-                fileTreeNode.metadata!.path_lower!
-              );
-              const newFileTreeNode: FileTreeNode = {
-                ...fileTreeNode,
-                temporary_link
+          <List orientation="horizontal" sx={{ gap: '1rem' }}>
+
+            <ListItem onClick={() => setTab('music')} sx={{
+              color: 'white',
+              opacity: tab === 'music' ? "1" : "0.4",
+              cursor: 'pointer',
+              gap: '0.3rem'
+            }}>
+              <Audiotrack sx={{ fill: 'white' }} />
+              <ListItemText>Music Tracks</ListItemText>
+            </ListItem>
+
+            <ListItem onClick={() => setTab('sfx')} sx={{
+              color: 'white',
+              opacity: tab === 'sfx' ? "1" : "0.4",
+              cursor: 'pointer',
+              gap: '0.3rem'
+            }}>
+              <GraphicEq sx={{ fill: 'white' }} />
+              <ListItemText>Music Tracks</ListItemText>
+            </ListItem>
+
+          </List>
+        </Box>
+        {tab === "music" &&
+          <FileBrowser
+            fileTree={musicTrackFileTree}
+            rootPath={musicTracksRootPath}
+            setNewFileTree={(newFileTree) => dispatch(setNewMusicTrackTree(newFileTree))}
+            onSourceChange={async (fileTreeNode) => {
+              if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
+
+              setAudioPlayerExpanded(true)
+              if (!fileTreeNode.temporary_link) {
+                const apiClient = new ApiClient();
+                const temporary_link = await apiClient.getTemporaryLink(
+                  musicTracksRootPath,
+                  fileTreeNode.metadata!.path_lower!
+                );
+                const newFileTreeNode: FileTreeNode = {
+                  ...fileTreeNode,
+                  temporary_link
+                }
+                dispatch(setNewAudioSource(newFileTreeNode))
+              } else {
+                dispatch(setNewAudioSource(fileTreeNode))
               }
-              dispatch(setNewAudioSource(newFileTreeNode))
-            } else {
-              dispatch(setNewAudioSource(fileTreeNode))
-            }
-          }}
-        ></FileBrowser>
+            }}
+          />
+        }
+        {tab === "sfx" &&
+          <FileBrowser
+            fileTree={sfxFileTree}
+            rootPath={sfxRootPath}
+            setNewFileTree={(newFileTree) => dispatch(setNewSfxTrackTree(newFileTree))}
+            onSourceChange={async (fileTreeNode) => {
+              if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
+
+              setAudioPlayerExpanded(true)
+              if (!fileTreeNode.temporary_link) {
+                const apiClient = new ApiClient();
+                const temporary_link = await apiClient.getTemporaryLink(
+                  sfxRootPath,
+                  fileTreeNode.metadata!.path_lower!
+                );
+                const newFileTreeNode: FileTreeNode = {
+                  ...fileTreeNode,
+                  temporary_link
+                }
+                dispatch(setNewAudioSource(newFileTreeNode))
+              } else {
+                dispatch(setNewAudioSource(fileTreeNode))
+              }
+            }}
+          />}
       </Box>
     </Box>
   );

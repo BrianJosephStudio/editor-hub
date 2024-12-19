@@ -1,7 +1,7 @@
-import { Box, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from "@mui/material";
+import { Box, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AccountCircle, Logout, Menu as MenuIcon } from "@mui/icons-material";
+import { AccountCircle, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
 import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -15,11 +15,13 @@ export const NavBar = () => {
   const pages = [
     {
       title: "Video Gallery",
-      path: "video-gallery"
+      path: "video-gallery",
+      listItemIcon: <Movie sx={{fill: 'hsl(213, 98%, 68%)'}}/>
     },
     {
       title: "Audio Gallery",
-      path: "audio-gallery"
+      path: "audio-gallery",
+      listItemIcon: <Headset sx={{fill: 'hsl(213, 98%, 68%)'}}/>
     }
   ]
 
@@ -63,7 +65,9 @@ export const NavBar = () => {
         <List sx={{ backgroundColor: 'hsl(0, 0%, 20%)', height: '100%', color: 'hsl(0, 0.00%, 90%)' }}>
           <ListItem sx={{ display: 'flex', gap: '0.6rem', placeItems: 'center', width: '100%' }}>
             <ListItemAvatar>
-              <AccountCircle fontSize="large" />
+              <AccountCircle sx={{
+                fill: 'hsl(213, 68%, 68%)'
+              }} fontSize="large" />
             </ListItemAvatar>
             <ListItemText
               id={`nava-bar:account-info:user-name`}
@@ -79,14 +83,15 @@ export const NavBar = () => {
             </SignOutButton>
           </ListItem>
 
-          {pages.map((page) => (
-            <ListItem disablePadding onClick={() => navigate(page.path)}
+          {pages.map(({ title, path, listItemIcon }) => (
+            <ListItem disablePadding onClick={() => navigate(path)}
               sx={{
-                backgroundColor: location.pathname.includes(page.path) ? "hsl(213, 60%, 50%)" : null
+                backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
               }}
             >
               <ListItemButton>
-                <ListItemText>{page.title}</ListItemText>
+                <ListItemIcon>{listItemIcon}</ListItemIcon>
+                <ListItemText>{title}</ListItemText>
               </ListItemButton>
             </ListItem>
           ))}
