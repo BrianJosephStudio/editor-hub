@@ -1,12 +1,13 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
-import { Download, PlayArrow, Theaters } from "@mui/icons-material";
-import { useState } from "react";
+import { Audiotrack, Download, PlayArrow, Theaters } from "@mui/icons-material";
+import { useEffect, useState } from "react";
 import { Resource } from "../../../business-logic/Resource";
 import { AppPaths } from "../../../business-logic/AppPaths";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useFileBrowser } from "../../../contexts/FileBrowser.context";
+import { getMimeType } from "../../../util/fileType";
 
 export const File = ({
   fileTreeNode,
@@ -21,6 +22,7 @@ export const File = ({
 
   const { tabIndex, setTabIndex } = useFileBrowser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [fileType, setFileType] = useState<"video" | "image" | "audio" | undefined>()
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)
@@ -32,6 +34,13 @@ export const File = ({
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    const type = getMimeType(fileTreeNode.name);
+
+    if (type === 'audio' || type === 'video' || type === 'image') {
+      setFileType(type);
+    }
+  })
 
   return (
     <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
@@ -79,7 +88,12 @@ export const File = ({
             gap: "0.3rem",
           }}
         >
-          <Theaters sx={{ fill: 'white)' }}></Theaters>
+          { fileType === "video" && 
+            <Theaters sx={{ fill: 'white)' }}/>
+          }
+          { fileType === "audio" && 
+            <Audiotrack sx={{ fill: 'white)' }}/>
+          }
           <Typography>{fileTreeNode.name}</Typography>
           {isLoading && (
             <CircularProgress

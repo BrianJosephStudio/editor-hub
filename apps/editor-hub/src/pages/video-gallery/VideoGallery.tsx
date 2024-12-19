@@ -1,5 +1,5 @@
-import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, Widgets } from "@mui/icons-material";
-import { Box, Checkbox, FormControlLabel, IconButton, Typography, useMediaQuery } from "@mui/material";
+import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, SportsEsports, Widgets } from "@mui/icons-material";
+import { Box, Checkbox, FormControlLabel, IconButton, ListItem, ListItemText, Typography, useMediaQuery } from "@mui/material";
 import { KeyboardEvent, useEffect, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
@@ -16,6 +16,7 @@ import { setNewInGameFootageTree } from "../../redux/slices/FileTreeSlice";
 import { ApiClient } from "../../api/ApiClient";
 import { FileTreeNode } from "../../types/app";
 import { setNewVideoSource } from "../../redux/slices/VideoGallerySlice";
+import { List } from "@mui/joy";
 
 const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 const ingameFootageRootPath = import.meta.env.VITE_INGAME_FOOTAGE_ROOT_FOLDER as string;
@@ -125,7 +126,17 @@ export const VideoGallery = () => {
               <ExpandLess fontSize={"large"} color={"primary"} sx={{ maxHeight: '2rem' }}></ExpandLess>
             </IconButton>
           }
-          <Typography>In-game Footage</Typography>
+
+          <List orientation="horizontal">
+            <ListItem sx={{
+              color: 'white',
+              cursor: 'pointer',
+              gap: '0.3rem'
+            }}>
+              <SportsEsports sx={{ fill: 'white' }} />
+              <ListItemText>In-game Footage</ListItemText>
+            </ListItem>
+          </List>
 
           <Box sx={{
             display: 'flex',
