@@ -1,5 +1,6 @@
 import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, SportsEsports, Widgets } from "@mui/icons-material";
-import { Box, Checkbox, FormControlLabel, IconButton, ListItem, ListItemText, Typography, useMediaQuery } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, ListItemText, Typography, useMediaQuery } from "@mui/material";
+import { List, ListItem } from "@mui/joy";
 import { KeyboardEvent, useEffect, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
@@ -16,7 +17,6 @@ import { setNewInGameFootageTree } from "../../redux/slices/FileTreeSlice";
 import { ApiClient } from "../../api/ApiClient";
 import { FileTreeNode } from "../../types/app";
 import { setNewVideoSource } from "../../redux/slices/VideoGallerySlice";
-import { List } from "@mui/joy";
 
 const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 const ingameFootageRootPath = import.meta.env.VITE_INGAME_FOOTAGE_ROOT_FOLDER as string;
@@ -33,6 +33,7 @@ export const VideoGallery = () => {
   const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
 
   const isWideEnough = useMediaQuery('(min-width: 30rem)')
+  const tabBreakingPoint = useMediaQuery('(min-width: 20rem)')
 
   const {
     videoPlayer,
@@ -127,14 +128,15 @@ export const VideoGallery = () => {
             </IconButton>
           }
 
-          <List orientation="horizontal">
-            <ListItem sx={{
-              color: 'white',
-              cursor: 'pointer',
-              gap: '0.3rem'
-            }}>
+          <List orientation="horizontal" sx={{ gap: '1rem', justifyContent: tabBreakingPoint ? 'flex-start' : 'space-around' }}>
+            <ListItem title={tabBreakingPoint ? "" : "In-game Footage"}
+              sx={{
+                color: 'white',
+                cursor: 'pointer',
+                gap: '0.3rem'
+              }}>
               <SportsEsports sx={{ fill: 'white' }} />
-              <ListItemText>In-game Footage</ListItemText>
+              {tabBreakingPoint && <ListItemText>In-game Footage</ListItemText>}
             </ListItem>
           </List>
 
