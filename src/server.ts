@@ -10,6 +10,7 @@ import { router as projectManagerRoutes } from "./routes/projectManager.routes";
 import { checkEnvs } from "./middleware/checkEnvs";
 import { clerkMiddleware, requireAuth } from "@clerk/express";
 import { clipTaggerAuthorizationFilter } from "./middleware/userAuthorization";
+import { existsSync } from "fs";
 
 const app = express()
 
@@ -30,11 +31,23 @@ app.use("/project-manager", projectManagerRoutes);
 
 app.get("/health", (_req, res) => res.send("ok"));
 
+app.use(express.static(path.resolve(__dirname, "..", "public")))
+
 app.get("/", (_req, res) => {
   res.sendFile(path.resolve(__dirname, "..", "public", "README.md"))
 })
 
-app.use(express.static(path.resolve(__dirname, "..", "public")))
+app.get('/:appName/*', (req, res) => {
+  const appName = req.params.appName;
+  const appPath = path.resolve(__dirname, '..', 'public', appName, 'index.html');
+
+  if (existsSync(appPath)) {
+    res.sendFile(appPath);
+  } else {
+    res.status(404).send('App not found');
+  }
+});
+
 
 const port = process.env.PORT
 
