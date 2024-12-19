@@ -1,5 +1,5 @@
 import { Audiotrack, ExpandLess, ExpandMore, GraphicEq, Headset, } from "@mui/icons-material";
-import { Box, IconButton, ListItemText } from "@mui/material";
+import { Box, IconButton, ListItemText, useMediaQuery } from "@mui/material";
 import { List, ListItem } from '@mui/joy'
 import { useAudioGallery } from "../../contexts/AudioGallery.context";
 import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
@@ -16,11 +16,14 @@ const sfxRootPath = import.meta.env.VITE_SFX_ROOT_FOLDER as string;
 
 if (!musicTracksRootPath || !sfxRootPath) throw new Error("Missing envs");
 
+
 export const AudioGallery = () => {
   const dispatch = useDispatch()
   const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
   const { musicTrackFileTree, sfxFileTree } = useSelector((state: RootState) => state.fileTree)
   const [tab, setTab] = useState<"music" | "sfx">("music")
+  
+  const isWideEnough = useMediaQuery('(min-width:22rem)')
 
   const {
     audioPlayer,
@@ -100,26 +103,30 @@ export const AudioGallery = () => {
             </IconButton>
           }
 
-          <List orientation="horizontal" sx={{ gap: '1rem' }}>
+          <List orientation="horizontal" sx={{ gap: '1rem', justifyContent: isWideEnough ? 'flex-start' : 'space-around' }}>
 
-            <ListItem onClick={() => setTab('music')} sx={{
+            <ListItem title={isWideEnough ? "": 'Music Tracks'} onClick={() => setTab('music')} sx={{
               color: 'white',
               opacity: tab === 'music' ? "1" : "0.4",
               cursor: 'pointer',
               gap: '0.3rem'
             }}>
               <Audiotrack sx={{ fill: 'white' }} />
-              <ListItemText>Music Tracks</ListItemText>
+              {isWideEnough && 
+                <ListItemText>Music Tracks</ListItemText>
+              }
             </ListItem>
 
-            <ListItem onClick={() => setTab('sfx')} sx={{
+            <ListItem title={isWideEnough ? "": 'Sound Effects'} onClick={() => setTab('sfx')} sx={{
               color: 'white',
               opacity: tab === 'sfx' ? "1" : "0.4",
               cursor: 'pointer',
               gap: '0.3rem'
             }}>
               <GraphicEq sx={{ fill: 'white' }} />
-              <ListItemText>Music Tracks</ListItemText>
+              {isWideEnough && 
+                <ListItemText>Sound Effects</ListItemText>
+              }
             </ListItem>
 
           </List>
