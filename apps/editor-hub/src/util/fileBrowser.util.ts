@@ -148,6 +148,6 @@ export const resolveTreeStructure = (
   return newFileTreeNode;
 };
 
-const getMetadataPath = (ootPath: string, path: string) => {
-  return path.replace(ootPath.toLowerCase(), "");
+const getMetadataPath = (rootPath: string, path: string) => {
+  return path.replace(rootPath.toLowerCase(), "");
 };
