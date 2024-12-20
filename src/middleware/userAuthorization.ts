@@ -11,7 +11,7 @@ export const clipTaggerAuthorizationFilter = (
   const role = auth.sessionClaims?.metadata?.role;
 
   const isAuthorized = role === "clip_tagger" || role === "admin";
-  console.log("API v2 request by role:", auth.sessionClaims?.metadata?.role);
+  console.log("API v2 request by role:", role);
 
   if (!isAuthorized) {
     return res.status(403).send("Unauthorized");

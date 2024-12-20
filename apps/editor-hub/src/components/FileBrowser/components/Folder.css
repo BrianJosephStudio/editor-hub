@@ -1,0 +1,8 @@
+.folder-tab-size{
+    padding-left: 1rem;
+}
+@media(max-width: 350px) {
+    .folder-tab-size{
+        padding-left: 0.5rem;
+    }
+}
