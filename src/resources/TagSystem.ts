@@ -1,49 +1,62 @@
-import { TagGroup, TagObject } from "../types/tags"
-interface TagSystem {
-    [name: string]: TagGroup
-}
+import { TagObject, TagSystem } from "../types/tags"
 
 export const AgentTags: TagObject[] = [
-    {tag:"astra",displayName:"Astra",description:"Player is playing Astra", unique: true, timeless: true, protected: true, keybind: "", id: "ag001"},
-    {tag:"brimstone",displayName:"Brimstone",description:"Player is playing Brimstone", unique: true, timeless: true, protected: true, keybind: "", id: "ag002"},
-    {tag:"breach",displayName:"Breach",description:"Player is playing Breach", unique: true, timeless: true, protected: true, keybind: "", id: "ag003"},
-    {tag:"chamber",displayName:"Chamber",description:"Player is playing Chamber", unique: true, timeless: true, protected: true, keybind: "", id: "ag004"},
+    {tag:"astra",displayName:"Astra",description:"Player is playing Astra", unique: true, timeless: true, protected: true, keybind: "a", id: "ag001"},
+    {tag:"breach",displayName:"Breach",description:"Player is playing Breach", unique: true, timeless: true, protected: true, keybind: "m", id: "ag003"},
+    {tag:"brimstone",displayName:"Brimstone",description:"Player is playing Brimstone", unique: true, timeless: true, protected: true, keybind: "b", id: "ag002"},
+    {tag:"chamber",displayName:"Chamber",description:"Player is playing Chamber", unique: true, timeless: true, protected: true, keybind: "c", id: "ag004"},
     {tag:"clove",displayName:"Clove",description:"Player is playing Clove", unique: true, timeless: true, protected: true, keybind: "q", id: "ag024"},
-    {tag:"cypher",displayName:"Cypher",description:"Player is playing Cypher", unique: true, timeless: true, protected: true, keybind: "", id: "ag005"},
-    {tag:"deadlock",displayName:"Deadlock",description:"Player is playing Deadlock", unique: true, timeless: true, protected: true, keybind: "", id: "ag006"},
-    {tag:"fade",displayName:"Fade",description:"Player is playing Fade", unique: true, timeless: true, protected: true, keybind: "", id: "ag007"},
-    {tag:"gekko",displayName:"Gekko",description:"Player is playing Gekko", unique: true, timeless: true, protected: true, keybind: "", id: "ag008"},
-    {tag:"harbor",displayName:"Harbor",description:"Player is playing Harbor", unique: true, timeless: true, protected: true, keybind: "", id: "ag009"},
-    {tag:"iso",displayName:"Iso",description:"Player is playing Iso", unique: true, timeless: true, protected: true, keybind: "", id: "ag010"},
-    {tag:"jett",displayName:"Jett",description:"Player is playing Jett", unique: true, timeless: true, protected: true, keybind: "", id: "ag011"},
-    {tag:"kayo",displayName:"Kayo",description:"Player is playing KAY/O", unique: true, timeless: true, protected: true, keybind: "", id: "ag012"},
-    {tag:"killjoy",displayName:"Killjoy",description:"Player is playing Killjoy", unique: true, timeless: true, protected: true, keybind: "", id: "ag013"},
-    {tag:"neon",displayName:"Neon",description:"Player is playing Neon", unique: true, timeless: true, protected: true, keybind: "", id: "ag014"},
-    {tag:"omen",displayName:"Omen",description:"Player is playing Omen", unique: true, timeless: true, protected: true, keybind: "", id: "ag015"},
-    {tag:"phoenix",displayName:"Phoenix",description:"Player is playing Phoenix", unique: true, timeless: true, protected: true, keybind: "", id: "ag016"},
-    {tag:"raze",displayName:"Raze",description:"Player is playing Raze", unique: true, timeless: true, protected: true, keybind: "", id: "ag017"},
-    {tag:"reyna",displayName:"Reyna",description:"Player is playing Reyna", unique: true, timeless: true, protected: true, keybind: "", id: "ag018"},
-    {tag:"sage",displayName:"Sage",description:"Player is playing Sage", unique: true, timeless: true, protected: true, keybind: "", id: "ag019"},
-    {tag:"skye",displayName:"Skye",description:"Player is playing Skye", unique: true, timeless: true, protected: true, keybind: "", id: "ag020"},
-    {tag:"sova",displayName:"Sova",description:"Player is playing Sova", unique: true, timeless: true, protected: true, keybind: "", id: "ag021"},
-    {tag:"viper",displayName:"Viper",description:"Player is playing Viper", unique: true, timeless: true, protected: true, keybind: "", id: "ag022"},
-    {tag:"vyse",displayName:"Vyse",description:"Player is playing Vyse", unique: true, timeless: true, protected: true, keybind: "", id: "ag025"},
-    {tag:"yoru",displayName:"Yoru",description:"Player is playing Yoru", unique: true, timeless: true, protected: true, keybind: "", id: "ag023"}
+    {tag:"cypher",displayName:"Cypher",description:"Player is playing Cypher", unique: true, timeless: true, protected: true, keybind: "x", id: "ag005"},
+    {tag:"deadlock",displayName:"Deadlock",description:"Player is playing Deadlock", unique: true, timeless: true, protected: true, keybind: "d", id: "ag006"},
+    {tag:"fade",displayName:"Fade",description:"Player is playing Fade", unique: true, timeless: true, protected: true, keybind: "f", id: "ag007"},
+    {tag:"gekko",displayName:"Gekko",description:"Player is playing Gekko", unique: true, timeless: true, protected: true, keybind: "g", id: "ag008"},
+    {tag:"harbor",displayName:"Harbor",description:"Player is playing Harbor", unique: true, timeless: true, protected: true, keybind: "h", id: "ag009"},
+    {tag:"iso",displayName:"Iso",description:"Player is playing Iso", unique: true, timeless: true, protected: true, keybind: "i", id: "ag010"},
+    {tag:"jett",displayName:"Jett",description:"Player is playing Jett", unique: true, timeless: true, protected: true, keybind: "j", id: "ag011"},
+    {tag:"kayo",displayName:"Kayo",description:"Player is playing KAY/O", unique: true, timeless: true, protected: true, keybind: "k", id: "ag012"},
+    {tag:"killjoy",displayName:"Killjoy",description:"Player is playing Killjoy", unique: true, timeless: true, protected: true, keybind: "l", id: "ag013"},
+    {tag:"neon",displayName:"Neon",description:"Player is playing Neon", unique: true, timeless: true, protected: true, keybind: "n", id: "ag014"},
+    {tag:"omen",displayName:"Omen",description:"Player is playing Omen", unique: true, timeless: true, protected: true, keybind: "o", id: "ag015"},
+    {tag:"phoenix",displayName:"Phoenix",description:"Player is playing Phoenix", unique: true, timeless: true, protected: true, keybind: "p", id: "ag016"},
+    {tag:"raze",displayName:"Raze",description:"Player is playing Raze", unique: true, timeless: true, protected: true, keybind: "r", id: "ag017"},
+    {tag:"reyna",displayName:"Reyna",description:"Player is playing Reyna", unique: true, timeless: true, protected: true, keybind: "e", id: "ag018"},
+    {tag:"sage",displayName:"Sage",description:"Player is playing Sage", unique: true, timeless: true, protected: true, keybind: "w", id: "ag019"},
+    {tag:"skye",displayName:"Skye",description:"Player is playing Skye", unique: true, timeless: true, protected: true, keybind: "s", id: "ag020"},
+    {tag:"sova",displayName:"Sova",description:"Player is playing Sova", unique: true, timeless: true, protected: true, keybind: "z", id: "ag021"},
+    {tag:"viper",displayName:"Viper",description:"Player is playing Viper", unique: true, timeless: true, protected: true, keybind: "v", id: "ag022"},
+    {tag:"vyse",displayName:"Vyse",description:"Player is playing Vyse", unique: true, timeless: true, protected: true, keybind: "f", id: "ag025"},
+    {tag:"yoru",displayName:"Yoru",description:"Player is playing Yoru", unique: true, timeless: true, protected: true, keybind: "y", id: "ag023"}
 ]
 export const MapTags: TagObject[] = [
-    {tag:"abyss",displayName:"Abyss",description:"Clip takes place on Abyss", unique: true, timeless: true, protected: true, keybind: "", id: "m001"},
-    {tag:"ascent",displayName:"Ascent",description:"Clip takes place on Ascent", unique: true, timeless: true, protected: true, keybind: "", id: "m002"},
-    {tag:"bind",displayName:"Bind",description:"Clip takes place on Bind", unique: true, timeless: true, protected: true, keybind: "", id: "m003"},
-    {tag:"breeze",displayName:"Breeze",description:"Clip takes place on Breeze", unique: true, timeless: true, protected: true, keybind: "", id: "m004"},
-    {tag:"fracture",displayName:"Fracture",description:"Clip takes place on Fracture", unique: true, timeless: true, protected: true, keybind: "", id: "m005"},
-    {tag:"haven",displayName:"Haven",description:"Clip takes place on Haven", unique: true, timeless: true, protected: true, keybind: "", id: "m006"},
-    {tag:"icebox",displayName:"Icebox",description:"Clip takes place on Icebox", unique: true, timeless: true, protected: true, keybind: "", id: "m007"},
-    {tag:"lotus",displayName:"Lotus",description:"Clip takes place on Lotus", unique: true, timeless: true, protected: true, keybind: "", id: "m008"},
-    {tag:"pearl",displayName:"Pearl",description:"Clip takes place on Pearl", unique: true, timeless: true, protected: true, keybind: "", id: "m009"},
-    {tag:"split",displayName:"Split",description:"Clip takes place on Split", unique: true, timeless: true, protected: true, keybind: "", id: "m010"},
-    {tag:"sunset",displayName:"Sunset",description:"Clip takes place on Sunset", unique: true, timeless: true, protected: true, keybind: "", id: "m011"}
+    {tag:"abyss",displayName:"Abyss",description:"Clip takes place on Abyss", unique: true, timeless: true, protected: true, keybind: "a", id: "m001"},
+    {tag:"ascent",displayName:"Ascent",description:"Clip takes place on Ascent", unique: true, timeless: true, protected: true, keybind: "t", id: "m002"},
+    {tag:"bind",displayName:"Bind",description:"Clip takes place on Bind", unique: true, timeless: true, protected: true, keybind: "b", id: "m003"},
+    {tag:"breeze",displayName:"Breeze",description:"Clip takes place on Breeze", unique: true, timeless: true, protected: true, keybind: "r", id: "m004"},
+    {tag:"fracture",displayName:"Fracture",description:"Clip takes place on Fracture", unique: true, timeless: true, protected: true, keybind: "f", id: "m005"},
+    {tag:"haven",displayName:"Haven",description:"Clip takes place on Haven", unique: true, timeless: true, protected: true, keybind: "h", id: "m006"},
+    {tag:"icebox",displayName:"Icebox",description:"Clip takes place on Icebox", unique: true, timeless: true, protected: true, keybind: "i", id: "m007"},
+    {tag:"lotus",displayName:"Lotus",description:"Clip takes place on Lotus", unique: true, timeless: true, protected: true, keybind: "l", id: "m008"},
+    {tag:"pearl",displayName:"Pearl",description:"Clip takes place on Pearl", unique: true, timeless: true, protected: true, keybind: "p", id: "m009"},
+    {tag:"split",displayName:"Split",description:"Clip takes place on Split", unique: true, timeless: true, protected: true, keybind: "s", id: "m010"},
+    {tag:"sunset",displayName:"Sunset",description:"Clip takes place on Sunset", unique: true, timeless: true, protected: true, keybind: "u", id: "m011"}
 ]
 export const GenericTags: TagSystem = {
+    agents: {
+        tags: AgentTags,
+        groupName: 'Agents',
+        keybindGroup: 'q',
+        exclusive: true,
+        iterable: true,
+        id: 'q01'
+    },
+    maps: {
+        tags: MapTags,
+        groupName: 'Maps',
+        keybindGroup: 'w',
+        exclusive: true,
+        iterable: true,
+        id: 'w01'
+    },
     guns: {
         tags: [
             {tag:"ares",displayName:"Ares",description:"Player gets a kill with the Ares", unique: true, timeless: true, protected: false, keybind: "a", id: "g001"},
@@ -65,6 +78,7 @@ export const GenericTags: TagSystem = {
             {tag:"vandal",displayName:"Vandal",description:"Player gets a kill with the Vandal", unique: true, timeless: true, protected: false, keybind: "v", id: "g017"},
             {tag:"knife",displayName:"Knife",description:"Player gets a kill with their Knife", unique: true, timeless: true, protected: false, keybind: "k", id: "g018"}
         ],
+        groupName: "Guns",
         keybindGroup: "g",
         exclusive: false,
         iterable: false,
@@ -88,6 +102,7 @@ export const GenericTags: TagSystem = {
             {tag:"displaced",displayName:"Displaced",description:"Player is displaced", unique: false, timeless: false, protected: false, keybind: "c", id: "s0014"},
             {tag:"stimmed",displayName:"Stimmed",description:"Player is stimmed", unique: false, timeless: false, protected: false, keybind: "m", id: "s0015"}
         ],
+        groupName: 'Status Effects',
         keybindGroup: "s",
         exclusive: false,
         iterable: false,
@@ -99,6 +114,7 @@ export const GenericTags: TagSystem = {
             {tag:"igclip",displayName:"In-Game Clip",description:"Clip showcases a real game", unique: true, timeless: true, protected: false, keybind: "i", id: "c002"},
             {tag:"deathmatch",displayName:"Death match",description:"Clip comes from a deathmatch", unique: true, timeless: true, protected: false, keybind: "d", id: "c004"}
         ],
+        groupName: 'Clip Type',
         keybindGroup: "c",
         exclusive: true,
         iterable: false,
@@ -111,6 +127,7 @@ export const GenericTags: TagSystem = {
             {tag:"qkey",displayName:"Q key",description:"Player casted their Q ability", unique: false, timeless: false, protected: false, keybind: "q", id: "a003"},
             {tag:"ekey",displayName:"E key",description:"Player casted their E ability", unique: false, timeless: false, protected: false, keybind: "e", id: "a004"},
         ],
+        groupName: 'Abilities',
         keybindGroup: "a",
         exclusive: false,
         iterable: false,
@@ -124,6 +141,7 @@ export const GenericTags: TagSystem = {
             {tag:"opd",displayName:"Opped",description:"Player got killed by an Operator", unique: false, timeless: false, protected: false, keybind: "o", id: "k008"},
             {tag:"kba",displayName:"Kill by Ability",description:"Player gets a kill with the one of their abilities", unique: false, timeless: false, protected: false, keybind: "a", id: "k009"}
         ],
+        groupName: 'KDA',
         keybindGroup: "k",
         exclusive: false,
         iterable: false,
@@ -134,6 +152,7 @@ export const GenericTags: TagSystem = {
             {tag:"attk",displayName:"Attacker",description:"Player is an attacker", unique: true, timeless: true, protected: false, keybind: "a", id: "p001"},
             {tag:"def",displayName:"Defender",description:"Player is a defender", unique: true, timeless: true, protected: false, keybind: "d", id: "p002"}
         ],
+        groupName: 'Player Side',
         keybindGroup: "p",
         exclusive: true,
         iterable: false,
@@ -148,6 +167,7 @@ export const GenericTags: TagSystem = {
             {tag:"aspawn",displayName:"attacker-spawn",description:"Important action occurs at or near Attacker Spawn", unique: true, timeless: false, protected: false, keybind: "x", id: "z005"},
             {tag:"dspawn",displayName:"defender-spawn",description:"Important action occurs at or near Defender Spawn", unique: true, timeless: false, protected: false, keybind: "o", id: "z006"},
         ],
+        groupName: 'Map Areas',
         keybindGroup: "n",
         exclusive: false,
         iterable: false,
@@ -162,6 +182,7 @@ export const GenericTags: TagSystem = {
             {tag:"wb",displayName:"Wall Bang",description:"Player got a kill by shooting through an obstacle", unique: false, timeless: false, protected: false, keybind: "w", id: "n005"},
             {tag:"bk",displayName:"Blind Kill",description:"Player got a kill without vision of the enemy", unique: false, timeless: false, protected: false, keybind: "b", id: "n006"}
         ],
+        groupName: 'Mechanics',
         keybindGroup: "m",
         exclusive: false,
         iterable: false,
@@ -171,6 +192,7 @@ export const GenericTags: TagSystem = {
         tags: [
             {tag:"ultorb",displayName:"Ultimate Orb",description:"Player acquired an ultimate orb", unique: false, timeless: false, protected: false, keybind: "o", id: "o001"}
         ],
+        groupName: 'Game Objects',
         keybindGroup: "o",
         exclusive: false,
         iterable: false,
@@ -190,6 +212,7 @@ export const GenericTags: TagSystem = {
             {tag:"winround",displayName:"Won Round",description:"Player's team won this round", unique: true, timeless: true, protected: false, keybind: "w", id: "e015"},
             {tag:"lostround",displayName:"Lost Round",description:"Player's team lost this round", unique: true, timeless: true, protected: false, keybind: "l", id: "e016"}
         ],
+        groupName: 'Game Events',
         keybindGroup: "e",
         exclusive: false,
         iterable: false,
@@ -203,6 +226,7 @@ export const GenericTags: TagSystem = {
             {tag:"1v4",displayName:"1v4",description:"Player won a round where they were the last man standing against 4 opponents", unique: true, timeless: false, protected: false, keybind: "4", id: "f010"},
             {tag:"1v5",displayName:"1v5",description:"Player won a round where they were the last man standing against 5 opponents", unique: true, timeless: false, protected: false, keybind: "5", id: "f011"},
         ],
+        groupName: 'Fights',
         keybindGroup: "f",
         exclusive: false,
         iterable: false,
@@ -219,6 +243,7 @@ export const GenericTags: TagSystem = {
             {tag:"pplant",displayName:"Post-Plant",description:"Important action occurs while planted spike counts down", unique: true, timeless: false, protected: false, keybind: "p", id: "t007"},
             {tag:"lineup",displayName:"Line-Up",description:"Player performs a line-up ability cast", unique: false, timeless: false, protected: false, keybind: "l", id: "t008"}
         ],
+        groupName: 'Game Tactics',
         keybindGroup: "t",
         exclusive: false,
         iterable: false,

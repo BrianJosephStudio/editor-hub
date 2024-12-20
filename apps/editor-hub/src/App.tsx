@@ -1,44 +1,68 @@
 import "./App.css";
 import { Box } from "@mui/material";
+import { BrowserRouter, Navigate } from "react-router";
+import { Routes, Route } from "react-router-dom"
 import { NavBar } from "./components/nav-bar/NavBar";
-import { AppBanner } from "./components/app-banner/AppBanner";
-import { TabbedPage } from "./components/pages/TabbedPage";
-import { PlayCircleFilled, Settings } from "@mui/icons-material";
-import { VideoGallery } from "./components/pages/VideoGallery";
+import { VideoGallery } from "./pages/video-gallery/VideoGallery";
 import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
+import { AudioGalleryProvider } from "./contexts/AudioGallery.context";
+import { AudioGallery } from "./pages/audio-gallery/AudioGallery";
+import { FileBrowserProvider } from "./contexts/FileBrowser.context";
+import { IsAuthorized, ProtectedRoute, UnauthorizedUser } from "./components/auth-screens/UnauthorizedUser";
+import { AuthorizationProvider } from "./contexts/Authorization.context";
 
 function App() {
   return (
-    <>
+    <BrowserRouter basename="editor-hub">
       <Box
         component={"div"}
         id="editor-hub-container"
         data-testid={"editor-hub-container"}
         sx={{
-          display: "grid",
-          gridTemplateRows: " 2.4rem 3rem auto",
+          display: "flex",
+          flexDirection: 'column',
+          gridTemplateRows: " 3rem auto",
           height: "100vh",
           width: "100vw",
         }}
       >
-        <AppBanner></AppBanner>
-        <NavBar></NavBar>
-        <VideoGalleryProvider>
-          <TabbedPage pageId={0}>
-            <VideoGallery
-              tabName="In-game"
-              tabIcon={PlayCircleFilled}
-              proportion={4}
-            ></VideoGallery>
-            <VideoGallery
-              tabName="Settings"
-              tabIcon={Settings}
-              proportion={1}
-            ></VideoGallery>
-          </TabbedPage>
-        </VideoGalleryProvider>
+        <AuthorizationProvider>
+          <NavBar></NavBar>
+          <FileBrowserProvider>
+            <Routes>
+              <Route path="/" element={
+                <ProtectedRoute>
+
+                  <Navigate to="/video-gallery" />
+                </ProtectedRoute>
+              } />
+
+              <Route path="video-gallery" element={
+                <ProtectedRoute>
+                  <VideoGalleryProvider>
+                    <VideoGallery></VideoGallery>
+                  </VideoGalleryProvider>
+                </ProtectedRoute>
+              } />
+
+              <Route path="audio-gallery" element={
+                <ProtectedRoute>
+                  <AudioGalleryProvider>
+                    <AudioGallery></AudioGallery>
+                  </AudioGalleryProvider>
+                </ProtectedRoute>
+              } />
+
+              <Route path="unauthorized" element={
+                <IsAuthorized>
+                  <UnauthorizedUser />
+                </IsAuthorized>
+              }></Route>
+            </Routes>
+          </FileBrowserProvider>
+        </AuthorizationProvider>
       </Box>
-    </>
+    </BrowserRouter>
   );
 }
 
