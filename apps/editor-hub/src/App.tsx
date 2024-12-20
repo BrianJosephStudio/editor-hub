@@ -8,6 +8,8 @@ import { VideoGalleryProvider } from "./contexts/VideoGallery.context";
 import { AudioGalleryProvider } from "./contexts/AudioGallery.context";
 import { AudioGallery } from "./pages/audio-gallery/AudioGallery";
 import { FileBrowserProvider } from "./contexts/FileBrowser.context";
+import { IsAuthorized, ProtectedRoute, UnauthorizedUser } from "./components/auth-screens/UnauthorizedUser";
+import { AuthorizationProvider } from "./contexts/Authorization.context";
 
 function App() {
   return (
@@ -24,27 +26,44 @@ function App() {
           width: "100vw",
         }}
       >
-        <NavBar></NavBar>
-        <FileBrowserProvider>
-          <Routes>
-            <Route path="/" element={<Navigate to="/video-gallery" />} />
+        <AuthorizationProvider>
+          <NavBar></NavBar>
+          <FileBrowserProvider>
+            <Routes>
+              <Route path="/" element={
+                <ProtectedRoute>
 
-            <Route path="video-gallery" element={
-              <VideoGalleryProvider>
-                <VideoGallery></VideoGallery>
-              </VideoGalleryProvider>
-            }>
-            </Route>
-            <Route path="audio-gallery" element={
-              <AudioGalleryProvider>
-                <AudioGallery></AudioGallery>
-              </AudioGalleryProvider>
-            }>
-            </Route>
-          </Routes>
-        </FileBrowserProvider>
+                  <Navigate to="/video-gallery" />
+                </ProtectedRoute>
+              } />
+
+              <Route path="video-gallery" element={
+                <ProtectedRoute>
+                  <VideoGalleryProvider>
+                    <VideoGallery></VideoGallery>
+                  </VideoGalleryProvider>
+                </ProtectedRoute>
+              } />
+
+              <Route path="audio-gallery" element={
+                <ProtectedRoute>
+                  <AudioGalleryProvider>
+                    <AudioGallery></AudioGallery>
+                  </AudioGalleryProvider>
+                </ProtectedRoute>
+              } />
+
+              <Route path="unauthorized" element={
+                <IsAuthorized>
+                  <UnauthorizedUser />
+                </IsAuthorized>
+              }></Route>
+            </Routes>
+          </FileBrowserProvider>
+        </AuthorizationProvider>
       </Box>
     </BrowserRouter>
   );
 }
+
 export default App;
