@@ -24,6 +24,6 @@ jobs:
           export NVM_DIR=~/.nvm
           source ~/.nvm/nvm.sh
           cd ${{ secrets.EDITOR_HUB_QA_DIR }}
-          git checkout dev
+          git checkout qa
           git pull
           npm run deploy
