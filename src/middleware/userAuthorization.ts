@@ -26,9 +26,10 @@ export const projectManagerAuthorizationFilter = (
 ) => {
   const auth = getAuth(req);
 
-  const role = auth.sessionClaims?.metadata?.role;
+  const roles = auth.sessionClaims?.metadata?.roles ?? [];
+  const authorizedRoles = ["admin", "editor"]
 
-  const isAuthorized = role === "project_manager" || role === "admin";
+  const isAuthorized = roles.some(role => authorizedRoles.some(authorizedRole => authorizedRole === role));
 
   console.log("API v2 request by role:", auth.sessionClaims?.metadata?.role);
 
