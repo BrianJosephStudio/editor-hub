@@ -26,7 +26,7 @@ export class Resource {
   }
 
   download = async () => {
-    if(!this.fileTreeNode.metadata || !this.fileTreeNode.metadata.path_lower) throw new Error("Missing metadata")
+    if (!this.fileTreeNode.metadata || !this.fileTreeNode.metadata.path_lower) throw new Error("Missing metadata")
     const apiClient = new ApiClient();
     const data = await apiClient.download(
       this.fileTreeNode.metadata.path_lower
@@ -46,8 +46,8 @@ export class Resource {
   };
 
   import = async () => {
-    if(!isNodeEnv) return console.log("Import function has been triggered for ", this.fileTreeNode.name)
-    
+    if (!isNodeEnv) return console.log("Import function has been triggered for ", this.fileTreeNode.name)
+
     const project = await Project.getInstance()
 
     const createdBin = await this.createBinRecursive(this.binPathArray)
@@ -81,7 +81,8 @@ export class Resource {
   private getBinPath = (): string[] => {
     const dirPath = this.getDirName(this.fileTreeNode.path)
     const dirPathArray = dirPath.split('/').filter(entry => !!entry)
-    return ['EditorHub', ...dirPathArray]
+    const categoryFolder = this.fileTreeNode.metadata?.path_lower?.split(`/${dirPathArray[0]}`)[0].split("/").pop()!
+    return ['EditorHub', categoryFolder, ...dirPathArray]
   }
 
   private getDirName = (path: string): string => {
