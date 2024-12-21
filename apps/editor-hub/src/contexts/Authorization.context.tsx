@@ -27,7 +27,7 @@ export const AuthorizationProvider = ({ children }: { children: ReactNode }) => 
 
     useEffect(() => {
         const roles = user?.publicMetadata.roles as string[];
-        if (!Array.isArray(roles)) setIsAuthorized(false)
+        if (!Array.isArray(roles)) return setIsAuthorized(false)
 
         const authorized = roles?.some(role => authorizedRoles.includes(role));
 
