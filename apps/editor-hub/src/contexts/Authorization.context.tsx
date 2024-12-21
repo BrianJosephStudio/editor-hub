@@ -27,7 +27,7 @@ export const AuthorizationProvider = ({ children }: { children: ReactNode }) => 
 
     useEffect(() => {
         const roles = user?.publicMetadata.roles as string[];
-        if (!Array.isArray(roles)) throw new Error("roles metadata doesn't match expected format")
+        if (!Array.isArray(roles)) setIsAuthorized(false)
 
         const authorized = roles?.some(role => authorizedRoles.includes(role));
 
