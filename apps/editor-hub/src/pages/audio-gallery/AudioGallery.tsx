@@ -1,4 +1,4 @@
-import { Audiotrack, ExpandLess, ExpandMore, GraphicEq, Headset, } from "@mui/icons-material";
+import { Audiotrack, ExpandLess, ExpandMore, GraphicEq } from "@mui/icons-material";
 import { Box, IconButton, ListItemText, useMediaQuery } from "@mui/material";
 import { List, ListItem } from '@mui/joy'
 import { useAudioGallery } from "../../contexts/AudioGallery.context";
