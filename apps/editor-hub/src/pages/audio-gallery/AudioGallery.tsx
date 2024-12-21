@@ -135,6 +135,7 @@ export const AudioGallery = () => {
           <FileBrowser
             fileTree={musicTrackFileTree}
             rootPath={musicTracksRootPath}
+            noFilter={true}
             setNewFileTree={(newFileTree) => dispatch(setNewMusicTrackTree(newFileTree))}
             onSourceChange={async (fileTreeNode) => {
               if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
@@ -162,6 +163,7 @@ export const AudioGallery = () => {
             fileTree={sfxFileTree}
             rootPath={sfxRootPath}
             setNewFileTree={(newFileTree) => dispatch(setNewSfxTrackTree(newFileTree))}
+            noFilter={true}
             onSourceChange={async (fileTreeNode) => {
               if (audioPlayer.current && audioPlayer.current.src) audioPlayer.current.src = "";
 

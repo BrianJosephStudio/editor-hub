@@ -62,7 +62,8 @@ export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
   rootPath: string,
-  genericTags?: TagSystem
+  noFilter?: boolean,
+  genericTags?: TagSystem,
 ): FileTreeNode => {
   const currentHead = currentFileTreeNode.path;
   const newFileTreeNode = { ...currentFileTreeNode }
@@ -84,7 +85,7 @@ export const resolveTreeStructure = (
           name: metadata.name,
           tag: metadata[".tag"],
           path: getMetadataPath(rootPath, metadata.path_lower!),
-          filtered: false,
+          filtered: !!noFilter ? true : false,
           metadata,
         };
 
@@ -116,6 +117,7 @@ export const resolveTreeStructure = (
             newFileTreeNode,
             newMetadata,
             rootPath,
+            noFilter,
             genericTags
           );
         }

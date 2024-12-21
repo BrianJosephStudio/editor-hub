@@ -12,6 +12,7 @@ export const FileBrowser = ({
   fileTree,
   fetchUpFront,
   rootPath,
+  noFilter,
   genericTags,
   setNewFileTree,
   onSourceChange,
@@ -19,6 +20,7 @@ export const FileBrowser = ({
   fileTree: FileTreeNode
   fetchUpFront?: number
   rootPath: string
+  noFilter?: boolean
   genericTags?: TagSystem
   setNewFileTree: (newFileTree: FileTreeNode) => void
   onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
@@ -29,7 +31,7 @@ export const FileBrowser = ({
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
     if (clipMetadataBatch.length === 0 || !fileTree) return;
-    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, rootPath, genericTags);
+    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, rootPath, noFilter, genericTags);
     setNewFileTree(builtRoot)
     setFoldersRendered(true);
   }, [clipMetadataBatch]);
