@@ -20,12 +20,11 @@ export const Tag = ({
   const { videoPlayer, setPauseOnInput } = useClipViewer();
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
-    if (!videoPlayer.current) return;
+    if(event.ctrlKey || event.altKey || event.metaKey || event.shiftKey || !videoPlayer.current) return;
     
     if (event.key === tagObject.keybind && blockGroupLevelListeners) {
       const currentTime =
         Math.max(videoPlayer.current.currentTime - 0.2 - tagOffset / 1000, 0);
-      console.log("adding tag");
       addTags([tagObject], currentTime, exclusiveTagIds);
 
       setBlockGroupLevelListeners(false);

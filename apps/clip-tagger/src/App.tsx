@@ -6,8 +6,14 @@ import { AuthorizationProvider } from "./context/Authorization.context";
 import { BrowserRouter } from "react-router";
 import { ClipTagger } from "./pages/clip-tagger/ClipTagger";
 import { Routes, Route } from "react-router-dom"
+import { FolderNavigationProvider } from "./context/FolderNavigationContext";
+import { ClipViewerProvider } from "./context/ClipViewerContext";
+import { KeybindProvider } from "./context/KeyBindContext";
 
 function App() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const currentPath = urlParams.get("path");
+
   return (
     <AppProvider>
       <BrowserRouter basename="clip-tagger">
@@ -16,7 +22,13 @@ function App() {
           <Routes>
             <Route path="/" element={
               <ProtectedRoute>
-                <ClipTagger></ClipTagger>
+                <KeybindProvider>
+                  <FolderNavigationProvider currentPath={currentPath ?? ""}>
+                    <ClipViewerProvider>
+                      <ClipTagger></ClipTagger>
+                    </ClipViewerProvider>
+                  </FolderNavigationProvider>
+                </KeybindProvider>
               </ProtectedRoute>
             } />
             <Route path="unauthorized" element={

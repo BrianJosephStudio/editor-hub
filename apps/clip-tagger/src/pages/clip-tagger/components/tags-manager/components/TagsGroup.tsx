@@ -24,8 +24,7 @@ export const TagsGroup = ({
     iterableTagListModifier,
     clipBrowserModifier,
   } = useKeybind();
-  const { currentVideoSource, targetClip, setPauseOnInput, videoPlayer } =
-    useClipViewer();
+  const { currentVideoSource, targetClip, setPauseOnInput, videoPlayer } = useClipViewer();
 
   const normalizedGroupName = groupName
     .replace(/([a-z])([A-Z])/g, "$1 $2")
@@ -40,6 +39,7 @@ export const TagsGroup = ({
   }
 
   const handleKeyBindPress = useRef((event: KeyboardEvent) => {
+    if(event.ctrlKey || event.altKey || event.metaKey || event.shiftKey) return;
     if (
       event.key === tagsGroup.keybindGroup &&
       !blockGroupLevelListeners &&

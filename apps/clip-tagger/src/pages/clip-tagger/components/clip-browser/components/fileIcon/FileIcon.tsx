@@ -6,7 +6,7 @@ import axios from "axios";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
 import { Box, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
-import { Metadata } from "../../../../../../types/dropbox";
+import { Metadata, PropertyGroup } from "../../../../../../types/dropbox";
 import { TagReference } from "../../../../../../types/tags";
 
 export const FileIcon = ({
@@ -22,11 +22,13 @@ export const FileIcon = ({
 }) => {
   const { setCurrentVideoSource, setNextVideoSource, setTargetClip } =
     useClipViewer();
-  const { activeItem } = useFolderNavigation();
+  const { activeItem, setCurrentPropertyGroupSetter, setActiveItem } = useFolderNavigation();
 
   const folderElement = useRef<HTMLDivElement>(null);
   const [cachedFile, setCachedFile] = useState<string>("");
   const [localTemporaryLink, setLocalTemporaryLink] = useState<string>();
+
+  const [propertyGroups, setPropertyGroups] = useState<PropertyGroup[] | undefined>(entry.property_groups)
   const [tagCount, setTagCount] = useState<number>(0)
   const [tagCountColor, setTagCountColor] = useState<string>('red')
 
@@ -57,11 +59,6 @@ export const FileIcon = ({
       folderElement.current.focus();
     }
   }, [active]);
-
-  useEffect(() => {
-    if (!folderElement.current) return;
-    folderElement.current.blur();
-  }, [entry.id]);
 
   useEffect(() => {
     const fetchAndCacheVideo = async () => {
@@ -96,15 +93,49 @@ export const FileIcon = ({
 
   return (
     <Box
+      tabIndex={itemIndex}
+      component={'div'}
       ref={folderElement}
-      className={`folderContainer ${active ? "folderContainerActive" : "folderContainerInactive"
-        }`}
+      sx={{
+        display: 'grid',
+        height: '3rem',
+        width: '100%',
+        margin: '0',
+        textAlign: 'left',
+        alignItems: 'center',
+        gridTemplateColumns: '2rem auto auto',
+        gridGap: '0.6rem',
+        cursor: 'pointer',
+        userSelect: 'none',
+        backgroundColor: active ? 'hsl(0, 0%, 50%)' : '',
+        outline: 'none',
+        '&:hover': {
+          backgroundColor: active ? '' : 'hsl(0, 0%, 40%)'
+        }
+      }}
+
+      onFocus={() => setActiveItem(itemIndex)}
+      
       onDoubleClick={(event) => {
         event.preventDefault();
         setTargetClip(entry.path_lower!);
         setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
+        setCurrentPropertyGroupSetter(setPropertyGroups)
       }}
+
       onClick={clickCallback}
+
+      onKeyDown={(event) => {
+        if(event.key !== "Enter" || activeItem === null) return;
+        event.stopPropagation()
+
+        setTargetClip(entry.path_lower!);
+        setNextVideoSource((currentNextVideoSource) => {
+          console.log(currentNextVideoSource);
+          setCurrentVideoSource(currentNextVideoSource);
+          return currentNextVideoSource;
+        });
+      }}
     >
       <Theaters></Theaters>
       {entry.name}
@@ -115,8 +146,8 @@ export const FileIcon = ({
       }}>
         <Style sx={{
           fill: tagCountColor,
-        }}/>
-      <Typography sx={{fontSize: '0.8rem'}}>{tagCount}</Typography>
+        }} />
+        <Typography sx={{ fontSize: '0.8rem' }}>{tagCount}</Typography>
       </Box>
     </Box>
   );

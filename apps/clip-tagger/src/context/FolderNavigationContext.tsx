@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { Metadata } from "../types/dropbox";
+import { Metadata, PropertyGroup } from "../types/dropbox";
 import { ApiClient } from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 
@@ -15,6 +15,10 @@ interface FolderNavigationContextProps {
   handleBackNavigation: (count: number) => void;
   getClipLevel: (currentEntries: Metadata[]) => Promise<boolean>;
   setFolderEntryNames: (folderEntries: Metadata[]) => Promise<boolean>;
+  currentPropertyGroupsSetter: React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>> | undefined;
+  setCurrentPropertyGroupSetter: React.Dispatch<React.SetStateAction<React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>> | undefined>>;
+  focusPreviousItem: () => void
+  focusNextItem: () => void
 }
 
 const FolderNavigationContext = createContext<
@@ -41,6 +45,7 @@ export const FolderNavigationProvider = ({
   const [currentFolder, setCurrentFolder] = useState<string>(currentPath ?? "/");
   const [currentFolderEntries, setCurrentFolderEntries] = useState<any[]>([]);
   const [activeItem, setActiveItem] = useState<number | null>(null);
+  const [currentPropertyGroupsSetter, setCurrentPropertyGroupSetter] = useState<React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>>>()
 
   const [pathSegments, setPathSegments] = useState<string[]>([]);
 
@@ -112,6 +117,36 @@ export const FolderNavigationProvider = ({
     return fileRenameSuccess && folderRenameSuccess.some(success => !!success)
   };
 
+  const focusPreviousItem = () => {
+    if (activeItem !== null) {
+      setActiveItem((activeItem) => {
+        if (activeItem !== null) {
+          return Math.max(activeItem - 1, 0);
+        }
+        return 0;
+      });
+      return;
+    }
+    if (activeItem === null) {
+      setActiveItem(currentFolderEntries.length - 1);
+    }
+  };
+
+  const focusNextItem = () => {
+    if (activeItem !== null) {
+      setActiveItem((activeItem) => {
+        if (activeItem !== null) {
+          return Math.min(activeItem + 1, currentFolderEntries.length - 1);
+        }
+        return 0;
+      });
+      return;
+    }
+    if (activeItem === null) {
+      setActiveItem(0);
+    }
+  };
+
   return (
     <FolderNavigationContext.Provider
       value={{
@@ -126,6 +161,10 @@ export const FolderNavigationProvider = ({
         setPathSegments,
         getClipLevel,
         setFolderEntryNames,
+        currentPropertyGroupsSetter,
+        setCurrentPropertyGroupSetter,
+        focusPreviousItem,
+        focusNextItem,
       }}
     >
       {children}
