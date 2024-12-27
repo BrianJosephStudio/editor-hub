@@ -15,26 +15,28 @@ export const UnauthenticatedUser = () => {
             alignItems: "center",
             justifyContent: "center",
             gap: "1rem",
+            placeItems: 'center',
           }}
         >
           <Box
             component={"img"}
             src={clipTaggerLogo}
             sx={{
-              maxHeight: "3rem",
+              maxHeight: "2rem",
             }}
           />
-          <Typography variant="h4">Welcome to the Clip Tagger!</Typography>
+          {/* <Typography variant="h5">Welcome to the Editor Hub!</Typography> */}
           <Typography
             variant="h6"
             sx={{
               fontWeight: "200",
+              fontSize: '1rem'
             }}
           >
             You must be signed in to proceed
           </Typography>
           <SignInButton>
-            <Button variant="contained" size="large" sx={{outline: 'none !important'}}> Sign In</Button>
+            <Button variant="contained" size="medium" sx={{outline: 'none !important'}}> Sign In</Button>
           </SignInButton>
         </Box>
     )

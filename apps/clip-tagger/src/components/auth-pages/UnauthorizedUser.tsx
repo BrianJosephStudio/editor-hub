@@ -1,5 +1,8 @@
 import { Box, Typography } from "@mui/material";
 import { NoAccounts } from "@mui/icons-material";
+import { Navigate } from "react-router";
+import { useAuthorization } from "../../context/Authorization.context";
+import { ReactNode } from "react";
 
 export const UnauthorizedUser = () => {
   return (
@@ -9,7 +12,6 @@ export const UnauthorizedUser = () => {
         flexDirection: "column",
         height: "100%",
         gap: "2rem",
-        // placeContent: "center",
         paddingTop: "2rem",
       }}
     >
@@ -36,10 +38,30 @@ export const UnauthorizedUser = () => {
           UNAUTHORIZED USER
         </Typography>
         <Typography variant="h6" fontWeight={"300"}>
-          It seems that you don't have permission to use this app yet! But worry
-          not! Contact the app's manager so that they can grant you permission!
+          It seems that you don't have permission to use this app. Don't worry, it usually means you haven't been assigned any authorized roles yet.
+          Contact the app's manager so that they can assign the correct role for you.
         </Typography>
       </Box>
     </Box>
   );
+};
+
+export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
+  const { isAuthorized } = useAuthorization()
+
+  if (!isAuthorized) {
+    return <Navigate to="/unauthorized" />;
+  }
+
+  return children;
+};
+
+export const IsAuthorized = ({ children }: { children: ReactNode }) => {
+  const { isAuthorized } = useAuthorization()
+
+  if (isAuthorized) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
 };
