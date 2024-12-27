@@ -1,11 +1,11 @@
 import { Box, Button, Input, Typography } from "@mui/material";
-import { useTags } from "../../context/TagsContext";
-import { ExclusiveTags, GenericTag } from "../../types/tags";
-import { AgentTags, GenericTags, MapTags } from "../../resources/TagSystem";
+import { useTags } from "../../../../context/TagsContext";
+import { ExclusiveTags, GenericTag } from "../../../../types/tags";
+import { AgentTags, GenericTags, MapTags } from "../../../../resources/TagSystem";
 import { useEffect, useRef, useState } from "react";
-import { useClipViewer } from "../../context/ClipViewerContext";
+import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { TagDisplayItem } from "./components/TagDisplayItem";
-import { labelTagReference } from "../../util/tagInstanceId";
+import { labelTagReference } from "../../../../util/tagInstanceId";
 import Cookies from "js-cookie";
 
 export const TagsDisplay = () => {

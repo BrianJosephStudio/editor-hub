@@ -1,6 +1,6 @@
 import axios from "axios";
 import { TagReference, TimeCode } from "../types/tags";
-import { DropboxFile } from "../types/dropbox";
+import { Metadata } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -191,7 +191,7 @@ export class ApiClient {
   };
   public getCurrentFolderEntries = async (
     currentFolderPath: string
-  ): Promise<DropboxFile[]> => {
+  ): Promise<Metadata[]> => {
     try {
       const url = `${apiHost}/list_folder`;
       const headers = {
@@ -205,6 +205,10 @@ export class ApiClient {
         include_mounted_folders: true,
         include_non_downloadable_files: true,
         path: currentFolderPath,
+        include_property_groups: {
+          ".tag": "filter_some",
+          filter_some: [tagTemplateId]
+        },
         recursive: false,
       };
 

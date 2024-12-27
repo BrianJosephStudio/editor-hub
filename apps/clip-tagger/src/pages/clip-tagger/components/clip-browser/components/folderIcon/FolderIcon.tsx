@@ -1,7 +1,8 @@
 // import React, { useState, useEffect } from 'react'
 import "./FolderIcon.css";
-import folderIcon from "../../../../assets/folderIcon.svg";
+import folderIcon from "../../../../../../assets/folderIcon.svg";
 import { useEffect, useRef } from "react";
+import { Box } from "@mui/material";
 
 export const FolderIcon = ({
   name,
@@ -12,7 +13,7 @@ export const FolderIcon = ({
 }: {
   name: string;
   path: string;
-  id: number;
+  id: string;
   active: boolean;
   clickCallback: () => void;
   openFolderCallback: () => void;
@@ -31,7 +32,7 @@ export const FolderIcon = ({
   }, [id])
   
   return (
-    <div
+    <Box
     //   tabIndex={tabIndex}
       ref={folderElement}
       className={`folderContainer ${
@@ -45,6 +46,6 @@ export const FolderIcon = ({
     >
       <img src={folderIcon} alt="" />
       {name}
-    </div>
+    </Box>
   );
 };

@@ -1,11 +1,11 @@
 import { Box, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
-import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
+import clipTaggerLogo from "../../../../../public/editor-hub-clip-tagger-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { AddAPhoto, Logout, Menu as MenuIcon, Style } from "@mui/icons-material";
-import packageJson from "../../../package.json";
+import packageJson from "../../../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAuthorization } from "../../context/Authorization.context";
+import { useAuthorization } from "../../../../context/Authorization.context";
 
 export const NavBar = () => {
   const { isAuthorized } = useAuthorization()

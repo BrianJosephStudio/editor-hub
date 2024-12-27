@@ -1,6 +1,6 @@
 import { Box } from "@mui/material";
-import { useClipViewer } from "../../context/ClipViewerContext";
-import { useAppContext } from "../../context/AppContext";
+import { useClipViewer } from "../../../../context/ClipViewerContext";
+import { useAppContext } from "../../../../context/AppContext";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;

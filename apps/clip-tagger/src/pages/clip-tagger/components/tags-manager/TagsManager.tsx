@@ -1,14 +1,14 @@
 import { Box } from "@mui/material";
-import { GenericTags } from "../../resources/TagSystem.ts";
+import { GenericTags } from "../../../../resources/TagSystem.ts";
 import { useEffect } from "react";
 import { TagsGroup } from "./components/TagsGroup";
-import { useKeybind } from "../../context/KeyBindContext.tsx";
-import { useClipViewer } from "../../context/ClipViewerContext.tsx";
-import { ApiClient } from "../../api/ApiClient.ts";
-import { useTags } from "../../context/TagsContext.tsx";
-import { ParsedFileName } from "../../util/dropboxFileParsing";
-import { MapTags } from "../../resources/TagSystem.ts";
-import { AgentTags } from "../../resources/TagSystem.ts";
+import { useKeybind } from "../../../../context/KeyBindContext.tsx";
+import { useClipViewer } from "../../../../context/ClipViewerContext.tsx";
+import { ApiClient } from "../../../../api/ApiClient.ts";
+import { useTags } from "../../../../context/TagsContext.tsx";
+import { ParsedFileName } from "../../../../util/dropboxFileParsing";
+import { MapTags } from "../../../../resources/TagSystem.ts";
+import { AgentTags } from "../../../../resources/TagSystem.ts";
 
 export const TagsManager = () => {
   const { targetClip } = useClipViewer();

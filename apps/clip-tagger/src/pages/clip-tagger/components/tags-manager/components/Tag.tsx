@@ -1,10 +1,10 @@
 import { Box, Typography } from "@mui/material";
-import { TagObject } from "../../../types/tags";
+import { TagObject } from "../../../../../types/tags";
 import { useEffect, useRef } from "react";
-import { useAppContext } from "../../../context/AppContext";
-import { useTags } from "../../../context/TagsContext";
-import { useKeybind } from "../../../context/KeyBindContext";
-import { useClipViewer } from "../../../context/ClipViewerContext";
+import { useAppContext } from "../../../../../context/AppContext";
+import { useTags } from "../../../../../context/TagsContext";
+import { useKeybind } from "../../../../../context/KeyBindContext";
+import { useClipViewer } from "../../../../../context/ClipViewerContext";
 
 export const Tag = ({
   tagObject,

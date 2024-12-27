@@ -3,13 +3,13 @@ import "./ClipBrowser.css";
 import { FolderIcon } from "./components/folderIcon/FolderIcon";
 import { FileIcon } from "./components/fileIcon/FileIcon";
 import { PathNav } from "./components/pathNav/PathNav";
-import { useFolderNavigation } from "../../context/FolderNavigationContext";
-import { useClipViewer } from "../../context/ClipViewerContext";
-import { useAppContext } from "../../context/AppContext";
-import { useKeybind } from "../../context/KeyBindContext";
-import { useTags } from "../../context/TagsContext";
+import { useFolderNavigation } from "../../../../context/FolderNavigationContext";
+import { useClipViewer } from "../../../../context/ClipViewerContext";
+import { useAppContext } from "../../../../context/AppContext";
+import { useKeybind } from "../../../../context/KeyBindContext";
+import { useTags } from "../../../../context/TagsContext";
 import { Box, Button, CircularProgress, Typography } from "@mui/material";
-import { ApiClient } from "../../api/ApiClient";
+import { ApiClient } from "../../../../api/ApiClient";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -169,13 +169,13 @@ export const ClipBrowser = () => {
           if (activeItem === null) break;
           if (currentFolderEntries[activeItem][".tag"] === "folder") {
             setCurrentFolder(
-              currentFolderEntries[activeItem].path_lower.replace(
+              currentFolderEntries[activeItem].path_lower!.replace(
                 clipsRootPath.toLowerCase(),
                 ""
               )
             );
           } else if (currentFolderEntries[activeItem][".tag"] === "file") {
-            setTargetClip(currentFolderEntries[activeItem].path_lower);
+            setTargetClip(currentFolderEntries[activeItem].path_lower!);
             console.log(nextVideoSource);
             // if (nextVideoSource) {
             //   setCurrentVideoSource(nextVideoSource);
@@ -292,14 +292,14 @@ export const ClipBrowser = () => {
                 {entry[".tag"] === "folder" && (
                   <FolderIcon
                     name={entry.name}
-                    path={entry.path_lower}
+                    path={entry.path_lower!}
                     id={entry.id}
                     key={index}
                     active={activeItem === index}
                     clickCallback={() => setActiveItem(index)}
                     openFolderCallback={() => {
                       setCurrentFolder(
-                        entry.path_lower.replace(
+                        entry.path_lower!.replace(
                           clipsRootPath.toLowerCase(),
                           ""
                         )
@@ -310,10 +310,8 @@ export const ClipBrowser = () => {
 
                 {entry[".tag"] === "file" && (
                   <FileIcon
+                    entry={entry}
                     itemIndex={index}
-                    name={entry.name}
-                    path={entry.path_lower}
-                    id={entry.id}
                     key={index}
                     active={activeItem === index}
                     clickCallback={() => setActiveItem(index)}
@@ -327,7 +325,7 @@ export const ClipBrowser = () => {
               <FolderIcon
                 name={"..."}
                 path={""}
-                id={0}
+                id={"0"}
                 key={index}
                 active={false}
                 clickCallback={() => {}}

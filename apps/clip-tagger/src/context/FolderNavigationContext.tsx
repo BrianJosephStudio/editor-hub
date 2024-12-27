@@ -1,20 +1,20 @@
 import { createContext, useContext, useState, ReactNode } from "react";
-import { DropboxFile } from "../types/dropbox";
+import { Metadata } from "../types/dropbox";
 import { ApiClient } from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 
 interface FolderNavigationContextProps {
   currentFolder: string;
   setCurrentFolder: React.Dispatch<React.SetStateAction<string>>;
-  currentFolderEntries: DropboxFile[];
-  setCurrentFolderEntries: React.Dispatch<React.SetStateAction<DropboxFile[]>>;
+  currentFolderEntries: Metadata[];
+  setCurrentFolderEntries: React.Dispatch<React.SetStateAction<Metadata[]>>;
   activeItem: number | null;
   setActiveItem: React.Dispatch<React.SetStateAction<number | null>>;
   pathSegments: string[];
   setPathSegments: React.Dispatch<React.SetStateAction<string[]>>;
   handleBackNavigation: (count: number) => void;
-  getClipLevel: (currentEntries: DropboxFile[]) => Promise<boolean>;
-  setFolderEntryNames: (folderEntries: DropboxFile[]) => Promise<boolean>;
+  getClipLevel: (currentEntries: Metadata[]) => Promise<boolean>;
+  setFolderEntryNames: (folderEntries: Metadata[]) => Promise<boolean>;
 }
 
 const FolderNavigationContext = createContext<
@@ -64,9 +64,9 @@ export const FolderNavigationProvider = ({
     });
   };
 
-  const setFolderEntryNames = async (folderEntries: DropboxFile[]): Promise<boolean> => {
+  const setFolderEntryNames = async (folderEntries: Metadata[]): Promise<boolean> => {
     const currentIndexes = folderEntries.map((folderEntry) => {
-      const parsedFileName = new ParsedFileName(folderEntry.path_lower, 0);
+      const parsedFileName = new ParsedFileName(folderEntry.path_lower!, 0);
 
       if (parsedFileName.isProperlyNamed) {
         return parsedFileName.index;
@@ -85,7 +85,7 @@ export const FolderNavigationProvider = ({
     const renameObjects = dropboxFiles
       .map((folderEntry) => {
         const parsedFileName = new ParsedFileName(
-          folderEntry.path_lower,
+          folderEntry.path_lower!,
           newCurrentIndex 
         );
 
@@ -103,7 +103,7 @@ export const FolderNavigationProvider = ({
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
 
     const folderPromises = dropboxFolders.map(async (dropboxFolder) =>{
-      const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower)
+      const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower!)
       return await setFolderEntryNames(subFolderEntries)
     })
 
