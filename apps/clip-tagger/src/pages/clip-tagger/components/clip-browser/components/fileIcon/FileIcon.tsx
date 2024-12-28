@@ -124,9 +124,15 @@ export const FileIcon = ({
       }}
 
       onFocus={() => setActiveItem(itemIndex)}
-
+      
       onDoubleClick={(event) => {
         event.preventDefault();
+
+        if(event.altKey){
+          const apiClient = new ApiClient()
+           return apiClient.createSharedLinkWithSettings(entry.path_lower!)
+            .then(sharedLinkResponse => window.open(sharedLinkResponse.url))
+        }
         setTargetClip(entry.path_lower!);
         setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
       }}

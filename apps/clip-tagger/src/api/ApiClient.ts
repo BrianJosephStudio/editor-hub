@@ -1,6 +1,6 @@
 import axios from "axios";
 import { TagReference, TimeCode } from "../types/tags";
-import { Metadata } from "../types/dropbox";
+import { Metadata, SharedLinkResponse } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -275,4 +275,23 @@ export class ApiClient {
     await axios.post(url, body, { headers });
     return await this.getMetadata(path);
   };
+
+  createSharedLinkWithSettings = async (path: string): Promise<SharedLinkResponse> => {
+    try {
+      const url = `${apiHost}/create_shared_link_with_settings`;
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const body = {
+        path
+      };
+
+      const { data } = await axios.post<SharedLinkResponse>(url, body, { headers });
+
+      return data;
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
 }
