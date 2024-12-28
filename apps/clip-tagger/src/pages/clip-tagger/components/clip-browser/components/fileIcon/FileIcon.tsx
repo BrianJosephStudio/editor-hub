@@ -3,7 +3,7 @@ import { ApiClient } from "../../../../../../api/ApiClient";
 import { useClipViewer } from "../../../../../../context/ClipViewerContext";
 import axios from "axios";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
-import { Box, Typography } from "@mui/material";
+import { Box, ListItem, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
 import { Metadata, PropertyGroup } from "../../../../../../types/dropbox";
 import { TagReference } from "../../../../../../types/tags";
@@ -99,7 +99,9 @@ export const FileIcon = ({
   }, [activeItem, cachedFile, localTemporaryLink]);
 
   return (
-    <Box
+    <ListItem
+      data-testid={'file-browser:file-item'}
+      key={itemIndex}
       tabIndex={itemIndex}
       component={'div'}
       ref={folderElement}
@@ -155,6 +157,6 @@ export const FileIcon = ({
         }} />
         <Typography sx={{ fontSize: '0.8rem' }}>{tagCount}</Typography>
       </Box>
-    </Box>
+    </ListItem>
   );
 };

@@ -7,7 +7,7 @@ import { useFolderNavigation } from "../../../../context/FolderNavigationContext
 import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { useKeybind } from "../../../../context/KeyBindContext";
 import { useTags } from "../../../../context/TagsContext";
-import { Box, Button, CircularProgress, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
 import { ApiClient } from "../../../../api/ApiClient";
 
 const apiHost = import.meta.env.VITE_API_HOST;
@@ -24,6 +24,7 @@ export const ClipBrowser = () => {
   const { setTagReferenceMaster } = useTags();
 
   const {
+    BrowserList,
     currentFolder,
     setCurrentFolder,
     currentFolderEntries,
@@ -92,7 +93,6 @@ export const ClipBrowser = () => {
       setActiveItem(0);
       setCurrentFolderEntries([]);
       setLoadingContent(true);
-      setClipLevel(false);
       const apiClient = new ApiClient();
       const currentEntries = await apiClient.getCurrentFolderEntries(
         `${clipsRootPath}/${currentFolder}`
@@ -120,91 +120,84 @@ export const ClipBrowser = () => {
   );
 
   return (
-    <>
-      <Box
-        sx={{
-          display: "grid",
-          gridGap: "0.6rem",
-          gridTemplateRows: "3rem auto",
-          minWidth: "20rem",
-          minHeight: "0",
-        }}
-      >
-        <PathNav path={currentFolder}></PathNav>
-        <Box
-          ref={filesViewport}
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: 'column',
+        minWidth: "20rem",
+        minHeight: 0,
+      }}
+    >
+      <PathNav path={currentFolder}></PathNav>
+      {clipLevel && !isRenaming && (
+        <Button
           sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            backgroundColor: 'hsl(0, 0%, 12%)',
-            borderRadius: '0 0 1rem 0',
-            overflowY: 'auto',
-            alignContent: 'start',
-            flexGrow: 1,
+            textJustify: 'center',
+            height: "2rem",
+          }}
+          onClick={autoRenameFolders}
+        >
+          Auto-name clips
+        </Button>
+      )}
+      {clipLevel && isRenaming && (
+        <Box
+          sx={{
+            display: "flex",
+            gap: "0.4rem",
+            placeContent: "center",
+            width: "100%",
+            paddingY: "0.4rem",
           }}
         >
-          {clipLevel && !isRenaming && (
-            <Button
-              sx={{
-                height: "2rem",
-              }}
-              onClick={autoRenameFolders}
-            >
-              Auto-name clips
-            </Button>
-          )}
-          {clipLevel && isRenaming && (
-            <Box
-              sx={{
-                display: "flex",
-                gap: "0.4rem",
-                placeContent: "center",
-                width: "100%",
-                paddingY: "0.4rem",
-              }}
-            >
-              <CircularProgress size={24}></CircularProgress>
-              <Typography>Renaming...</Typography>
-            </Box>
-          )}
-          {!loadingContent &&
-            currentFolderEntries.map((entry, index) => (
-              <Box key={index}>
-                {entry[".tag"] === "folder" && (
-                  <FolderIcon
-                    entry={entry}
-                    itemIndex={index}
-                    active={activeItem === index}
-                    clickCallback={() => setActiveItem(index)}
-                    openFolderCallback={() => {
-                      setCurrentFolder(
-                        entry.path_lower!.replace(
-                          clipsRootPath.toLowerCase(),
-                          ""
-                        )
-                      );
-                    }}
-                  ></FolderIcon>
-                )}
-
-                {entry[".tag"] === "file" && (
-                  <FileIcon
-                    entry={entry}
-                    itemIndex={index}
-                    key={index}
-                    active={activeItem === index}
-                    clickCallback={() => setActiveItem(index)}
-                  ></FileIcon>
-                )}
-              </Box>
-            ))}
-
-          {loadingContent &&
-            [1, 2, 3].map((_entry, index) => (
-              <FolderIconPlaceHolder />
-            ))}
+          <CircularProgress size={24}></CircularProgress>
+          <Typography>Renaming...</Typography>
         </Box>
-      </Box >
-    </>
+      )}
+      <List
+        ref={BrowserList}
+        disablePadding
+        sx={{
+          overflowY: 'auto',
+        }}
+      >
+        {!loadingContent &&
+          currentFolderEntries.map((entry, index) => (
+            <>
+              {entry[".tag"] === "folder" && (
+                <FolderIcon
+                  entry={entry}
+                  itemIndex={index}
+                  active={activeItem === index}
+                  clickCallback={() => setActiveItem(index)}
+                  openFolderCallback={() => {
+                    setCurrentFolder(
+                      entry.path_lower!.replace(
+                        clipsRootPath.toLowerCase(),
+                        ""
+                      )
+                    );
+                  }}
+                ></FolderIcon>
+              )}
+
+              {entry[".tag"] === "file" && (
+                <FileIcon
+                  entry={entry}
+                  itemIndex={index}
+                  key={index}
+                  active={activeItem === index}
+                  clickCallback={() => setActiveItem(index)}
+                ></FileIcon>
+              )}
+            </>
+          ))}
+      </List>
+
+      {loadingContent &&
+        [1, 2, 3].map((_entry, index) => (
+          <FolderIconPlaceHolder />
+        ))}
+    </Box >
   );
 };

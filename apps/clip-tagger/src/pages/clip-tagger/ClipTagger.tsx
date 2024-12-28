@@ -9,10 +9,11 @@ import { useClipViewer } from "../../context/ClipViewerContext"
 import { TagsProvider } from "../../context/TagsContext"
 import { useFolderNavigation } from "../../context/FolderNavigationContext"
 import { Settings } from "./components/settings/Settings"
+
 export const ClipTagger = () => {
 	const { AppRoot } = useAppContext()
 
-	const { focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
+	const { focusCurrentItem, focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
 	const { videoPlayer, skipTime } = useClipViewer()
 	const { setBlockGroupLevelListeners } = useKeybind();
 
@@ -20,15 +21,13 @@ export const ClipTagger = () => {
 		<TagsProvider>
 			<Box
 				component={"div"}
+				data-testid={"page:clip-tagger:root"}
 				ref={AppRoot}
 				tabIndex={0}
 				sx={{
-					margin: "0",
-					padding: "0",
-					display: "grid",
-					gridTemplateColumns: "2fr 8fr 3fr",
+					display: "flex",
 					width: "100vw",
-					// height: "96vh",
+					minHeight: 0,
 					flexGrow: 1,
 					outline: "none",
 				}}
@@ -64,19 +63,21 @@ export const ClipTagger = () => {
 							? videoPlayer.current?.play()
 							: videoPlayer.current?.pause();
 					}
-					if (key === "Escape") {
-						setBlockGroupLevelListeners(false)
+					if (key === "Escape") setBlockGroupLevelListeners(false);
+					if(key === "Enter") {
+						console.log("hey")
+						focusCurrentItem()
+						window.dispatchEvent(new KeyboardEvent("Enter"))
 					}
 				}}
 			>
 				<ClipBrowser></ClipBrowser>
 				<Box
 					sx={{
-						display: "grid",
-						gridTemplateRows: "6fr 3fr",
-						gridTemplateColumns: "100%",
-						minHeight: "0",
+						display: "flex",
+						flexDirection: 'column',
 						minWidth: "0",
+						flexGrow: 1
 					}}
 				>
 					<ClipViewer></ClipViewer>
@@ -84,7 +85,8 @@ export const ClipTagger = () => {
 				</Box>
 				<Box sx={{
 					display: 'flex',
-					flexDirection: 'column'
+					flexDirection: 'column',
+					minWidth: '16rem'
 				}}>
 					<TagsDisplay></TagsDisplay>
 					<Settings></Settings>

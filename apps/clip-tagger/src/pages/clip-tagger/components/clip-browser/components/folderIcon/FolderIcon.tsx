@@ -1,5 +1,5 @@
 import { useEffect, useRef } from "react";
-import { Box } from "@mui/material";
+import { ListItem } from "@mui/material";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
 import { Metadata } from "../../../../../../types/dropbox";
 import { Folder } from "@mui/icons-material";
@@ -29,7 +29,8 @@ export const FolderIcon = ({
   }, [active])
 
   return (
-    <Box
+    <ListItem
+      key={itemIndex}
       tabIndex={itemIndex}
       component={'div'}
       ref={folderElement}
@@ -72,14 +73,14 @@ export const FolderIcon = ({
     >
       <Folder></Folder>
       {entry.name}
-    </Box>
+    </ListItem>
   );
 };
 
 export const FolderIconPlaceHolder = () => {
 
   return (
-    <Box
+    <ListItem
       component={'div'}
       sx={{
         display: 'grid',
@@ -97,6 +98,6 @@ export const FolderIconPlaceHolder = () => {
     >
       <Folder></Folder>
       ...
-    </Box>
+    </ListItem>
   );
 }
