@@ -76,10 +76,8 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     exclusiveTagIds?: string[]
   ) => {
     const apiClient = new ApiClient();
-    console.log("addTags starts", tagReferenceMaster);
     setTagReferenceMaster((currentTagReference) => {
       let newTagReference: TagReference = { ...currentTagReference };
-      console.log("newTagReference", newTagReference);
 
       if (exclusiveTagIds) {
         exclusiveTagIds.forEach((tagId) => {
@@ -95,14 +93,9 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         );
 
         if (!tagObject.unique && referenceExistsInMaster) {
-          console.log("currentTime", currentTime);
           const newEntry = [...newTagReference[tagObject.id]];
-          console.log("newEntry", newEntry);
           newEntry.push(currentTime);
-          console.log("newEntry.push", newEntry);
           newTagReference[tagObject.id] = newEntry;
-          console.log(newTagReference);
-          console.log(newTagReference[tagObject.id]);
         } else {
           newTagReference = {
             ...newTagReference,
@@ -110,19 +103,15 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
           };
         }
       });
-      console.log("newTagReference", newTagReference);
 
-      console.log("about to update");
       apiClient
         .updateFileProperties(targetClip, newTagReference)
         .then(async (updateSuccessful) => {
           if (!updateSuccessful) {
-            console.log("attempting to reverse");
             // let revertedTagReference = await apiClient.getMetadata(targetClip)
             // setTagReferenceMaster(revertedTagReference)
           }
         });
-      console.log("returning", newTagReference);
       return newTagReference;
     });
   };
