@@ -40,20 +40,13 @@ export const Tag = ({
 
   const addKeyBindListener = () => {
     if (!AppRoot || !AppRoot.current) return;
-    // console.log("adding", tagObject.displayName);
     AppRoot.current.addEventListener("keydown", handleKeyBindPress.current);
   };
 
   const removeKeyBindListener = () => {
     if (!AppRoot || !AppRoot.current) return;
-    // console.log("removing", tagObject.displayName);
     AppRoot.current.removeEventListener("keydown", handleKeyBindPress.current);
   };
-
-  // useEffect(() => {
-  //   addKeyBindListener();
-  //   return removeKeyBindListener;
-  // }, []);
 
   useEffect(() => {
     if (blockGroupLevelListeners === false) {
