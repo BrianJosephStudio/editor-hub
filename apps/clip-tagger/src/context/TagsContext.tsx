@@ -9,6 +9,7 @@ import {
 import { ApiClient } from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
 import Cookies from "js-cookie";
+import { useFolderNavigation } from "./FolderNavigationContext";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -60,9 +61,9 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const [tagOffset, setTagOffset] = useState<number>(() => {
     const defaultValue = 500
     const tagOffsetCookie = Cookies.get("tagOffset")
-    if(!tagOffsetCookie) return defaultValue
+    if (!tagOffsetCookie) return defaultValue
     const tagOffsetNumber = parseInt(tagOffsetCookie)
-    if(!isNaN(tagOffsetNumber)) {
+    if (!isNaN(tagOffsetNumber)) {
       return tagOffsetNumber
     }
     return defaultValue
@@ -129,7 +130,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const removeTag = (tagObject: TagObject, instanceId?: string) => {
     let tagEntry = tagReferenceLabeled[tagObject.id];
     if (!tagEntry) return;
-    if(instanceId){
+    if (instanceId) {
       tagEntry = tagEntry.filter(
         (timeEntry) => timeEntry.instanceId !== instanceId
       );
@@ -143,9 +144,9 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         ...currentTagReference
       };
 
-      if(newTagEntry.length < 1){
+      if (newTagEntry.length < 1) {
         delete updatedTagReference[tagObject.id]
-      }else{
+      } else {
         updatedTagReference[tagObject.id] = newTagEntry
       }
 
