@@ -87,17 +87,11 @@ export const ClipTagger = () => {
 						flexGrow: 1
 					}}
 				>
+					<Settings></Settings>
 					<ClipViewer></ClipViewer>
 					<TagsManager></TagsManager>
 				</Box>
-				<Box sx={{
-					display: 'flex',
-					flexDirection: 'column',
-					minWidth: '16rem'
-				}}>
-					<TagsDisplay></TagsDisplay>
-					<Settings></Settings>
-				</Box>
+				<TagsDisplay></TagsDisplay>
 			</Box>
 		</TagsProvider>
 	)

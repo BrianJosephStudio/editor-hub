@@ -21,8 +21,8 @@ export const ClipViewer = () => {
         preload="auto"
         src={currentVideoSource}
         onFocus={(event) => {
-           event.target.blur()
-           AppRoot?.current?.focus()
+          event.target.blur()
+          AppRoot?.current?.focus()
         }}
         style={{
           minHeight: '0',
