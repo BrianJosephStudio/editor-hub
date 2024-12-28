@@ -1,5 +1,3 @@
-// import React, { useState, useEffect } from 'react'
-import "./FolderIcon.css";
 import { useEffect, useRef } from "react";
 import { Box } from "@mui/material";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
@@ -83,8 +81,19 @@ export const FolderIconPlaceHolder = () => {
   return (
     <Box
       component={'div'}
-      className={`folderContainer ${"folderContainerInactive"
-        }`}
+      sx={{
+        display: 'grid',
+        height: '3rem',
+        width: '100%',
+        margin: '0',
+        textAlign: 'left',
+        alignItems: 'center',
+        gridTemplateColumns: '2rem auto auto',
+        gridGap: '0.6rem',
+        cursor: 'pointer',
+        userSelect: 'none',
+        outline: 'none',
+      }}
     >
       <Folder></Folder>
       ...

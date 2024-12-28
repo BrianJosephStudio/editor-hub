@@ -1,4 +1,3 @@
-import "./FileIcon.css";
 import { useEffect, useRef, useState } from "react";
 import { ApiClient } from "../../../../../../api/ApiClient";
 import { useClipViewer } from "../../../../../../context/ClipViewerContext";
