@@ -7,6 +7,7 @@ import { Box, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
 import { Metadata, PropertyGroup } from "../../../../../../types/dropbox";
 import { TagReference } from "../../../../../../types/tags";
+import { useTags } from "../../../../../../context/TagsContext";
 
 export const FileIcon = ({
   entry,
@@ -19,38 +20,45 @@ export const FileIcon = ({
   itemIndex: number;
   clickCallback: () => void;
 }) => {
-  const { setCurrentVideoSource, setNextVideoSource, setTargetClip } =
+  const { targetClip, setCurrentVideoSource, setNextVideoSource, setTargetClip } =
     useClipViewer();
-  const { activeItem, setCurrentPropertyGroupSetter, setActiveItem } = useFolderNavigation();
+  const { activeItem, setActiveItem } = useFolderNavigation();
 
   const folderElement = useRef<HTMLDivElement>(null);
   const [cachedFile, setCachedFile] = useState<string>("");
   const [localTemporaryLink, setLocalTemporaryLink] = useState<string>();
 
-  const [propertyGroups, setPropertyGroups] = useState<PropertyGroup[] | undefined>(entry.property_groups)
   const [tagCount, setTagCount] = useState<number>(0)
   const [tagCountColor, setTagCountColor] = useState<string>('red')
+
+  const { tagReferenceMaster } = useTags()
 
   const apiClient = new ApiClient();
 
   useEffect(() => {
-    try {
-      if (entry.property_groups && Array.isArray(entry.property_groups) && entry.property_groups[0].fields && entry.property_groups![0].fields[0].value) {
-        const tags = JSON.parse(entry.property_groups![0].fields[0].value) as TagReference[]
-        const tagsLength = Object.entries(tags).length ?? 0
-        setTagCount(tagsLength)
-      }
-    } catch { }
+    if (entry.property_groups && Array.isArray(entry.property_groups) && entry.property_groups[0] && entry.property_groups[0].fields && entry.property_groups![0].fields[0].value) {
+      const tags = JSON.parse(entry.property_groups![0].fields[0].value) as TagReference
+
+      let newTagCount: number = 0
+      Object.values(tags).forEach(entry => newTagCount += (entry.length > 0 ? entry.length : 1))
+
+      setTagCount(newTagCount)
+    }
   }, [])
 
   useEffect(() => {
-    if (tagCount === 0) return;
-    if (tagCount < 4) {
-      setTagCountColor('yellow')
-    }
-    if (tagCount >= 4) {
-      setTagCountColor('green')
-    }
+    if (targetClip !== entry.path_lower || Object.keys(tagReferenceMaster).length === 0) return;
+
+    let newTagCount: number = 0
+    Object.values(tagReferenceMaster).forEach(entry => newTagCount += (entry.length > 0 ? entry.length : 1))
+
+    setTagCount(newTagCount)
+  }, [tagReferenceMaster])
+
+  useEffect(() => {
+    if (tagCount === 0) return setTagCountColor('red');
+    if (tagCount < 4) return setTagCountColor('yellow');
+    if (tagCount >= 4) return setTagCountColor('green');
   }, [tagCount])
 
   useEffect(() => {
@@ -114,18 +122,17 @@ export const FileIcon = ({
       }}
 
       onFocus={() => setActiveItem(itemIndex)}
-      
+
       onDoubleClick={(event) => {
         event.preventDefault();
         setTargetClip(entry.path_lower!);
         setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
-        setCurrentPropertyGroupSetter(setPropertyGroups)
       }}
 
       onClick={clickCallback}
 
       onKeyDown={(event) => {
-        if(event.key !== "Enter" || activeItem === null) return;
+        if (event.key !== "Enter" || activeItem === null) return;
         event.stopPropagation()
 
         setTargetClip(entry.path_lower!);

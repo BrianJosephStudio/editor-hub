@@ -15,8 +15,6 @@ interface FolderNavigationContextProps {
   handleBackNavigation: (count: number) => void;
   getClipLevel: (currentEntries: Metadata[]) => Promise<boolean>;
   setFolderEntryNames: (folderEntries: Metadata[]) => Promise<boolean>;
-  currentPropertyGroupsSetter: React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>> | undefined;
-  setCurrentPropertyGroupSetter: React.Dispatch<React.SetStateAction<React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>> | undefined>>;
   focusPreviousItem: () => void
   focusNextItem: () => void
 }
@@ -45,7 +43,6 @@ export const FolderNavigationProvider = ({
   const [currentFolder, setCurrentFolder] = useState<string>(currentPath ?? "/");
   const [currentFolderEntries, setCurrentFolderEntries] = useState<any[]>([]);
   const [activeItem, setActiveItem] = useState<number | null>(null);
-  const [currentPropertyGroupsSetter, setCurrentPropertyGroupSetter] = useState<React.Dispatch<React.SetStateAction<PropertyGroup[] | undefined>>>()
 
   const [pathSegments, setPathSegments] = useState<string[]>([]);
 
@@ -161,8 +158,6 @@ export const FolderNavigationProvider = ({
         setPathSegments,
         getClipLevel,
         setFolderEntryNames,
-        currentPropertyGroupsSetter,
-        setCurrentPropertyGroupSetter,
         focusPreviousItem,
         focusNextItem,
       }}
