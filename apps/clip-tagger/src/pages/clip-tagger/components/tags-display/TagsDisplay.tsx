@@ -167,6 +167,7 @@ export const TagsDisplay = () => {
       sx={{
         display: "flex",
         flexDirection: "column",
+        flexGrow: 1
       }}
     >
       <Box
