@@ -64,9 +64,9 @@ export const ClipTagger = () => {
 							: videoPlayer.current?.pause();
 					}
 					if (key === "Escape") setBlockGroupLevelListeners(false);
-					if(key === "Enter") {
+					if (key === "Enter") {
 						const activeItem = getActiveItem()
-						if(!activeItem) return;
+						if (!activeItem) return;
 						activeItem.dispatchEvent(new KeyboardEvent("keydown", {
 							key: "Enter",
 							code: "Enter",
