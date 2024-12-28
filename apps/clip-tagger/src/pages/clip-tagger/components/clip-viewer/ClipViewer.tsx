@@ -12,7 +12,21 @@ export const ClipViewer = () => {
   const { AppRoot } = useAppContext();
 
   return (
-    <Box component={'div'} tabIndex={-1} sx={{ display: "flex", flexDirection: 'column', minHeight: '0', placeContent: 'center' }}>
+    <Box
+      component={'div'}
+      tabIndex={-1}
+      sx={{
+        display: "flex",
+        flexDirection: 'column',
+        minHeight: '0',
+        placeContent: 'center'
+      }}
+      onClick={() => {
+        videoPlayer.current?.paused
+          ? videoPlayer.current?.play()
+          : videoPlayer.current?.pause();
+      }}
+    >
       <video
         tabIndex={-1}
         autoPlay
