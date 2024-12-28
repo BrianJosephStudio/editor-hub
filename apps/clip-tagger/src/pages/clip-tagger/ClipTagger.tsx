@@ -13,7 +13,7 @@ import { Settings } from "./components/settings/Settings"
 export const ClipTagger = () => {
 	const { AppRoot } = useAppContext()
 
-	const { focusCurrentItem, focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
+	const { getActiveItem, focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
 	const { videoPlayer, skipTime } = useClipViewer()
 	const { setBlockGroupLevelListeners } = useKeybind();
 
@@ -65,9 +65,16 @@ export const ClipTagger = () => {
 					}
 					if (key === "Escape") setBlockGroupLevelListeners(false);
 					if(key === "Enter") {
-						console.log("hey")
-						focusCurrentItem()
-						window.dispatchEvent(new KeyboardEvent("Enter"))
+						const activeItem = getActiveItem()
+						if(!activeItem) return;
+						activeItem.dispatchEvent(new KeyboardEvent("keydown", {
+							key: "Enter",
+							code: "Enter",
+							keyCode: 13,
+							charCode: 13,
+							bubbles: true,
+							cancelable: true,
+						}))
 					}
 				}}
 			>

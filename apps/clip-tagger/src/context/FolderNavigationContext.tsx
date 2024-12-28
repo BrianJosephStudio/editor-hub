@@ -1,9 +1,10 @@
-import { createContext, useContext, useState, ReactNode } from "react";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import { Metadata, PropertyGroup } from "../types/dropbox";
 import { ApiClient } from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 
 interface FolderNavigationContextProps {
+  BrowserList: React.RefObject<HTMLUListElement>;
   currentFolder: string;
   setCurrentFolder: React.Dispatch<React.SetStateAction<string>>;
   currentFolderEntries: Metadata[];
@@ -15,6 +16,7 @@ interface FolderNavigationContextProps {
   handleBackNavigation: (count: number) => void;
   getClipLevel: (currentEntries: Metadata[]) => Promise<boolean>;
   setFolderEntryNames: (folderEntries: Metadata[]) => Promise<boolean>;
+  getActiveItem: () => HTMLDivElement | undefined
   focusPreviousItem: () => void
   focusNextItem: () => void
 }
@@ -43,8 +45,9 @@ export const FolderNavigationProvider = ({
   const [currentFolder, setCurrentFolder] = useState<string>(currentPath ?? "/");
   const [currentFolderEntries, setCurrentFolderEntries] = useState<any[]>([]);
   const [activeItem, setActiveItem] = useState<number | null>(null);
-
   const [pathSegments, setPathSegments] = useState<string[]>([]);
+
+  const BrowserList = useRef<HTMLUListElement>(null)
 
   const handleBackNavigation = (count: number) => {
     if (pathSegments.length < 1) return;
@@ -88,7 +91,7 @@ export const FolderNavigationProvider = ({
       .map((folderEntry) => {
         const parsedFileName = new ParsedFileName(
           folderEntry.path_lower!,
-          newCurrentIndex 
+          newCurrentIndex
         );
 
         if (parsedFileName.isProperlyNamed) {
@@ -98,13 +101,13 @@ export const FolderNavigationProvider = ({
         return parsedFileName.getrenameObject();
       })
       .filter((data) => !!data);
-    
+
     const apiClient = new ApiClient();
 
     //@ts-ignore
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
 
-    const folderPromises = dropboxFolders.map(async (dropboxFolder) =>{
+    const folderPromises = dropboxFolders.map(async (dropboxFolder) => {
       const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower!)
       return await setFolderEntryNames(subFolderEntries)
     })
@@ -112,6 +115,13 @@ export const FolderNavigationProvider = ({
     const folderRenameSuccess = await Promise.all(folderPromises)
 
     return fileRenameSuccess && folderRenameSuccess.some(success => !!success)
+  };
+
+  const getActiveItem = () => {
+    if (!BrowserList.current || !activeItem) return;
+
+    const activeElement = BrowserList.current.children[activeItem] as HTMLDivElement
+    return activeElement
   };
 
   const focusPreviousItem = () => {
@@ -124,9 +134,7 @@ export const FolderNavigationProvider = ({
       });
       return;
     }
-    if (activeItem === null) {
-      setActiveItem(currentFolderEntries.length - 1);
-    }
+    setActiveItem(currentFolderEntries.length - 1);
   };
 
   const focusNextItem = () => {
@@ -139,15 +147,14 @@ export const FolderNavigationProvider = ({
       });
       return;
     }
-    if (activeItem === null) {
-      setActiveItem(0);
-    }
+    setActiveItem(0);
   };
 
   return (
     <FolderNavigationContext.Provider
       value={{
         currentFolder,
+        BrowserList,
         setCurrentFolder,
         currentFolderEntries,
         setCurrentFolderEntries,
@@ -158,6 +165,7 @@ export const FolderNavigationProvider = ({
         setPathSegments,
         getClipLevel,
         setFolderEntryNames,
+        getActiveItem,
         focusPreviousItem,
         focusNextItem,
       }}
