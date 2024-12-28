@@ -27,8 +27,8 @@ interface TagsContextProps {
     React.SetStateAction<LabeledTagReference>
   >;
   tagDisplayList: React.RefObject<HTMLDivElement>;
-  tagOffset: number;
-  setTagOffset: React.Dispatch<React.SetStateAction<number>>;
+  tagOffset: unknown;
+  setTagOffset: React.Dispatch<React.SetStateAction<unknown>>;
   addTags: (
     tagObjects: TagObject[],
     currentTime: number,
@@ -53,12 +53,10 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const [agentTags, setAgentTags] = useState<TagGroup[]>([]);
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
-  const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>(
-    {}
-  );
-  const [tagReferenceLabeled, setTagReferenceLabeled] =
-    useState<LabeledTagReference>({});
-  const [tagOffset, setTagOffset] = useState<number>(() => {
+  const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>({});
+  const [tagReferenceLabeled, setTagReferenceLabeled] =useState<LabeledTagReference>({});
+
+  const [tagOffset, setTagOffset] = useState<unknown>(() => {
     const defaultValue = 500
     const tagOffsetCookie = Cookies.get("tagOffset")
     if (!tagOffsetCookie) return defaultValue

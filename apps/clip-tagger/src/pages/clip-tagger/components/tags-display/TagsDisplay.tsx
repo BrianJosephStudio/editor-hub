@@ -15,10 +15,9 @@ export const TagsDisplay = () => {
     tagReferenceLabeled,
     setTagReferenceLabeled,
     tagOffset,
-    setTagOffset,
     removeTag,
   } = useTags();
-  const { videoPlayer, pauseOnInput, setPauseOnInput } = useClipViewer();
+  const { videoPlayer, pauseOnInput } = useClipViewer();
   const [exclusiveTags, setExclusiveTags] = useState<ExclusiveTags[]>([]);
   const [genericTags, setGenericTags] = useState<GenericTag[]>([]);
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
@@ -47,7 +46,7 @@ export const TagsDisplay = () => {
       const duration = videoPlayer.current.duration;
       setCurrentTimePercentage(getPlaybackPercentage(currentTime, duration));
     };
-    
+
     const handleLoadedMetadata = () => {
       setIsVideoReady(true);
     };
@@ -160,7 +159,7 @@ export const TagsDisplay = () => {
   }, [pauseOnInput]);
 
   useEffect(() => {
-    Cookies.set("tagOffset", tagOffset.toString());
+    Cookies.set("tagOffset", tagOffset as string);
   }, [tagOffset]);
 
   return (
@@ -299,62 +298,6 @@ export const TagsDisplay = () => {
               }}
             ></TagDisplayItem>
           ))}
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          backgroundColor: "hsl(0, 0%, 30%)",
-          display: "grid",
-          gridTemplateColumns: "repeat(2,1fr)",
-          justifyContent: "space-evenly",
-          height: "4rem",
-        }}
-      >
-        <Button
-          sx={{
-            flexGrow: 1,
-            stroke: "none",
-            borderRadius: "0",
-            "&:focus": {
-              outline: "none",
-            },
-            "&:active": {
-              outline: "none",
-            },
-          }}
-          variant={"contained"}
-          color={pauseOnInput ? "success" : "primary"}
-          onClick={() => {
-            setPauseOnInput((currentValue) => !currentValue);
-          }}
-        >
-          Pause on Input
-        </Button>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "column",
-            placeContent: "center",
-          }}
-        >
-          <Typography fontWeight={"400"}>Tag Offset ms</Typography>
-          <Input
-            type="number"
-            sx={{
-              color: "white",
-              backgroundColor: "hsl(0,0%,35%)",
-              "& input": {
-                textAlign: "center",
-              },
-            }}
-            value={tagOffset}
-            onChange={(event) => {
-              const inputValue = event.target.value;
-              const inputValueNumber = parseInt(inputValue);
-              if (isNaN(inputValueNumber)) throw new Error("Input is NaN");
-              setTagOffset(Math.max(0, inputValueNumber));
-            }}
-          />
         </Box>
       </Box>
     </Box>

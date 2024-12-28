@@ -8,11 +8,12 @@ import { useKeybind } from "../../context/KeyBindContext"
 import { useClipViewer } from "../../context/ClipViewerContext"
 import { TagsProvider } from "../../context/TagsContext"
 import { useFolderNavigation } from "../../context/FolderNavigationContext"
+import { Settings } from "./components/settings/Settings"
 export const ClipTagger = () => {
 	const { AppRoot } = useAppContext()
 
 	const { focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
-	const { videoPlayer } = useClipViewer()
+	const { videoPlayer, skipTime } = useClipViewer()
 	const { setBlockGroupLevelListeners } = useKeybind();
 
 	return (
@@ -27,7 +28,8 @@ export const ClipTagger = () => {
 					display: "grid",
 					gridTemplateColumns: "2fr 8fr 3fr",
 					width: "100vw",
-					height: "96vh",
+					// height: "96vh",
+					flexGrow: 1,
 					outline: "none",
 				}}
 
@@ -40,6 +42,18 @@ export const ClipTagger = () => {
 					if ((altKey && (key === "k" || event.key === '˚')) || key === 'ArrouwUp') {
 						event.stopPropagation()
 						focusPreviousItem();
+					}
+					if (altKey && (key === "h" || event.key === '∫')) {
+						if (!videoPlayer.current) return;
+						event.stopPropagation()
+						const newTime = videoPlayer.current.currentTime - (skipTime / 1000);
+						videoPlayer.current.currentTime = newTime
+					}
+					if (altKey && (key === "l" || event.key === 'ç')) {
+						if (!videoPlayer.current) return;
+						event.stopPropagation()
+						const newTime = videoPlayer.current.currentTime + (skipTime / 1000);
+						videoPlayer.current.currentTime = newTime
 					}
 					if (key === "Backspace") {
 						event.stopPropagation()
@@ -68,7 +82,13 @@ export const ClipTagger = () => {
 					<ClipViewer></ClipViewer>
 					<TagsManager></TagsManager>
 				</Box>
-				<TagsDisplay></TagsDisplay>
+				<Box sx={{
+					display: 'flex',
+					flexDirection: 'column'
+				}}>
+					<TagsDisplay></TagsDisplay>
+					<Settings></Settings>
+				</Box>
 			</Box>
 		</TagsProvider>
 	)

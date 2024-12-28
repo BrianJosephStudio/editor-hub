@@ -11,6 +11,8 @@ interface ClipViewerContextProps {
   videoPlayer: React.RefObject<HTMLVideoElement>;
   pauseOnInput: boolean;
   setPauseOnInput: React.Dispatch<React.SetStateAction<boolean>>;
+  skipTime: number;
+  setSkipTime: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const ClipViewerContext = createContext<ClipViewerContextProps | undefined>(
@@ -34,6 +36,16 @@ export const ClipViewerProvider = ({ children }: { children: ReactNode }) => {
     const pauseOnInputValue = pauseOnInputCookie === 'true'
     return pauseOnInputValue
   });
+  const [skipTime, setSkipTime] = useState<number>(() => {
+    const defaultValue = 5000
+    const skipTimeCookie = Cookies.get("skipTime")
+    if (!skipTimeCookie) return defaultValue
+    const skipTimeNumber = parseInt(skipTimeCookie)
+    if (!isNaN(skipTimeNumber)) {
+      return skipTimeNumber
+    }
+    return defaultValue
+  });
   const videoPlayer = useRef<HTMLVideoElement>(null);
 
   return (
@@ -48,6 +60,8 @@ export const ClipViewerProvider = ({ children }: { children: ReactNode }) => {
         videoPlayer,
         pauseOnInput,
         setPauseOnInput,
+        skipTime,
+        setSkipTime,
       }}
     >
       {children}
