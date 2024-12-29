@@ -57,6 +57,20 @@ export class ApiClient {
     await axios.post(url, body, { headers });
   };
 
+  public removeFilePropertyGroup = async (path: string) => {
+    const url = `${this.apiHost}/properties/remove`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const body = {
+      path,
+      property_template_ids: [tagTemplateId]
+    };
+
+    await axios.post(url, body, { headers });
+  };
+
   public updateFileProperties = async (
     path: string,
     tagReferenceMaster: TagReference,

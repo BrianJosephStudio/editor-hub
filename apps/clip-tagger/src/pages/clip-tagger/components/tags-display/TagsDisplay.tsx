@@ -1,4 +1,4 @@
-import { Box, Button, Input, Typography } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Typography } from "@mui/material";
 import { useTags } from "../../../../context/TagsContext";
 import { ExclusiveTags, GenericTag } from "../../../../types/tags";
 import { AgentTags, GenericTags, MapTags } from "../../../../resources/TagSystem";
@@ -13,24 +13,34 @@ export const TagsDisplay = () => {
     tagReferenceMaster,
     tagDisplayList,
     tagReferenceLabeled,
+    setTagReferenceMaster,
     setTagReferenceLabeled,
     tagOffset,
     removeTag,
+    resetTags,
+    setStarterTags
   } = useTags();
-  const { videoPlayer, pauseOnInput } = useClipViewer();
+  const { videoPlayer, pauseOnInput, targetClip } = useClipViewer();
   const [exclusiveTags, setExclusiveTags] = useState<ExclusiveTags[]>([]);
   const [genericTags, setGenericTags] = useState<GenericTag[]>([]);
   const [currentTimePercentage, setCurrentTimePercentage] = useState<number>(0);
   const [hoverHeightPercentage, setHoverHeightPercentage] = useState<number>(0);
-  const [playheadHoverVisible, setPlayheadHoverVisible] =
-    useState<boolean>(false);
+  const [playheadHoverVisible, setPlayheadHoverVisible] = useState<boolean>(false);
   const [isVideoReady, setIsVideoReady] = useState(false);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 
   const genericTagsContainer = useRef<HTMLDivElement | null>(null);
 
   function getPlaybackPercentage(currentTime: number, duration: number) {
     if (duration === 0) return 0;
     return (currentTime / duration) * 100;
+  }
+
+  const resetTagsHandler = async () => {
+    setDialogOpen(false)
+    setTagReferenceMaster({})
+    await resetTags(targetClip)
+    await setStarterTags()
   }
 
   useEffect(() => {
@@ -163,145 +173,155 @@ export const TagsDisplay = () => {
   }, [tagOffset]);
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        flexGrow: 1,
-        minWidth: '16rem'
-      }}
-    >
+    <>
+      <Dialog open={dialogOpen}>
+        <DialogTitle>Are you sure you want to reset tags for this clip?</DialogTitle>
+        <DialogActions>
+          <Button onClick={resetTagsHandler}>Reset</Button>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
       <Box
-        component={"div"}
-        id="exclusive-tags-container"
         sx={{
-          backgroundColor: "hsl(0, 0%, 40%)",
           display: "flex",
-          gap: "0.2rem",
-          padding: "0.3rem",
-          flexWrap: "wrap",
-          placeContent: "center",
-          minHeight: "6rem",
-        }}
-      >
-        {exclusiveTags.map((exclusiveTag, index) => (
-          <Box
-            key={index}
-            component={"div"}
-            title="remove"
-            sx={{
-              display: "flex",
-              placeContent: "center",
-              cursor: exclusiveTag.tagObject.protected ? "default" : "pointer",
-              backgroundColor: "black",
-              minWidth: "0",
-              padding: "0.3rem 0.8rem",
-              borderRadius: "1rem",
-              "&:hover": {
-                backgroundColor: exclusiveTag.tagObject.protected
-                  ? "black"
-                  : "#a33643",
-              },
-            }}
-            onClick={async (event) => {
-              event.stopPropagation();
-              if (exclusiveTag.tagObject.protected) return;
-
-              removeTag(exclusiveTag.tagObject);
-            }}
-          >
-            <Typography>{exclusiveTag.tagObject.displayName}</Typography>
-          </Box>
-        ))}
-      </Box>
-      <Box
-        component={"div"}
-        id="generic-tags-container"
-        ref={genericTagsContainer}
-        sx={{
-          position: "relative",
-          width: "100%",
-          flexGrow: "1",
-        }}
-        onMouseMove={(event) => {
-          const divElement = event.currentTarget;
-          const { top, height } = divElement.getBoundingClientRect();
-          const mouseY = event.clientY;
-
-          setHoverHeightPercentage(((mouseY - top) / height) * 100);
-        }}
-        onMouseEnter={() => setPlayheadHoverVisible(true)}
-        onMouseLeave={() => setPlayheadHoverVisible(false)}
-        onClick={(event) => {
-          const divElement = event.currentTarget;
-          const { top, height } = divElement.getBoundingClientRect();
-          const clickY = event.clientY;
-
-          const clickPositionPercentage = ((clickY - top) / height) * 100;
-
-          const videoElement = videoPlayer.current;
-
-          if (videoElement && videoElement.duration) {
-            const newTime =
-              (clickPositionPercentage / 100) * videoElement.duration;
-            videoElement.currentTime = newTime;
-
-            console.log(
-              `Playhead set to ${newTime.toFixed(2)} seconds of the video.`
-            );
-          }
+          flexDirection: "column",
+          flexGrow: 1,
+          minWidth: '16rem'
         }}
       >
         <Box
-          id="playhead"
           component={"div"}
+          id="exclusive-tags-container"
           sx={{
-            position: "absolute",
-            backgroundColor: "hsl(180, 0%, 30%)",
-            width: "100%",
-            height: `${currentTimePercentage}%`,
+            backgroundColor: "hsl(0, 0%, 40%)",
+            display: "flex",
+            gap: "0.2rem",
+            padding: "0.3rem",
+            flexWrap: "wrap",
+            placeContent: "center",
+            minHeight: "6rem",
           }}
-        ></Box>
-        <Box
-          id="playhead-hover"
-          component={"div"}
-          sx={{
-            opacity: !!playheadHoverVisible ? 0.5 : 0,
-            position: "absolute",
-            backgroundColor: "hsl(180, 0%, 40%)",
-            width: "100%",
-            height: `${hoverHeightPercentage}%`,
-          }}
-        ></Box>
-        <Box
-          component={"div"}
-          id="tag-display-list"
-          ref={tagDisplayList}
-          height={"100%"}
         >
-          {genericTags.map((genericTag, index) => (
-            <TagDisplayItem
+          {exclusiveTags.map((exclusiveTag, index) => (
+            <Box
               key={index}
-              index={index}
-              instanceId={genericTag.instanceId}
-              tagObject={genericTag.tagObject}
-              time={genericTag.time!}
-              top={genericTag.top}
-              left={genericTag.left}
-              mouseEnterCallback={(event) => {
-                event.stopPropagation();
-                event.preventDefault();
-                setPlayheadHoverVisible(false);
+              component={"div"}
+              title="remove"
+              sx={{
+                display: "flex",
+                placeContent: "center",
+                cursor: exclusiveTag.tagObject.protected ? "default" : "pointer",
+                backgroundColor: "black",
+                minWidth: "0",
+                padding: "0.3rem 0.8rem",
+                borderRadius: "1rem",
+                "&:hover": {
+                  backgroundColor: exclusiveTag.tagObject.protected
+                    ? "black"
+                    : "#a33643",
+                },
               }}
-              mouseLeaveCallback={(event) => {
+              onClick={async (event) => {
                 event.stopPropagation();
-                event.preventDefault();
-                setPlayheadHoverVisible(true);
+                if (exclusiveTag.tagObject.protected) return;
+
+                removeTag(exclusiveTag.tagObject);
               }}
-            ></TagDisplayItem>
+            >
+              <Typography>{exclusiveTag.tagObject.displayName}</Typography>
+            </Box>
           ))}
         </Box>
+        <Box
+          component={"div"}
+          id="generic-tags-container"
+          ref={genericTagsContainer}
+          sx={{
+            position: "relative",
+            width: "100%",
+            flexGrow: "1",
+          }}
+          onMouseMove={(event) => {
+            const divElement = event.currentTarget;
+            const { top, height } = divElement.getBoundingClientRect();
+            const mouseY = event.clientY;
+
+            setHoverHeightPercentage(((mouseY - top) / height) * 100);
+          }}
+          onMouseEnter={() => setPlayheadHoverVisible(true)}
+          onMouseLeave={() => setPlayheadHoverVisible(false)}
+          onClick={(event) => {
+            const divElement = event.currentTarget;
+            const { top, height } = divElement.getBoundingClientRect();
+            const clickY = event.clientY;
+
+            const clickPositionPercentage = ((clickY - top) / height) * 100;
+
+            const videoElement = videoPlayer.current;
+
+            if (videoElement && videoElement.duration) {
+              const newTime =
+                (clickPositionPercentage / 100) * videoElement.duration;
+              videoElement.currentTime = newTime;
+
+              console.log(
+                `Playhead set to ${newTime.toFixed(2)} seconds of the video.`
+              );
+            }
+          }}
+        >
+          <Box
+            id="playhead"
+            component={"div"}
+            sx={{
+              position: "absolute",
+              backgroundColor: "hsl(180, 0%, 30%)",
+              width: "100%",
+              height: `${currentTimePercentage}%`,
+            }}
+          ></Box>
+          <Box
+            id="playhead-hover"
+            component={"div"}
+            sx={{
+              opacity: !!playheadHoverVisible ? 0.5 : 0,
+              position: "absolute",
+              backgroundColor: "hsl(180, 0%, 40%)",
+              width: "100%",
+              height: `${hoverHeightPercentage}%`,
+            }}
+          ></Box>
+          <Box
+            component={"div"}
+            id="tag-display-list"
+            ref={tagDisplayList}
+            height={"100%"}
+          >
+            {genericTags.map((genericTag, index) => (
+              <TagDisplayItem
+                key={index}
+                index={index}
+                instanceId={genericTag.instanceId}
+                tagObject={genericTag.tagObject}
+                time={genericTag.time!}
+                top={genericTag.top}
+                left={genericTag.left}
+                mouseEnterCallback={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  setPlayheadHoverVisible(false);
+                }}
+                mouseLeaveCallback={(event) => {
+                  event.stopPropagation();
+                  event.preventDefault();
+                  setPlayheadHoverVisible(true);
+                }}
+              ></TagDisplayItem>
+            ))}
+          </Box>
+        </Box>
+        <Button onClick={() => setDialogOpen(true)}>Reset Tags</Button>
       </Box>
-    </Box>
+    </>
   );
 };

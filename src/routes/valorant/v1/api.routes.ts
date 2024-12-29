@@ -27,6 +27,8 @@ router.post('/get_metadata', await dropboxFilesProxy());
 
 router.post('/properties/add', await dropboxFilePropertiesProxy());
 
+router.post('/properties/remove', await dropboxFilePropertiesProxy());
+
 router.post('/properties/update', await dropboxFilePropertiesProxy());
 
 

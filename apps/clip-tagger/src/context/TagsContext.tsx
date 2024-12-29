@@ -9,7 +9,8 @@ import {
 import { ApiClient } from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
 import Cookies from "js-cookie";
-import { useFolderNavigation } from "./FolderNavigationContext";
+import { ParsedFileName } from "../util/dropboxFileParsing";
+import { AgentTags, GenericTags, MapTags } from "../resources/TagSystem";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -29,12 +30,14 @@ interface TagsContextProps {
   tagDisplayList: React.RefObject<HTMLDivElement>;
   tagOffset: unknown;
   setTagOffset: React.Dispatch<React.SetStateAction<unknown>>;
+  setStarterTags: () => Promise<void>
   addTags: (
     tagObjects: TagObject[],
     currentTime: number,
     exclusiveTagIds?: string[]
   ) => void;
   removeTag: (tagObject: TagObject, instanceId?: string) => void;
+  resetTags: (path: string) => Promise<void>;
 }
 
 const TagsContext = createContext<TagsContextProps | undefined>(undefined);
@@ -54,7 +57,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
   const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>({});
-  const [tagReferenceLabeled, setTagReferenceLabeled] =useState<LabeledTagReference>({});
+  const [tagReferenceLabeled, setTagReferenceLabeled] = useState<LabeledTagReference>({});
 
   const [tagOffset, setTagOffset] = useState<unknown>(() => {
     const defaultValue = 500
@@ -67,6 +70,39 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     return defaultValue
   });
   const tagDisplayList = useRef<HTMLDivElement>(null);
+
+  const setStarterTags = async () => {
+    const currentFileParsed = new ParsedFileName(targetClip, 0);
+    const currentMap = MapTags.find(
+      (mapTag) => mapTag.tag === currentFileParsed.map.toLocaleLowerCase()
+    );
+    const currentAgent = AgentTags.find(
+      (agentTag) =>
+        agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
+    );
+    const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+
+    if (!currentMap || !currentAgent || !inGameClipTag)
+      throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
+
+    const mapTagIds = MapTags.map((mapTag) => {
+      return mapTag.id;
+    });
+    const agentTagIds = AgentTags.map((agentTag) => {
+      return agentTag.id;
+    });
+
+    const clipTypeTagIds = GenericTags.clipType.tags.map((clipTypeTag) => {
+      return clipTypeTag.id;
+    });
+
+    const exclusiveTagIds = [...mapTagIds, ...agentTagIds, ...clipTypeTagIds];
+    addTags([
+      currentAgent,
+      currentMap,
+      inGameClipTag
+    ], 0, exclusiveTagIds)
+  }
 
   const addTags = (
     tagObjects: TagObject[],
@@ -143,6 +179,12 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const resetTags = async (path: string) => {
+    const apiClient = new ApiClient()
+
+    await apiClient.removeFilePropertyGroup(path)
+  }
+
   return (
     <TagsContext.Provider
       value={{
@@ -161,8 +203,10 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         tagDisplayList,
         tagOffset,
         setTagOffset,
+        setStarterTags,
         addTags,
         removeTag,
+        resetTags
       }}
     >
       {children}
