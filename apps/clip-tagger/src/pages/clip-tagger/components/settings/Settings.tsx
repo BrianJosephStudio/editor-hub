@@ -81,7 +81,6 @@ export const Settings = () => {
           }} />
         <VolumeUp />
       </Stack>
-      {currentVolume}
     </Box>
   )
 }
