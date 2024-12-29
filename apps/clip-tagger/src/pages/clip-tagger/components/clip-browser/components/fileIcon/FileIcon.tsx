@@ -100,6 +100,7 @@ export const FileIcon = ({
 
   return (
     <ListItem
+      id={entry.name}
       data-testid={'file-browser:file-item'}
       key={itemIndex}
       tabIndex={itemIndex}

@@ -20,7 +20,7 @@ export const FolderIcon = ({
   openFolderCallback: () => void;
 }) => {
   const folderElement = useRef<HTMLDivElement>(null)
-  const { setCurrentFolder, setActiveItem } = useFolderNavigation()
+  const { setCurrentFolder, setActiveItem, lastItemName } = useFolderNavigation()
 
   useEffect(() => {
     if (active && folderElement.current) {
@@ -28,8 +28,15 @@ export const FolderIcon = ({
     }
   }, [active])
 
+  useEffect(() => {
+    if(entry.name.toLowerCase() !== lastItemName.toLowerCase() || !folderElement.current) return;
+
+    folderElement.current.focus()
+  },[lastItemName])
+
   return (
     <ListItem
+      id={entry.name}
       key={itemIndex}
       tabIndex={itemIndex}
       component={'div'}

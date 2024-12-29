@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useRef } from "react";
+import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
 import { Metadata, PropertyGroup } from "../types/dropbox";
 import { ApiClient } from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
@@ -13,6 +13,8 @@ interface FolderNavigationContextProps {
   setActiveItem: React.Dispatch<React.SetStateAction<number | null>>;
   pathSegments: string[];
   setPathSegments: React.Dispatch<React.SetStateAction<string[]>>;
+  lastItemName: string;
+  setLastItemName: React.Dispatch<React.SetStateAction<string>>;
   handleBackNavigation: (count: number) => void;
   getClipLevel: (currentEntries: Metadata[]) => Promise<boolean>;
   setFolderEntryNames: (folderEntries: Metadata[]) => Promise<boolean>;
@@ -46,6 +48,7 @@ export const FolderNavigationProvider = ({
   const [currentFolderEntries, setCurrentFolderEntries] = useState<any[]>([]);
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [pathSegments, setPathSegments] = useState<string[]>([]);
+  const [lastItemName, setLastItemName] = useState<string>("")
 
   const BrowserList = useRef<HTMLUListElement>(null)
 
@@ -53,14 +56,13 @@ export const FolderNavigationProvider = ({
     if (pathSegments.length < 1) return;
 
     const start = pathSegments.length - count;
-
-    const newSegments = pathSegments;
-
-    newSegments.splice(start, 10);
-
+    const newSegments = pathSegments;    
+    const deletedSegments = newSegments.splice(start, 10);
+    const newActiveItemName = deletedSegments[0]
     const newPath = `/${newSegments.join("/")}`;
-
+    
     setCurrentFolder(newPath);
+    setLastItemName(newActiveItemName)
   };
 
   const getClipLevel = async (currentEntries: any[]): Promise<boolean> => {
@@ -163,6 +165,8 @@ export const FolderNavigationProvider = ({
         handleBackNavigation,
         pathSegments,
         setPathSegments,
+        lastItemName,
+        setLastItemName,
         getClipLevel,
         setFolderEntryNames,
         getActiveItem,
