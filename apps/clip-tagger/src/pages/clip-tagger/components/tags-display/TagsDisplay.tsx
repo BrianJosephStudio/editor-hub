@@ -45,7 +45,7 @@ export const TagsDisplay = () => {
 
   useEffect(() => {
     console.log("haciendo labels en master");
-    const newLabeledTagReference = labelTagReference(tagReferenceMaster);
+    const newLabeledTagReference = labelTagReference(tagReferenceMaster, tagReferenceLabeled);
     setTagReferenceLabeled(newLabeledTagReference);
   }, [tagReferenceMaster]);
 

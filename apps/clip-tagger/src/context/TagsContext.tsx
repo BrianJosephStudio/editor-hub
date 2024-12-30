@@ -5,6 +5,7 @@ import {
   TagObject,
   TagReference,
   TimeCode,
+  TimeEntry,
 } from "../types/tags.d";
 import { ApiClient } from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
@@ -37,6 +38,7 @@ interface TagsContextProps {
     exclusiveTagIds?: string[]
   ) => void;
   removeTag: (tagObject: TagObject, instanceId?: string) => void;
+  removeLastAddedTag: () => void
   resetTags: (path: string) => Promise<void>;
 }
 
@@ -52,7 +54,7 @@ export const useTags = (): TagsContextProps => {
 
 export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const { targetClip } = useClipViewer();
-  const [genericTags, setGenericTags] = useState<TagGroup[]>([]);
+  const [genericTags, setGenericTags] = useState<TagGroup[]>(Object.values(GenericTags));
   const [agentTags, setAgentTags] = useState<TagGroup[]>([]);
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
@@ -142,8 +144,6 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         .updateFileProperties(targetClip, newTagReference)
         .then(async (updateSuccessful) => {
           if (!updateSuccessful) {
-            // let revertedTagReference = await apiClient.getMetadata(targetClip)
-            // setTagReferenceMaster(revertedTagReference)
           }
         });
       return newTagReference;
@@ -179,6 +179,43 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const getLastAddedTag = (): [string, string] | undefined => {
+    if (Object.keys(tagReferenceLabeled).length === 0) {
+      return undefined;
+    }
+
+    let latestEntry: TimeEntry | null = null;
+    let latestTagId: string | null = null;
+
+    Object.entries(tagReferenceLabeled).forEach(([tagId, timeEntryArray]) => {
+      timeEntryArray.forEach((timeEntry) => {
+        if (latestEntry) console.log(timeEntry.created, 'is greater than', latestEntry.created, timeEntry.created > latestEntry.created);
+        if (!latestEntry || timeEntry.created > latestEntry.created) {
+          latestEntry = timeEntry;
+          latestTagId = tagId;
+        }
+      });
+    });
+
+    return [latestTagId!, latestEntry!.instanceId];
+  };
+
+  const removeLastAddedTag = () => {
+    const lastAddedTagData = getLastAddedTag()
+    if (!lastAddedTagData) return;
+    const [lastAddedTagId, lastAddedInstanceId] = lastAddedTagData
+    let targetTagObject: TagObject | undefined = undefined
+    genericTags.forEach(tagGroup => {
+      tagGroup.tags.forEach(tag => {
+        if (tag.id !== lastAddedTagId) return;
+        targetTagObject = tag;
+      })
+    })
+    if (!targetTagObject) return;
+    removeTag(targetTagObject, lastAddedInstanceId)
+  }
+
+
   const resetTags = async (path: string) => {
     const apiClient = new ApiClient()
 
@@ -206,6 +243,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         setStarterTags,
         addTags,
         removeTag,
+        removeLastAddedTag,
         resetTags
       }}
     >

@@ -45,6 +45,7 @@ export interface TagReference {
 export interface TimeEntry {
   time: TimeCode;
   instanceId: string;
+  created: number;
 }
 
 export interface LabeledTagReference {

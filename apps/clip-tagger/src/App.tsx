@@ -9,6 +9,7 @@ import { Routes, Route } from "react-router-dom"
 import { FolderNavigationProvider } from "./context/FolderNavigationContext";
 import { ClipViewerProvider } from "./context/ClipViewerContext";
 import { KeybindProvider } from "./context/KeyBindContext";
+import { TagsProvider } from "./context/TagsContext";
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -25,7 +26,9 @@ function App() {
                 <KeybindProvider>
                   <FolderNavigationProvider currentPath={currentPath ?? ""}>
                     <ClipViewerProvider>
-                      <ClipTagger></ClipTagger>
+                      <TagsProvider>
+                        <ClipTagger></ClipTagger>
+                      </TagsProvider>
                     </ClipViewerProvider>
                   </FolderNavigationProvider>
                 </KeybindProvider>
