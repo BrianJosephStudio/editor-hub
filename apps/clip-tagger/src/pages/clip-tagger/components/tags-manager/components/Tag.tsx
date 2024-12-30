@@ -24,7 +24,7 @@ export const Tag = ({
     
     if (event.key === tagObject.keybind && blockGroupLevelListeners) {
       const currentTime =
-        Math.max(videoPlayer.current.currentTime - 0.2 - tagOffset / 1000, 0);
+        Math.max(videoPlayer.current.currentTime - 0.2 - (tagOffset as number) / 1000, 0);
       addTags([tagObject], currentTime, exclusiveTagIds);
 
       setBlockGroupLevelListeners(false);
