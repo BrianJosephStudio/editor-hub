@@ -6,7 +6,7 @@ import { useKeybind } from "../../../../context/KeyBindContext.tsx";
 import { useClipViewer } from "../../../../context/ClipViewerContext.tsx";
 import { ApiClient } from "../../../../api/ApiClient.ts";
 import { useTags } from "../../../../context/TagsContext.tsx";
-import { labelTagReference } from "../../../../util/tagInstanceId.ts";
+import { labelTagReference } from "../../../../util/tagObjectHelpers.ts";
 
 export const TagsManager = () => {
   const { targetClip } = useClipViewer();

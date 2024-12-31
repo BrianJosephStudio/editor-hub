@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 import { AgentTags, GenericTags, MapTags } from "../resources/TagSystem";
 import { v4 as uuid } from "uuid";
-import { getTagObjectFromId, getTagObjectFromInstanceId, unlabelTagReference } from "../util/tagInstanceId";
+import { getTagObjectFromId, getTagObjectFromInstanceId, unlabelTagReference } from "../util/tagObjectHelpers";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
