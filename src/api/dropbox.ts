@@ -52,6 +52,18 @@ export const dropboxFilePropertiesProxy = async () => {
     }
 }
 
+export const dropboxSharingProxy = async () => {
+    try {
+        const proxyMiddleware = createDropboxProxy(
+            "https://api.dropboxapi.com/2/sharing"
+        )
+
+        return proxyMiddleware
+    } catch (e: any) {
+        throw e
+    }
+}
+
 export const listFolders = async (path: string) => {
     try {
         const authorizationHeader = await createAuthorizationHeader();

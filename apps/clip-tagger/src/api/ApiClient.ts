@@ -1,6 +1,6 @@
 import axios from "axios";
-import { TagReference, TimeCode } from "../types/tags";
-import { DropboxFile } from "../types/dropbox";
+import { UnlabeledTagReference, TimeCode } from "../types/tags";
+import { Metadata, SharedLinkResponse } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -57,9 +57,23 @@ export class ApiClient {
     await axios.post(url, body, { headers });
   };
 
+  public removeFilePropertyGroup = async (path: string) => {
+    const url = `${this.apiHost}/properties/remove`;
+    const headers = {
+      "Content-Type": "application/json",
+    };
+
+    const body = {
+      path,
+      property_template_ids: [tagTemplateId]
+    };
+
+    await axios.post(url, body, { headers });
+  };
+
   public updateFileProperties = async (
     path: string,
-    tagReferenceMaster: TagReference,
+    tagReferenceMaster: UnlabeledTagReference,
   ): Promise<boolean> => {
     const updatedTagReference = tagReferenceMaster
     console.log('apiClient 1', updatedTagReference)
@@ -94,7 +108,7 @@ export class ApiClient {
     }
   };
 
-  public getMetadata = async (path: string): Promise<TagReference> => {
+  public getMetadata = async (path: string): Promise<UnlabeledTagReference> => {
     const url = `${this.apiHost}/get_metadata`;
     const headers = {
       "Content-Type": "application/json",
@@ -191,7 +205,7 @@ export class ApiClient {
   };
   public getCurrentFolderEntries = async (
     currentFolderPath: string
-  ): Promise<DropboxFile[]> => {
+  ): Promise<Metadata[]> => {
     try {
       const url = `${apiHost}/list_folder`;
       const headers = {
@@ -205,6 +219,10 @@ export class ApiClient {
         include_mounted_folders: true,
         include_non_downloadable_files: true,
         path: currentFolderPath,
+        include_property_groups: {
+          ".tag": "filter_some",
+          filter_some: [tagTemplateId]
+        },
         recursive: false,
       };
 
@@ -233,9 +251,9 @@ export class ApiClient {
     path: string,
     tagObjectId: string,
     newTagEntry: TimeCode[]
-  ): Promise<TagReference> => {
+  ): Promise<UnlabeledTagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
-    let updatedTagReference: TagReference = upToDateTagReference;
+    let updatedTagReference: UnlabeledTagReference = upToDateTagReference;
     if (newTagEntry.length === 0) {
       delete updatedTagReference[tagObjectId];
     } else {
@@ -271,4 +289,23 @@ export class ApiClient {
     await axios.post(url, body, { headers });
     return await this.getMetadata(path);
   };
+
+  createSharedLinkWithSettings = async (path: string): Promise<SharedLinkResponse> => {
+    try {
+      const url = `${apiHost}/create_shared_link_with_settings`;
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const body = {
+        path
+      };
+
+      const { data } = await axios.post<SharedLinkResponse>(url, body, { headers });
+
+      return data;
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  }
 }
