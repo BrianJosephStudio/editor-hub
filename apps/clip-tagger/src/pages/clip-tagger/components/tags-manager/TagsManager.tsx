@@ -6,6 +6,7 @@ import { useKeybind } from "../../../../context/KeyBindContext.tsx";
 import { useClipViewer } from "../../../../context/ClipViewerContext.tsx";
 import { ApiClient } from "../../../../api/ApiClient.ts";
 import { useTags } from "../../../../context/TagsContext.tsx";
+import { labelTagReference } from "../../../../util/tagInstanceId.ts";
 
 export const TagsManager = () => {
   const { targetClip } = useClipViewer();
@@ -13,19 +14,20 @@ export const TagsManager = () => {
     blockGroupLevelListeners,
   } = useKeybind();
 
-  const { setStarterTags, setTagReferenceMaster } = useTags();
+  const { setStarterTags, setLabeledTagReference, setUndoTagHistory } = useTags();
 
   useEffect(() => {
-    setTagReferenceMaster({})
+    if(!targetClip) return
+    setLabeledTagReference({})
+    setUndoTagHistory([])
     const getMetadata = async () => {
-      if(!targetClip) return
       const apiClient = new ApiClient();
-      const currentTagReference = await apiClient.getMetadata(targetClip);
-      console.log("target clip changed:", currentTagReference)
-      if (Object.keys(currentTagReference).length === 0) {
+      const unlabeledTagReference = await apiClient.getMetadata(targetClip);
+      const labeledTagReference = labelTagReference(unlabeledTagReference)
+      if (Object.keys(labeledTagReference).length === 0) {
         await setStarterTags()
       }else{
-        setTagReferenceMaster(currentTagReference)
+        setLabeledTagReference(labeledTagReference)
       }
     };
     getMetadata();

@@ -5,16 +5,13 @@ import { AgentTags, GenericTags, MapTags } from "../../../../resources/TagSystem
 import { useEffect, useRef, useState } from "react";
 import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { TagDisplayItem } from "./components/TagDisplayItem";
-import { labelTagReference } from "../../../../util/tagInstanceId";
 import Cookies from "js-cookie";
 
 export const TagsDisplay = () => {
   const {
-    tagReferenceMaster,
     tagDisplayList,
-    tagReferenceLabeled,
-    setTagReferenceMaster,
-    setTagReferenceLabeled,
+    labeledTagReference,
+    setLabeledTagReference,
     tagOffset,
     removeTag,
     resetTags,
@@ -38,16 +35,10 @@ export const TagsDisplay = () => {
 
   const resetTagsHandler = async () => {
     setDialogOpen(false)
-    setTagReferenceMaster({})
+    setLabeledTagReference({})
     await resetTags(targetClip)
     await setStarterTags()
   }
-
-  useEffect(() => {
-    console.log("haciendo labels en master");
-    const newLabeledTagReference = labelTagReference(tagReferenceMaster, tagReferenceLabeled);
-    setTagReferenceLabeled(newLabeledTagReference);
-  }, [tagReferenceMaster]);
 
   useEffect(() => {
     const handleTimeUpdate = () => {
@@ -86,7 +77,7 @@ export const TagsDisplay = () => {
     const newExclusiveTags: ExclusiveTags[] = [];
     const newGenericTags: GenericTag[] = [];
 
-    Object.keys(tagReferenceLabeled).forEach((tagId) => {
+    Object.keys(labeledTagReference).forEach((tagId) => {
       const mapTagObject = MapTags.find((mapTag) => mapTag.id === tagId);
       if (mapTagObject)
         return newExclusiveTags.push({
@@ -105,9 +96,8 @@ export const TagsDisplay = () => {
         const matchingTagObject = tagGroup.tags.find(
           (genericTag) => genericTag.id === tagId
         );
-
         if (matchingTagObject) {
-          const timeArray = tagReferenceLabeled[tagId];
+          const timeArray = labeledTagReference[tagId];
           if (timeArray.length > 0) {
             timeArray.forEach((timeEntry) =>
               newGenericTags.push({
@@ -162,7 +152,7 @@ export const TagsDisplay = () => {
 
     setExclusiveTags(newExclusiveTags);
     setGenericTags(newGenericTags);
-  }, [tagReferenceLabeled, isVideoReady]);
+  }, [labeledTagReference, isVideoReady]);
 
   useEffect(() => {
     Cookies.set("pauseOnInput", pauseOnInput.toString());

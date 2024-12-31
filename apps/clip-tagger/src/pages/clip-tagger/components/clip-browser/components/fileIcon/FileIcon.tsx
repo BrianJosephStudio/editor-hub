@@ -5,8 +5,8 @@ import axios from "axios";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
 import { Box, ListItem, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
-import { Metadata, PropertyGroup } from "../../../../../../types/dropbox";
-import { TagReference } from "../../../../../../types/tags";
+import { Metadata } from "../../../../../../types/dropbox";
+import { UnlabeledTagReference } from "../../../../../../types/tags";
 import { useTags } from "../../../../../../context/TagsContext";
 
 export const FileIcon = ({
@@ -31,13 +31,13 @@ export const FileIcon = ({
   const [tagCount, setTagCount] = useState<number>(0)
   const [tagCountColor, setTagCountColor] = useState<string>('red')
 
-  const { tagReferenceMaster } = useTags()
+  const { labeledTagReference } = useTags()
 
   const apiClient = new ApiClient();
 
   useEffect(() => {
     if (entry.property_groups && Array.isArray(entry.property_groups) && entry.property_groups[0] && entry.property_groups[0].fields && entry.property_groups![0].fields[0].value) {
-      const tags = JSON.parse(entry.property_groups![0].fields[0].value) as TagReference
+      const tags = JSON.parse(entry.property_groups![0].fields[0].value) as UnlabeledTagReference
 
       let newTagCount: number = 0
       Object.values(tags).forEach(entry => newTagCount += (entry.length > 0 ? entry.length : 1))
@@ -47,13 +47,13 @@ export const FileIcon = ({
   }, [])
 
   useEffect(() => {
-    if (targetClip !== entry.path_lower || Object.keys(tagReferenceMaster).length === 0) return;
+    if (targetClip !== entry.path_lower || Object.keys(labeledTagReference).length === 0) return;
 
     let newTagCount: number = 0
-    Object.values(tagReferenceMaster).forEach(entry => newTagCount += (entry.length > 0 ? entry.length : 1))
+    Object.values(labeledTagReference).forEach(entry => newTagCount += (entry.length > 0 ? entry.length : 1))
 
     setTagCount(newTagCount)
-  }, [tagReferenceMaster])
+  }, [labeledTagReference])
 
   useEffect(() => {
     if (tagCount === 0) return setTagCountColor('red');

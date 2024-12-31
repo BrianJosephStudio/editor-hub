@@ -1,5 +1,5 @@
 import axios from "axios";
-import { TagReference, TimeCode } from "../types/tags";
+import { UnlabeledTagReference, TimeCode } from "../types/tags";
 import { Metadata, SharedLinkResponse } from "../types/dropbox";
 
 const apiHost = import.meta.env.VITE_API_HOST;
@@ -73,7 +73,7 @@ export class ApiClient {
 
   public updateFileProperties = async (
     path: string,
-    tagReferenceMaster: TagReference,
+    tagReferenceMaster: UnlabeledTagReference,
   ): Promise<boolean> => {
     const updatedTagReference = tagReferenceMaster
     console.log('apiClient 1', updatedTagReference)
@@ -108,7 +108,7 @@ export class ApiClient {
     }
   };
 
-  public getMetadata = async (path: string): Promise<TagReference> => {
+  public getMetadata = async (path: string): Promise<UnlabeledTagReference> => {
     const url = `${this.apiHost}/get_metadata`;
     const headers = {
       "Content-Type": "application/json",
@@ -251,9 +251,9 @@ export class ApiClient {
     path: string,
     tagObjectId: string,
     newTagEntry: TimeCode[]
-  ): Promise<TagReference> => {
+  ): Promise<UnlabeledTagReference> => {
     const upToDateTagReference = await this.getMetadata(path);
-    let updatedTagReference: TagReference = upToDateTagReference;
+    let updatedTagReference: UnlabeledTagReference = upToDateTagReference;
     if (newTagEntry.length === 0) {
       delete updatedTagReference[tagObjectId];
     } else {
