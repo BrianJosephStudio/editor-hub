@@ -2,8 +2,6 @@
     "name": "editor-hub",
     "private": true,
     "workspaces": [
-        "apps/*",
-        "server",
         "packages/*"
     ]
 }

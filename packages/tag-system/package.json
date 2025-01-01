@@ -1,0 +1,11 @@
+{
+  "name": "tag-system",
+  "module": "src/index.t",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  }
+}
