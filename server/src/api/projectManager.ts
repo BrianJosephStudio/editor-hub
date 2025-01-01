@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { ProjectData, ProjectType } from "../types/ProjectManager.d";
+import { ProjectData, ProjectType } from "../types/ProjectManager";
 import axios from "axios";
 import { createFolder, listFolders } from "./dropbox";
 import config from "../util/config";

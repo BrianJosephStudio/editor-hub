@@ -3,7 +3,7 @@ version: '3.8'
 services:
   server:
     container_name: editor-hub-server-${ENVIRONMENT}
-    build: .
+    build: ./server
     ports:
       - "${PORT}:${PORT}"
     restart: always
