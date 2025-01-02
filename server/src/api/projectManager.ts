@@ -3,7 +3,7 @@ import axios from "axios";
 import { createFolder, listFolders } from "./dropbox";
 import config from "../util/config";
 import moment from "moment";
-import { ProjectData, ProjectType } from "../types/ProjectManager";
+import { ProjectData, ProjectType } from "../types/ProjectManager.d";
 
 const closedFolderRegex = /^\(S?\d.*?\s-\sS?\d.*?\)\s\w.*?\s\w.*?$/;
 const openFolderRegex = /^\(S?\d.*?\s-\s\)\s\w.*?\s\w.*?$/;
