@@ -1,9 +1,16 @@
 {
-  "name": "tag-system",
-  "module": "src/index.t",
-  "type": "module",
+  "name": "@editor-hub/tag-system",
+  "version": "1.0.0",
+  "main": "src/index.js", 
+  "module": "src/index.js", 
+  "types": "src/index.d.ts",
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

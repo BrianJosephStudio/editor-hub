@@ -1,9 +1,18 @@
 {
-  "name": "dropbox-types",
-  "module": "src/index.ts",
+  "name": "@editor-hub/dropbox-types",
+  "version": "1.0.0",
+  "main": "src/index.js",
+  "module": "src/index.js",
+  "types": "src/index.d.ts",
+
   "type": "module",
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "^5.0.0"
   },
   "peerDependencies": {
     "typescript": "^5.0.0"

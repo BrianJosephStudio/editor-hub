@@ -1,21 +1,19 @@
-require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` })
 import axios from "axios";
-import { UnlabeledTagReference, TimeCode } from "tag-system";
-import { Metadata, SharedLinkResponse } from "dropbox-types";
-
-const apiHost = process.env.API_HOST;
-const clipsRootPath = process.env.CLIPS_ROOT_FOLDER as string;
-const tagTemplateId = process.env.TAG_TEMPLATE_ID as string;
-
-if (!clipsRootPath || !apiHost) throw new Error("Missing envs");
+import type { Metadata, SharedLinkResponse } from "@editor-hub/dropbox-types";
+import { UnlabeledTagReference, TimeCode } from "@editor-hub/tag-system";
 
 export class ApiClient {
   private apiHost: string;
   private clipsRootPath: string;
+  private tagTemplateId: string;
 
-  constructor() {
+  constructor(apiHost: string,
+    clipsRootPath: string,
+    tagTemplateId: string
+  ) {
     this.apiHost = apiHost;
     this.clipsRootPath = clipsRootPath;
+    this.tagTemplateId = tagTemplateId;
   }
   public getTemporaryLink = async (targetClip: string): Promise<string> => {
     const path = targetClip.replace(this.clipsRootPath.toLowerCase(), "");
@@ -44,7 +42,7 @@ export class ApiClient {
       path,
       property_groups: [
         {
-          template_id: tagTemplateId,
+          template_id: this.tagTemplateId,
           fields: [
             {
               name: "tagReference",
@@ -66,7 +64,7 @@ export class ApiClient {
 
     const body = {
       path,
-      property_template_ids: [tagTemplateId]
+      property_template_ids: [this.tagTemplateId]
     };
 
     await axios.post(url, body, { headers });
@@ -94,7 +92,7 @@ export class ApiClient {
               value: JSON.stringify(updatedTagReference),
             },
           ],
-          template_id: tagTemplateId,
+          template_id: this.tagTemplateId,
         },
       ],
     };
@@ -119,7 +117,7 @@ export class ApiClient {
       path,
       include_property_groups: {
         ".tag": "filter_some",
-        filter_some: [tagTemplateId],
+        filter_some: [this.tagTemplateId],
       },
     };
 
@@ -128,7 +126,7 @@ export class ApiClient {
     } = await axios.post(url, body, { headers });
 
     const tagPropertyGroup = property_groups.find((propertyGroup: any) => {
-      return (propertyGroup.template_id = tagTemplateId);
+      return (propertyGroup.template_id = this.tagTemplateId);
     });
 
     if (!tagPropertyGroup) {
@@ -208,7 +206,7 @@ export class ApiClient {
     currentFolderPath: string
   ): Promise<Metadata[]> => {
     try {
-      const url = `${apiHost}/list_folder`;
+      const url = `${this.apiHost}/list_folder`;
       const headers = {
         "Content-Type": "application/json",
       };
@@ -222,7 +220,7 @@ export class ApiClient {
         path: currentFolderPath,
         include_property_groups: {
           ".tag": "filter_some",
-          filter_some: [tagTemplateId]
+          filter_some: [this.tagTemplateId]
         },
         recursive: false,
       };
@@ -282,7 +280,7 @@ export class ApiClient {
               value: JSON.stringify(updatedTagReference),
             },
           ],
-          template_id: tagTemplateId,
+          template_id: this.tagTemplateId,
         },
       ],
     };
@@ -293,7 +291,7 @@ export class ApiClient {
 
   createSharedLinkWithSettings = async (path: string): Promise<SharedLinkResponse> => {
     try {
-      const url = `${apiHost}/create_shared_link_with_settings`;
+      const url = `${this.apiHost}/create_shared_link_with_settings`;
       const headers = {
         "Content-Type": "application/json",
       };

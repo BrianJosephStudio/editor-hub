@@ -5,6 +5,7 @@ import { useAppContext } from "../../../../../context/AppContext";
 import { useTags } from "../../../../../context/TagsContext";
 import { useKeybind } from "../../../../../context/KeyBindContext";
 import { useClipViewer } from "../../../../../context/ClipViewerContext";
+import { v4 as uuid } from "uuid";
 
 export const Tag = ({
   tagObject,
@@ -25,6 +26,7 @@ export const Tag = ({
     if (event.key === tagObject.keybind && blockGroupLevelListeners) {
       const currentTime =
         Math.max(videoPlayer.current.currentTime - 0.2 - (tagOffset as number) / 1000, 0);
+      const tagReferenceLabel = uuid()
       addTags([tagObject], currentTime, exclusiveTagIds);
 
       setBlockGroupLevelListeners(false);

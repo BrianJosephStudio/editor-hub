@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
 import { Metadata, PropertyGroup } from "../types/dropbox";
-import { ApiClient } from "../api/ApiClient";
+import apiClient from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 
 interface FolderNavigationContextProps {
@@ -103,8 +103,6 @@ export const FolderNavigationProvider = ({
         return parsedFileName.getrenameObject();
       })
       .filter((data) => !!data);
-
-    const apiClient = new ApiClient();
 
     //@ts-ignore
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);

@@ -6,8 +6,9 @@ import type {
     GenericTag,
     TagGroup,
     ClipTags,
-    TagReference,
+    TimeCode,
     TimeEntry,
+    UnlabeledTagReference,
     LabeledTagReference,
     TagSystem
 } from './types/tags'
@@ -19,8 +20,9 @@ export type {
     GenericTag,
     TagGroup,
     ClipTags,
-    TagReference,
+    TimeCode,
     TimeEntry,
+    UnlabeledTagReference,
     LabeledTagReference,
     TagSystem
 }

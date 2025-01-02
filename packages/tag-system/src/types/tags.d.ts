@@ -1,4 +1,5 @@
 export type IterableTagListId = "agent" | "map";
+type uuid = string
 
 export interface TagObject {
   tag: string;
@@ -37,21 +38,19 @@ export interface ClipTags {
   tags: TagObject[];
 }
 
-type TimeCode = number;
-
-export interface TagReference {
-  [tagId: string]: TimeCode[];
-}
+export type TimeCode = number;
 
 export interface TimeEntry {
   time: TimeCode;
   instanceId: string;
 }
-
+export interface UnlabeledTagReference {
+  [tagId: string]: TimeCode[];
+}
 export interface LabeledTagReference {
   [tagId: string]: TimeEntry[];
 }
 
-interface TagSystem {
+export interface TagSystem {
   [name: string]: TagGroup
 }

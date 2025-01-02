@@ -1,4 +1,4 @@
-import type { TagObject, TagSystem } from "../types/tags"
+import { TagObject, TagSystem } from "../types/tags"
 
 export const AgentTags: TagObject[] = [
     {tag:"astra",displayName:"Astra",description:"Player is playing Astra", unique: true, timeless: true, protected: true, keybind: "a", id: "ag001"},

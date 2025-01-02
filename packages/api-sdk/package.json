@@ -1,7 +1,19 @@
 {
-  "name": "api-sdk",
-  "module": "./src/index.ts",
+  "name": "@editor-hub/api-sdk",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.js",
   "type": "module",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.js"
+    }
+  },
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
   "devDependencies": {
     "@types/bun": "latest"
   },
@@ -9,6 +21,8 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
-    "dotenv": "^16.4.7"
+    "@editor-hub/dropbox-types": "workspace:*",
+    "@editor-hub/tag-system": "workspace:*",
+    "axios": "^1.7.9"
   }
 }
