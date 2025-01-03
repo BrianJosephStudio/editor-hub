@@ -1,5 +1,4 @@
-import { GenericTags } from "../resources/TagSystem";
-import { LabeledTagReference, TagObject, UnlabeledTagReference } from "../types/tags";
+import { GenericTags, LabeledTagReference, TagObject, UnlabeledTagReference } from "@editor-hub/tag-system";
 import { v4 as uuid } from "uuid";
 
 export const labelTagReference = (

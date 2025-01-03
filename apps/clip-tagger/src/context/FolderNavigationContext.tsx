@@ -1,7 +1,7 @@
 import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
-import { Metadata, PropertyGroup } from "../types/dropbox";
 import apiClient from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
+import { Metadata } from "@editor-hub/dropbox-types";
 
 interface FolderNavigationContextProps {
   BrowserList: React.RefObject<HTMLUListElement>;

@@ -5,9 +5,9 @@ import axios from "axios";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
 import { Box, ListItem, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
-import { Metadata } from "../../../../../../types/dropbox";
-import { UnlabeledTagReference } from "../../../../../../types/tags";
 import { useTags } from "../../../../../../context/TagsContext";
+import { UnlabeledTagReference } from "@editor-hub/tag-system";
+import { Metadata } from "@editor-hub/dropbox-types";
 
 export const FileIcon = ({
   entry,

@@ -1,18 +1,11 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
-import {
-  LabeledTagReference,
-  TagGroup,
-  TagObject,
-  TimeEntry,
-  UnlabeledTagReference,
-} from "../types/tags.d";
 import apiClient from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
 import Cookies from "js-cookie";
 import { ParsedFileName } from "../util/dropboxFileParsing";
-import { AgentTags, GenericTags, MapTags } from "../resources/TagSystem";
 import { v4 as uuid } from "uuid";
 import { getTagObjectFromId, getTagObjectFromInstanceId, unlabelTagReference } from "../util/tagObjectHelpers";
+import { AgentTags, GenericTags, LabeledTagReference, MapTags, TagGroup, TagObject, TimeEntry, UnlabeledTagReference } from "@editor-hub/tag-system";
 
 interface TagsContextProps {
   genericTags: TagGroup[];

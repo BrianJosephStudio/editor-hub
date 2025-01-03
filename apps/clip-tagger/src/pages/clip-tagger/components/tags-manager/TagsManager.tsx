@@ -1,5 +1,4 @@
 import { Box } from "@mui/material";
-import { GenericTags } from "../../../../resources/TagSystem.ts";
 import { useEffect } from "react";
 import { TagsGroup } from "./components/TagsGroup";
 import { useKeybind } from "../../../../context/KeyBindContext.tsx";
@@ -7,6 +6,7 @@ import { useClipViewer } from "../../../../context/ClipViewerContext.tsx";
 import apiClient from "../../../../api/ApiClient.ts";
 import { useTags } from "../../../../context/TagsContext.tsx";
 import { labelTagReference } from "../../../../util/tagObjectHelpers.ts";
+import { GenericTags } from "@editor-hub/tag-system";
 
 export const TagsManager = () => {
   const { targetClip } = useClipViewer();
