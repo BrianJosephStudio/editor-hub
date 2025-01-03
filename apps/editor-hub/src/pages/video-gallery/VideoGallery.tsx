@@ -16,10 +16,9 @@ import { FileTreeNode } from "../../types/app";
 import { setNewVideoSource } from "../../redux/slices/VideoGallerySlice";
 import { GenericTags } from "@editor-hub/tag-system";
 
-const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 const ingameFootageRootPath = import.meta.env.VITE_INGAME_FOOTAGE_ROOT_FOLDER as string;
 
-if (!resourcesHost || !ingameFootageRootPath) throw new Error("Missing envs");
+if (!ingameFootageRootPath) throw new Error("Missing envs");
 
 export const VideoGallery = () => {
   const dispatch = useDispatch()
