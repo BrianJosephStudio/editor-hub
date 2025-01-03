@@ -1,7 +1,7 @@
 import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, SportsEsports, Widgets } from "@mui/icons-material";
 import { Box, Checkbox, FormControlLabel, IconButton, ListItemText, Typography, useMediaQuery } from "@mui/material";
 import { List, ListItem } from "@mui/joy";
-import { KeyboardEvent, useEffect, useState } from "react";
+import { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
 import { toggleFilterByTags } from "../../redux/slices/TagsSlice";
 import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
@@ -10,13 +10,11 @@ import { RootState } from "../../redux/store";
 import { TagsProvider } from "../../contexts/Tags.context";
 import { TagsDialog } from "../../modals/TagsModal";
 import { selectFilteredIngameFootageFileTree } from "../../redux/selectors/FileTreeSelector";
-import { setGenericTags } from "../../redux/slices/TagsSlice";
-import axios from "axios";
-import { TagSystem } from "../../types/tags";
 import { setNewInGameFootageTree } from "../../redux/slices/FileTreeSlice";
-import { ApiClient } from "../../api/ApiClient";
+import apiClient from "../../api/ApiClient";
 import { FileTreeNode } from "../../types/app";
 import { setNewVideoSource } from "../../redux/slices/VideoGallerySlice";
+import { GenericTags } from "@editor-hub/tag-system";
 
 const resourcesHost = import.meta.env.VITE_RESOURCES_HOST as string;
 const ingameFootageRootPath = import.meta.env.VITE_INGAME_FOOTAGE_ROOT_FOLDER as string;
@@ -28,7 +26,6 @@ export const VideoGallery = () => {
   const { currentVideoSource, settings: { fetchUpFront } } = useSelector((state: RootState) => state.videoGallery)
   const { filterByTags } = useSelector((state: RootState) => state.tags)
   const filteredFileTree = useSelector(selectFilteredIngameFootageFileTree)
-  const { genericTags } = useSelector((state: RootState) => state.tags)
 
   const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
 
@@ -46,14 +43,6 @@ export const VideoGallery = () => {
       setTagModalOpen(currentValue => !currentValue)
     }
   }
-
-  useEffect(() => {
-    const fetchTagSystem = async () => {
-      const { data: { GenericTags } } = await axios.get<{ GenericTags: TagSystem }>(`${resourcesHost}/tag-system`)
-      dispatch(setGenericTags(GenericTags))
-    }
-    fetchTagSystem()
-  }, [])
 
   return (
     <Box
@@ -169,7 +158,7 @@ export const VideoGallery = () => {
           fileTree={filteredFileTree}
           rootPath={ingameFootageRootPath}
           fetchUpFront={fetchUpFront}
-          genericTags={genericTags}
+          genericTags={GenericTags}
           setNewFileTree={(newFileTree) => dispatch(setNewInGameFootageTree(newFileTree))
           }
           onSourceChange={async (fileTreeNode) => {
@@ -177,9 +166,7 @@ export const VideoGallery = () => {
 
             setVideoPlayerExpanded(true)
             if (!fileTreeNode.temporary_link) {
-              const apiClient = new ApiClient();
               const temporary_link = await apiClient.getTemporaryLink(
-                ingameFootageRootPath,
                 fileTreeNode.metadata!.path_lower!
               );
               const newFileTreeNode: FileTreeNode = {

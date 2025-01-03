@@ -11,6 +11,9 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@editor-hub/api-sdk": "workspace:*",
+    "@editor-hub/tag-system": "workspace:*",
+    "@editor-hub/dropbox-types": "workspace:*",
     "@clerk/clerk-react": "^5.15.4",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",

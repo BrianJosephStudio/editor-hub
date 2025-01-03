@@ -1,14 +1,12 @@
+import { TagObject } from '@editor-hub/tag-system';
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { TagObject, TagSystem } from '../../types/tags';
 
 interface TagsState {
-    genericTags: TagSystem
     activeTags: TagObject[]
     filterByTags: boolean
 }
 
 const initialState: TagsState = {
-    genericTags: {},
     activeTags: [],
     filterByTags: false
 };
@@ -17,9 +15,6 @@ const tagsSlice = createSlice({
     name: 'file tree',
     initialState,
     reducers: {
-        setGenericTags(state, action: PayloadAction<TagSystem>) {
-            state.genericTags = action.payload
-        },
         toggleFilterByTags(state) {
             state.filterByTags = !state.filterByTags
         },
@@ -39,6 +34,6 @@ const tagsSlice = createSlice({
     },
 });
 
-export const { toggleFilterByTags, addActiveTag, removeActiveTag, setGenericTags } = tagsSlice.actions;
+export const { toggleFilterByTags, addActiveTag, removeActiveTag } = tagsSlice.actions;
 
 export default tagsSlice.reducer;

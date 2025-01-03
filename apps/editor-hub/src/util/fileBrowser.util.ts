@@ -1,10 +1,9 @@
-import { ApiClient } from "../api/ApiClient";
+import { Metadata } from "@editor-hub/dropbox-types";
+import apiClient from "../api/ApiClient";
 import { FileTreeNode } from "../types/app";
-import { Metadata } from "../types/dropbox";
-import { TagObject, TagSystem } from "../types/tags";
+import { TagObject, TagSystem } from "@editor-hub/tag-system";
 
 export const fetchRootFolders = async (rootPath: string): Promise<Metadata[]> => {
-  const apiClient = new ApiClient();
   const clipMetadataBatch = await apiClient.getFolderEntries(rootPath);
   const reversedClipMetadataBatch = clipMetadataBatch.reverse();
 
@@ -12,7 +11,6 @@ export const fetchRootFolders = async (rootPath: string): Promise<Metadata[]> =>
 }
 
 export const fetchInitialMetadata = async (fileTree: FileTreeNode, fetchUpFront?: number): Promise<Metadata[]> => {
-  const apiClient = new ApiClient();
   const fetchedMetadataRaw = await Promise.all(
     fileTree.children!.map((fileTreeNode, index) => {
       if (!fileTreeNode.metadata) throw new Error(`Missing metadata in fileTreeNode for ${fileTreeNode.name}`);
@@ -34,7 +32,6 @@ export const fetchClickedFolderMetadata = async (
   currentFileTree: FileTreeNode,
   fileTreeNode: FileTreeNode,
 ) => {
-  const apiClient = new ApiClient();
   if (!currentFileTree.children || currentFileTree.children.length === 0)
     return;
 

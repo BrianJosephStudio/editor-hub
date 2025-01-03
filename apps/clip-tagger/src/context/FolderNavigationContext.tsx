@@ -108,7 +108,7 @@ export const FolderNavigationProvider = ({
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
 
     const folderPromises = dropboxFolders.map(async (dropboxFolder) => {
-      const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower!)
+      const subFolderEntries = await apiClient.getFolderEntries(dropboxFolder.path_lower!)
       return await setFolderEntryNames(subFolderEntries)
     })
 

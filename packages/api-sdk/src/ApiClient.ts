@@ -1,29 +1,26 @@
 import axios from "axios";
-import type { Metadata, SharedLinkResponse } from "@editor-hub/dropbox-types";
+import type { ListFolderResponse, Metadata, SharedLinkResponse } from "@editor-hub/dropbox-types";
 import { UnlabeledTagReference, TimeCode } from "@editor-hub/tag-system";
 
 export class ApiClient {
   private apiHost: string;
-  private clipsRootPath: string;
   private tagTemplateId: string;
 
-  constructor(apiHost: string,
-    clipsRootPath: string,
+  constructor(
+    apiHost: string,
     tagTemplateId: string
   ) {
     this.apiHost = apiHost;
-    this.clipsRootPath = clipsRootPath;
     this.tagTemplateId = tagTemplateId;
   }
   public getTemporaryLink = async (targetClip: string): Promise<string> => {
-    const path = targetClip.replace(this.clipsRootPath.toLowerCase(), "");
     const url = `${this.apiHost}/get_temporary_link`;
     const headers = {
       "Content-Type": "application/json",
     };
 
     const body = {
-      path: `${this.clipsRootPath}${path}`,
+      path: targetClip
     };
 
     const {
@@ -202,7 +199,7 @@ export class ApiClient {
     }
     return false;
   };
-  public getCurrentFolderEntries = async (
+  public getFolderEntries = async (
     currentFolderPath: string
   ): Promise<Metadata[]> => {
     try {
@@ -306,5 +303,66 @@ export class ApiClient {
     } catch (e: any) {
       throw new Error(e);
     }
+  }
+
+  public getFolderEntriesRecursively = async (
+    currentFolderPath: string
+  ): Promise<Metadata[]> => {
+    try {
+      const url = `${this.apiHost}/list_folder`;
+      const urlContinue = `${this.apiHost}/list_folder/continue`;
+      const headers = {
+        "Content-Type": "application/json",
+      };
+
+      const body = {
+        include_deleted: false,
+        include_has_explicit_shared_members: false,
+        include_media_info: false,
+        include_mounted_folders: true,
+        include_non_downloadable_files: true,
+        include_property_groups: {
+          ".tag": "filter_some",
+          filter_some: [this.tagTemplateId]
+        },
+        path: currentFolderPath,
+        recursive: true,
+      };
+
+      let entries: Metadata[] = [];
+      let hasMore = false;
+      let cursor = null;
+
+      do {
+        const { data: listFolderResponse }: { data: ListFolderResponse } =
+          await axios.post(
+            cursor ? urlContinue : url,
+            cursor ? { cursor } : body,
+            {
+              headers,
+            }
+          );
+
+        entries = [...entries, ...listFolderResponse.entries];
+        hasMore = listFolderResponse.has_more;
+        cursor = listFolderResponse.cursor;
+      } while (hasMore);
+
+      return entries;
+    } catch (e: any) {
+      throw new Error(e);
+    }
+  };
+
+  public download = async (path: string) => {
+    const url = `${this.apiHost}/download`;
+    const headers = {
+      'Dropbox-API-Arg': JSON.stringify({ path })
+    };
+
+    const {
+      data
+    } = await axios.post(url, undefined, { headers, responseType: 'arraybuffer' });
+    return data
   }
 }

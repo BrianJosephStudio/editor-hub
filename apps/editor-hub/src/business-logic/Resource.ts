@@ -1,6 +1,6 @@
 import { NodeWrapper } from "./node.wrapper";
 import { FileTreeNode } from "../types/app";
-import { ApiClient } from "../api/ApiClient";
+import apiClient from "../api/ApiClient";
 import { ProjectItem } from "./premire-api/classes/ProjectItem";
 import { Project } from "./premire-api/classes/Project";
 
@@ -27,7 +27,6 @@ export class Resource {
 
   download = async () => {
     if (!this.fileTreeNode.metadata || !this.fileTreeNode.metadata.path_lower) throw new Error("Missing metadata")
-    const apiClient = new ApiClient();
     const data = await apiClient.download(
       this.fileTreeNode.metadata.path_lower
     );

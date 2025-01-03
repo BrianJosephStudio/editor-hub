@@ -80,7 +80,7 @@ export const ClipBrowser = () => {
     setTargetClip("");
     setCurrentVideoSource("");
     setLabeledTagReference({});
-    const newEntries = await apiClient.getCurrentFolderEntries(
+    const newEntries = await apiClient.getFolderEntries(
       `${clipsRootPath}/${currentFolder}`
     );
     setCurrentFolderEntries(newEntries);
@@ -92,7 +92,7 @@ export const ClipBrowser = () => {
       setActiveItem(0);
       setCurrentFolderEntries([]);
       setLoadingContent(true);
-      const currentEntries = await apiClient.getCurrentFolderEntries(
+      const currentEntries = await apiClient.getFolderEntries(
         `${clipsRootPath}/${currentFolder}`
       );
       setCurrentFolderEntries(currentEntries);
