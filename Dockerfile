@@ -4,4 +4,4 @@ WORKDIR /app
 
 COPY . .
 
-CMD ["bun", "run", "build"]
+CMD [ "bun", "i" ]

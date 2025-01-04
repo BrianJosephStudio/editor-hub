@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState } from "react";
-import { AgentTags, MapTags } from "../../../resources/TagSystem.ts";
 import { Box, Typography } from "@mui/material";
-import { useAppContext } from "../../../context/AppContext.tsx";
-import { useKeybind } from "../../../context/KeyBindContext.tsx";
-import { IterableTagListId } from "../../../types/tags";
+import { useAppContext } from "../../../../../context/AppContext.tsx";
+import { useKeybind } from "../../../../../context/KeyBindContext.tsx";
+import { AgentTags, IterableTagListId, MapTags } from "@editor-hub/tag-system";
 
 export const IterableTagList = ({
   gridColumn,

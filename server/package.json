@@ -5,8 +5,7 @@
   "version": "1.6.1",
   "scripts": {
     "dev": "NODE_ENV=development bun src/server.ts",
-    "serve": "NODE_ENV=production bun src/server.ts",
-    "deploy": "NODE_ENV=production sudo docker compose --env-file .env.production up --build -d"
+    "serve": "NODE_ENV=production bun src/server.ts"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

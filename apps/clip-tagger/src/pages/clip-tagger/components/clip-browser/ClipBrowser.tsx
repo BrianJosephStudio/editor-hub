@@ -193,7 +193,7 @@ export const ClipBrowser = () => {
       </List>
 
       {loadingContent &&
-        [1, 2, 3].map((_entry, index) => (
+        [1, 2, 3].map(() => (
           <FolderIconPlaceHolder />
         ))}
     </Box >

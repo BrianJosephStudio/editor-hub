@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import apiClient from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 import { Metadata } from "@editor-hub/dropbox-types";

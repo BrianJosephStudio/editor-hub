@@ -5,5 +5,9 @@
         "packages/*",
         "server",
         "apps/*"
-    ]
+    ],
+    "scripts": {
+        "deploy": "NODE_ENV=production sudo docker compose --env-file .env.production up --build -d",
+        "deploy:stage": "NODE_ENV=development sudo docker compose --env-file .env.development up --build -d"
+    }
 }
