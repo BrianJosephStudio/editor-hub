@@ -9,7 +9,7 @@ services:
         FROM oven/bun
         WORKDIR /app
         COPY . .
-        RUN chmod +X ./workflows/build-libs.sh
+        RUN chmod +x ./workflows/*
     command: ["bun", "run", "build:libs"]
     volumes:
       - root_node_modules:/app/node_modules
