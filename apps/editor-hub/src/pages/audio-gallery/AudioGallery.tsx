@@ -8,7 +8,7 @@ import { RootState } from "../../redux/store";
 import { setNewMusicTrackTree, setNewSfxTrackTree } from "../../redux/slices/FileTreeSlice";
 import { setNewAudioSource } from "../../redux/slices/AudioGallerySlice";
 import { FileTreeNode } from "../../types/app";
-import { ApiClient } from "../../api/ApiClient";
+import apiClient from "../../api/ApiClient";
 import { useState } from "react";
 
 const musicTracksRootPath = import.meta.env.VITE_MUSICTRACKS_ROOT_FOLDER as string;
@@ -142,9 +142,7 @@ export const AudioGallery = () => {
 
               setAudioPlayerExpanded(true)
               if (!fileTreeNode.temporary_link) {
-                const apiClient = new ApiClient();
                 const temporary_link = await apiClient.getTemporaryLink(
-                  musicTracksRootPath,
                   fileTreeNode.metadata!.path_lower!
                 );
                 const newFileTreeNode: FileTreeNode = {
@@ -169,9 +167,7 @@ export const AudioGallery = () => {
 
               setAudioPlayerExpanded(true)
               if (!fileTreeNode.temporary_link) {
-                const apiClient = new ApiClient();
                 const temporary_link = await apiClient.getTemporaryLink(
-                  sfxRootPath,
                   fileTreeNode.metadata!.path_lower!
                 );
                 const newFileTreeNode: FileTreeNode = {

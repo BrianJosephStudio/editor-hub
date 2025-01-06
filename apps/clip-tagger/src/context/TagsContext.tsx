@@ -1,18 +1,11 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
-import {
-  LabeledTagReference,
-  TagGroup,
-  TagObject,
-  TimeEntry,
-  UnlabeledTagReference,
-} from "../types/tags.d";
-import { ApiClient } from "../api/ApiClient";
+import apiClient from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
 import Cookies from "js-cookie";
 import { ParsedFileName } from "../util/dropboxFileParsing";
-import { AgentTags, GenericTags, MapTags } from "../resources/TagSystem";
 import { v4 as uuid } from "uuid";
 import { getTagObjectFromId, getTagObjectFromInstanceId, unlabelTagReference } from "../util/tagObjectHelpers";
+import { AgentTags, GenericTags, LabeledTagReference, MapTags, TagGroup, TagObject, TimeEntry, UnlabeledTagReference } from "@editor-hub/tag-system";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -115,7 +108,6 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     currentTime: number,
     exclusiveTagIds?: string[]
   ) => {
-    const apiClient = new ApiClient();
     setLabeledTagReference((currentLabeledTagReference) => {
       let newTagReference: LabeledTagReference = { ...currentLabeledTagReference };
 
@@ -210,7 +202,6 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
 
       const unlabeledTagReference = unlabelTagReference(updatedTagReference)
 
-      const apiClient = new ApiClient();
       apiClient.updateFileProperties(targetClip, unlabeledTagReference);
       return updatedTagReference;
     });
@@ -247,8 +238,6 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
 
 
   const resetTags = async (path: string) => {
-    const apiClient = new ApiClient()
-
     await apiClient.removeFilePropertyGroup(path)
   }
 

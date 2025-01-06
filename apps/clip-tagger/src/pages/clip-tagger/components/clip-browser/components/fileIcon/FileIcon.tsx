@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
-import { ApiClient } from "../../../../../../api/ApiClient";
+import apiClient from "../../../../../../api/ApiClient";
 import { useClipViewer } from "../../../../../../context/ClipViewerContext";
 import axios from "axios";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
 import { Box, ListItem, Typography } from "@mui/material";
 import { Style, Theaters } from "@mui/icons-material";
-import { Metadata } from "../../../../../../types/dropbox";
-import { UnlabeledTagReference } from "../../../../../../types/tags";
 import { useTags } from "../../../../../../context/TagsContext";
+import { UnlabeledTagReference } from "@editor-hub/tag-system";
+import { Metadata } from "@editor-hub/dropbox-types";
 
 export const FileIcon = ({
   entry,
@@ -32,8 +32,6 @@ export const FileIcon = ({
   const [tagCountColor, setTagCountColor] = useState<string>('red')
 
   const { labeledTagReference } = useTags()
-
-  const apiClient = new ApiClient();
 
   useEffect(() => {
     if (entry.property_groups && Array.isArray(entry.property_groups) && entry.property_groups[0] && entry.property_groups[0].fields && entry.property_groups![0].fields[0].value) {
@@ -130,7 +128,6 @@ export const FileIcon = ({
         event.preventDefault();
 
         if(event.altKey){
-          const apiClient = new ApiClient()
            return apiClient.createSharedLinkWithSettings(entry.path_lower!)
             .then(sharedLinkResponse => window.open(sharedLinkResponse.url))
         }

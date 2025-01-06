@@ -1,9 +1,9 @@
 import { Box, Typography } from "@mui/material";
 import { useClipViewer } from "../../../../../context/ClipViewerContext";
-import { TagObject } from "../../../../../types/tags";
 import { useRef } from "react";
 import { useTags } from "../../../../../context/TagsContext";
 import { Clear } from "@mui/icons-material";
+import { TagObject } from "@editor-hub/tag-system";
 
 export const TagDisplayItem = ({
   index,

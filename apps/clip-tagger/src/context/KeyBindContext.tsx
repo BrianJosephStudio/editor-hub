@@ -1,5 +1,5 @@
+import { IterableTagListId } from "@editor-hub/tag-system";
 import { createContext, useContext, useState, ReactNode } from "react";
-import { IterableTagListId } from "../types/tags";
 
 interface KeybindContextProps {
   blockGroupLevelListeners: boolean;

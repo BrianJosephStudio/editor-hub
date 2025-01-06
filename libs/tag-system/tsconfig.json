@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": true, // Emit .d.ts files
+    "declarationMap": false,
+    "module": "ESNext", // Module type
+    "target": "ESNext", // Target language version
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // For compatibility with CommonJS and ESModules
+    "skipLibCheck": true,
+  },
+  "include": ["src/**/*"]
+}

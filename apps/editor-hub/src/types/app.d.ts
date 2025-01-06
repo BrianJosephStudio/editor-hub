@@ -1,5 +1,5 @@
-import { Metadata } from "./dropbox";
-import { TagObject } from "./tags";
+import { Metadata } from "@editor-hub/dropbox-types"
+import { TagObject } from "@editor-hub/tag-system"
 
 export interface FileTreeNode {
   name: string;

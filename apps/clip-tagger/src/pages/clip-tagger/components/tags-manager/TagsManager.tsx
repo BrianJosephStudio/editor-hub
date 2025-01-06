@@ -1,12 +1,12 @@
 import { Box } from "@mui/material";
-import { GenericTags } from "../../../../resources/TagSystem.ts";
 import { useEffect } from "react";
 import { TagsGroup } from "./components/TagsGroup";
 import { useKeybind } from "../../../../context/KeyBindContext.tsx";
 import { useClipViewer } from "../../../../context/ClipViewerContext.tsx";
-import { ApiClient } from "../../../../api/ApiClient.ts";
+import apiClient from "../../../../api/ApiClient.ts";
 import { useTags } from "../../../../context/TagsContext.tsx";
 import { labelTagReference } from "../../../../util/tagObjectHelpers.ts";
+import { GenericTags } from "@editor-hub/tag-system";
 
 export const TagsManager = () => {
   const { targetClip } = useClipViewer();
@@ -21,7 +21,6 @@ export const TagsManager = () => {
     setLabeledTagReference({})
     setUndoTagHistory([])
     const getMetadata = async () => {
-      const apiClient = new ApiClient();
       const unlabeledTagReference = await apiClient.getMetadata(targetClip);
       const labeledTagReference = labelTagReference(unlabeledTagReference)
       if (Object.keys(labeledTagReference).length === 0) {

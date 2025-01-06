@@ -1,8 +1,8 @@
 import { useEffect, useRef } from "react";
 import { ListItem } from "@mui/material";
 import { useFolderNavigation } from "../../../../../../context/FolderNavigationContext";
-import { Metadata } from "../../../../../../types/dropbox";
 import { Folder } from "@mui/icons-material";
+import { Metadata } from "@editor-hub/dropbox-types";
 
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
 

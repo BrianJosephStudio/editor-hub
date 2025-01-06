@@ -1,7 +1,7 @@
-import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
-import { Metadata, PropertyGroup } from "../types/dropbox";
-import { ApiClient } from "../api/ApiClient";
+import { createContext, useContext, useState, ReactNode, useRef } from "react";
+import apiClient from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
+import { Metadata } from "@editor-hub/dropbox-types";
 
 interface FolderNavigationContextProps {
   BrowserList: React.RefObject<HTMLUListElement>;
@@ -104,13 +104,11 @@ export const FolderNavigationProvider = ({
       })
       .filter((data) => !!data);
 
-    const apiClient = new ApiClient();
-
     //@ts-ignore
     const fileRenameSuccess = await apiClient.setTrueNames(renameObjects);
 
     const folderPromises = dropboxFolders.map(async (dropboxFolder) => {
-      const subFolderEntries = await apiClient.getCurrentFolderEntries(dropboxFolder.path_lower!)
+      const subFolderEntries = await apiClient.getFolderEntries(dropboxFolder.path_lower!)
       return await setFolderEntryNames(subFolderEntries)
     })
 

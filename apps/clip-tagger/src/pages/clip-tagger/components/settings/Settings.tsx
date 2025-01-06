@@ -1,4 +1,4 @@
-import { Box, Button, FormControlLabel, Input, InputAdornment, InputLabel, Slider, Stack, Switch, TextField, Typography } from "@mui/material";
+import { Box, FormControlLabel, InputAdornment, Slider, Stack, Switch, TextField } from "@mui/material";
 import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { useTags } from "../../../../context/TagsContext";
 import { VolumeDown, VolumeUp } from "@mui/icons-material";

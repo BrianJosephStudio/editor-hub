@@ -1,11 +1,11 @@
 import { useEffect, useRef } from "react";
 import { useAppContext } from "../../../../../context/AppContext";
-import { TagGroup } from "../../../../../types/tags";
 import { useTags } from "../../../../../context/TagsContext";
 import { Box, Typography } from "@mui/material";
 import { Tag } from "./Tag";
 import { useKeybind } from "../../../../../context/KeyBindContext";
 import { useClipViewer } from "../../../../../context/ClipViewerContext";
+import { TagGroup } from "@editor-hub/tag-system";
 
 export const TagsGroup = ({
   tagsGroup,

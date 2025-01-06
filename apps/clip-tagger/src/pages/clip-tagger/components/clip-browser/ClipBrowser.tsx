@@ -8,7 +8,7 @@ import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { useKeybind } from "../../../../context/KeyBindContext";
 import { useTags } from "../../../../context/TagsContext";
 import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
-import { ApiClient } from "../../../../api/ApiClient";
+import apiClient from "../../../../api/ApiClient";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -21,7 +21,7 @@ export const ClipBrowser = () => {
   const {
     clipBrowserModifier,
   } = useKeybind();
-  const { setTagReferenceMaster } = useTags();
+  const { setLabeledTagReference } = useTags();
 
   const {
     BrowserList,
@@ -79,9 +79,8 @@ export const ClipBrowser = () => {
     }
     setTargetClip("");
     setCurrentVideoSource("");
-    setTagReferenceMaster({});
-    const apiClient = new ApiClient();
-    const newEntries = await apiClient.getCurrentFolderEntries(
+    setLabeledTagReference({});
+    const newEntries = await apiClient.getFolderEntries(
       `${clipsRootPath}/${currentFolder}`
     );
     setCurrentFolderEntries(newEntries);
@@ -93,8 +92,7 @@ export const ClipBrowser = () => {
       setActiveItem(0);
       setCurrentFolderEntries([]);
       setLoadingContent(true);
-      const apiClient = new ApiClient();
-      const currentEntries = await apiClient.getCurrentFolderEntries(
+      const currentEntries = await apiClient.getFolderEntries(
         `${clipsRootPath}/${currentFolder}`
       );
       setCurrentFolderEntries(currentEntries);
@@ -195,7 +193,7 @@ export const ClipBrowser = () => {
       </List>
 
       {loadingContent &&
-        [1, 2, 3].map((_entry, index) => (
+        [1, 2, 3].map(() => (
           <FolderIconPlaceHolder />
         ))}
     </Box >
