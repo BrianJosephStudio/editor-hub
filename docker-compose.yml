@@ -3,7 +3,6 @@ version: '3.8'
 services:
   dependencies:
     container_name: dependencies-${ENVIRONMENT}
-    working_dir: /app
     build:
       context: ./
       dockerfile_inline: |
@@ -12,40 +11,42 @@ services:
         COPY . .
     command: ["bun", "run", "build:libs"]
     volumes:
-      - node_modules:/app/node_modules
+      - root_node_modules:/app/node_modules
+      - server_node_modules:/app/server/node_modules
+      - clip-tagger_node_modules:/app/apps/clip-tagger/node_modules
+      - editor-hub_node_modules:/app/apps/editor-hub/node_modules
       - libs:/app/libs
   server:
     container_name: editor-hub-server-${ENVIRONMENT}
-    working_dir: /app
     build:
       context: ./server
       dockerfile_inline: |
         FROM oven/bun
-        WORKDIR /app
+        WORKDIR /app/server
         COPY . .
     command: ["bun", "run", "serve"]
     ports:
       - "${PORT}:${PORT}"
     restart: always
     volumes:
-      - node_modules:/app/node_modules
+      - root_node_modules:/app/node_modules
+      - server_node_modules:/app/server/node_modules
       - libs:/app/libs
-      - auth-app:/app/apps/authorization/dist
-      - clip-tagger:/app/public/clip-tagger
-      - editor-hub:/app/public/editor-hub
-      - ./authCode:/app/authCode
+      - auth-app:/app//server/apps/authorization/dist
+      - clip-tagger:/app/server/public/clip-tagger
+      - editor-hub:/app/server/public/editor-hub
+      - ./authCode:/app/server/authCode
     depends_on:
       dependencies:
         condition: service_completed_successfully
       authorization:
-        condition: service-started
+        condition: service_started
       clip-tagger:
-        condition: service-started
+        condition: service_started
       editor-hub:
-        condition: service-started
+        condition: service_started
   authorization:
     container_name: authorization-${ENVIRONMENT}
-    working_dir: /app
     build:
       context: ./apps/authorization
       dockerfile_inline: |
@@ -54,42 +55,42 @@ services:
         COPY . .
     command: ["bun", "run", "build"]
     volumes:
-      - node_modules:/app/node_modules
+      - root_node_modules:/app/node_modules
       - auth-app:/app/dist
     depends_on:
       dependencies:
         condition: service_completed_successfully
   clip-tagger:
     container_name: clip-tagger-${ENVIRONMENT}
-    working_dir: /app
     build:
       context: ./apps/clip-tagger
       dockerfile_inline: |
         FROM oven/bun
-        WORKDIR /app
+        WORKDIR /app/clip-tagger
         COPY . .
     command: ["bun", "run", "build"]
     volumes:
-      - node_modules:/app/node_modules
+      - root_node_modules:/app/node_modules
+      - clip-tagger_node_modules:/app/clip-tagger/node_modules
       - libs:/app/libs
-      - clip-tagger:/app/dist
+      - clip-tagger:/app/clip-tagger/dist
     depends_on:
       dependencies:
         condition: service_completed_successfully
   editor-hub:
     container_name: editor-hub-${ENVIRONMENT}
-    working_dir: /app
     build:
       context: ./apps/editor-hub
       dockerfile_inline: |
         FROM oven/bun
-        WORKDIR /app
+        WORKDIR /app/editor-hub
         COPY . .
     command: ["bun", "run", "build"]
     volumes:
-      - node_modules:/app/node_modules
+      - root_node_modules:/app/node_modules
+      - editor-hub_node_modules:/app/editor-hub/node_modules
       - libs:/app/libs
-      - editor-hub:/app/dist
+      - editor-hub:/app/editor-hub/dist
     depends_on:
       dependencies:
         condition: service_completed_successfully
@@ -97,5 +98,8 @@ volumes:
   auth-app:
   clip-tagger:
   editor-hub:
-  node_modules:
+  root_node_modules:
+  server_node_modules:
+  clip-tagger_node_modules:
+  editor-hub_node_modules:
   libs:
