@@ -1,14 +1,11 @@
 import { createContext, useContext, useState, ReactNode, useRef } from "react";
-import {
-  LabeledTagReference,
-  TagGroup,
-  TagObject,
-  TagReference,
-  TimeCode,
-} from "../types/tags.d";
-import { ApiClient } from "../api/ApiClient";
+import apiClient from "../api/ApiClient";
 import { useClipViewer } from "./ClipViewerContext";
 import Cookies from "js-cookie";
+import { ParsedFileName } from "../util/dropboxFileParsing";
+import { v4 as uuid } from "uuid";
+import { getTagObjectFromId, getTagObjectFromInstanceId, unlabelTagReference } from "../util/tagObjectHelpers";
+import { AgentTags, GenericTags, LabeledTagReference, MapTags, TagGroup, TagObject, TimeEntry, UnlabeledTagReference } from "@editor-hub/tag-system";
 
 interface TagsContextProps {
   genericTags: TagGroup[];
@@ -19,21 +16,26 @@ interface TagsContextProps {
   setAgentTags: React.Dispatch<React.SetStateAction<TagGroup[]>>;
   selectedTagGroup: string | null;
   setSelectedTagGroup: React.Dispatch<React.SetStateAction<string | null>>;
-  tagReferenceMaster: TagReference;
-  setTagReferenceMaster: React.Dispatch<React.SetStateAction<TagReference>>;
-  tagReferenceLabeled: LabeledTagReference;
-  setTagReferenceLabeled: React.Dispatch<
+  unlabeledTagReference: UnlabeledTagReference;
+  setUnlabeledTagReference: React.Dispatch<React.SetStateAction<UnlabeledTagReference>>;
+  labeledTagReference: LabeledTagReference;
+  setLabeledTagReference: React.Dispatch<
     React.SetStateAction<LabeledTagReference>
   >;
   tagDisplayList: React.RefObject<HTMLDivElement>;
-  tagOffset: number;
-  setTagOffset: React.Dispatch<React.SetStateAction<number>>;
+  tagOffset: unknown;
+  setTagOffset: React.Dispatch<React.SetStateAction<unknown>>;
+  unDoTagHistory: string[];
+  setUndoTagHistory: React.Dispatch<React.SetStateAction<string[]>>;
+  setStarterTags: () => Promise<void>
   addTags: (
     tagObjects: TagObject[],
     currentTime: number,
     exclusiveTagIds?: string[]
   ) => void;
   removeTag: (tagObject: TagObject, instanceId?: string) => void;
+  removeLastAddedTag: () => void
+  resetTags: (path: string) => Promise<void>;
 }
 
 const TagsContext = createContext<TagsContextProps | undefined>(undefined);
@@ -48,37 +50,66 @@ export const useTags = (): TagsContextProps => {
 
 export const TagsProvider = ({ children }: { children: ReactNode }) => {
   const { targetClip } = useClipViewer();
-  const [genericTags, setGenericTags] = useState<TagGroup[]>([]);
+  const [genericTags, setGenericTags] = useState<TagGroup[]>(Object.values(GenericTags));
   const [agentTags, setAgentTags] = useState<TagGroup[]>([]);
   const [mapTags, setMapTags] = useState<TagGroup[]>([]);
   const [selectedTagGroup, setSelectedTagGroup] = useState<string | null>(null);
-  const [tagReferenceMaster, setTagReferenceMaster] = useState<TagReference>(
-    {}
-  );
-  const [tagReferenceLabeled, setTagReferenceLabeled] =
-    useState<LabeledTagReference>({});
-  const [tagOffset, setTagOffset] = useState<number>(() => {
+  const [labeledTagReference, setLabeledTagReference] = useState<LabeledTagReference>({});
+  const [unlabeledTagReference, setUnlabeledTagReference] = useState<UnlabeledTagReference>({});
+  const [unDoTagHistory, setUndoTagHistory] = useState<string[]>([])
+
+  const [tagOffset, setTagOffset] = useState<unknown>(() => {
     const defaultValue = 500
     const tagOffsetCookie = Cookies.get("tagOffset")
-    if(!tagOffsetCookie) return defaultValue
+    if (!tagOffsetCookie) return defaultValue
     const tagOffsetNumber = parseInt(tagOffsetCookie)
-    if(!isNaN(tagOffsetNumber)) {
+    if (!isNaN(tagOffsetNumber)) {
       return tagOffsetNumber
     }
     return defaultValue
   });
   const tagDisplayList = useRef<HTMLDivElement>(null);
 
+  const setStarterTags = async () => {
+    const currentFileParsed = new ParsedFileName(targetClip, 0);
+    const currentMap = MapTags.find(
+      (mapTag) => mapTag.tag === currentFileParsed.map.toLocaleLowerCase()
+    );
+    const currentAgent = AgentTags.find(
+      (agentTag) =>
+        agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
+    );
+    const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+
+    if (!currentMap || !currentAgent || !inGameClipTag)
+      throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
+
+    const mapTagIds = MapTags.map((mapTag) => {
+      return mapTag.id;
+    });
+    const agentTagIds = AgentTags.map((agentTag) => {
+      return agentTag.id;
+    });
+
+    const clipTypeTagIds = GenericTags.clipType.tags.map((clipTypeTag) => {
+      return clipTypeTag.id;
+    });
+
+    const exclusiveTagIds = [...mapTagIds, ...agentTagIds, ...clipTypeTagIds];
+    addTags([
+      currentAgent,
+      currentMap,
+      inGameClipTag
+    ], 0, exclusiveTagIds)
+  }
+
   const addTags = (
     tagObjects: TagObject[],
     currentTime: number,
     exclusiveTagIds?: string[]
   ) => {
-    const apiClient = new ApiClient();
-    console.log("addTags starts", tagReferenceMaster);
-    setTagReferenceMaster((currentTagReference) => {
-      let newTagReference: TagReference = { ...currentTagReference };
-      console.log("newTagReference", newTagReference);
+    setLabeledTagReference((currentLabeledTagReference) => {
+      let newTagReference: LabeledTagReference = { ...currentLabeledTagReference };
 
       if (exclusiveTagIds) {
         exclusiveTagIds.forEach((tagId) => {
@@ -93,67 +124,122 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
           newTagReference[tagObject.id]
         );
 
+        const newInstanceId = uuid()
         if (!tagObject.unique && referenceExistsInMaster) {
-          console.log("currentTime", currentTime);
           const newEntry = [...newTagReference[tagObject.id]];
-          console.log("newEntry", newEntry);
-          newEntry.push(currentTime);
-          console.log("newEntry.push", newEntry);
+          newEntry.push({
+            time: currentTime,
+            instanceId: newInstanceId
+          });
           newTagReference[tagObject.id] = newEntry;
-          console.log(newTagReference);
-          console.log(newTagReference[tagObject.id]);
+          setUndoTagHistory(currentHistory => ([
+            ...currentHistory,
+            newInstanceId
+          ]))
+        } else if (tagObject.timeless) {
+          newTagReference = {
+            ...newTagReference,
+            [tagObject.id]: []
+          };
+          setUndoTagHistory(currentHistory => ([
+            ...currentHistory,
+            tagObject.id
+          ]))
         } else {
           newTagReference = {
             ...newTagReference,
-            [tagObject.id]: tagObject.timeless ? [] : [currentTime],
+            [tagObject.id]: [
+              {
+                time: currentTime,
+                instanceId: newInstanceId
+              }
+            ],
           };
+          setUndoTagHistory(currentHistory => ([
+            ...currentHistory,
+            newInstanceId
+          ]))
         }
       });
-      console.log("newTagReference", newTagReference);
 
-      console.log("about to update");
+      const unlabeledTagReference = unlabelTagReference(newTagReference)
+
       apiClient
-        .updateFileProperties(targetClip, newTagReference)
+        .updateFileProperties(targetClip, unlabeledTagReference)
         .then(async (updateSuccessful) => {
           if (!updateSuccessful) {
-            console.log("attempting to reverse");
-            // let revertedTagReference = await apiClient.getMetadata(targetClip)
-            // setTagReferenceMaster(revertedTagReference)
           }
         });
-      console.log("returning", newTagReference);
       return newTagReference;
     });
   };
 
   const removeTag = (tagObject: TagObject, instanceId?: string) => {
-    let tagEntry = tagReferenceLabeled[tagObject.id];
+    let tagEntry = labeledTagReference[tagObject.id];
     if (!tagEntry) return;
-    if(instanceId){
+    if (instanceId) {
       tagEntry = tagEntry.filter(
         (timeEntry) => timeEntry.instanceId !== instanceId
       );
     }
-    const newTagEntry: TimeCode[] = tagEntry.map(
-      (timeEntry) => timeEntry.time
+    const newTagEntry: TimeEntry[] = tagEntry.map(
+      (timeEntry) => ({
+        time: timeEntry.time,
+        instanceId: uuid()
+      })
     );
 
-    setTagReferenceMaster((currentTagReference) => {
+    setLabeledTagReference((currentTagReference) => {
       const updatedTagReference = {
         ...currentTagReference
       };
 
-      if(newTagEntry.length < 1){
+      if (newTagEntry.length < 1) {
         delete updatedTagReference[tagObject.id]
-      }else{
+      } else {
         updatedTagReference[tagObject.id] = newTagEntry
       }
 
-      const apiClient = new ApiClient();
-      apiClient.updateFileProperties(targetClip, updatedTagReference);
+      const unlabeledTagReference = unlabelTagReference(updatedTagReference)
+
+      apiClient.updateFileProperties(targetClip, unlabeledTagReference);
       return updatedTagReference;
     });
   };
+
+  const removeLastAddedTag = (): void => {
+    let lastAddedId: string | undefined
+    let lastAddedTagInstanceId: string | undefined
+
+    setUndoTagHistory(currentHistory => {
+      const newHistory = [...currentHistory]
+      lastAddedId = newHistory.pop()
+      return newHistory
+    })
+
+    if (!lastAddedId) return;
+
+    //Checking to see if string is object id
+    console.log(lastAddedId)
+    const tagObjectFromId = getTagObjectFromId(lastAddedId)
+    console.log(tagObjectFromId)
+    if (tagObjectFromId) {
+      return removeTag(tagObjectFromId)
+    };
+    //if no, by default it's got to be an instance id
+
+    lastAddedTagInstanceId = lastAddedId;
+
+    const tagObject = getTagObjectFromInstanceId(lastAddedTagInstanceId, { ...labeledTagReference })
+    if (!tagObject) return
+
+    removeTag(tagObject, lastAddedTagInstanceId)
+  }
+
+
+  const resetTags = async (path: string) => {
+    await apiClient.removeFilePropertyGroup(path)
+  }
 
   return (
     <TagsContext.Provider
@@ -166,15 +252,20 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
         setMapTags,
         selectedTagGroup,
         setSelectedTagGroup,
-        tagReferenceMaster,
-        setTagReferenceMaster,
-        tagReferenceLabeled,
-        setTagReferenceLabeled,
+        unlabeledTagReference,
+        setUnlabeledTagReference,
+        labeledTagReference,
+        setLabeledTagReference,
         tagDisplayList,
         tagOffset,
         setTagOffset,
+        unDoTagHistory,
+        setUndoTagHistory,
+        setStarterTags,
         addTags,
         removeTag,
+        removeLastAddedTag,
+        resetTags
       }}
     >
       {children}

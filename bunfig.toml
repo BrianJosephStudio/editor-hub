@@ -1,0 +1,3 @@
+name = "editor-hub-workspace"
+version = "1.0.0"
+workspace = true

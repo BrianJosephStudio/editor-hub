@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "declaration": true, // Emit .d.ts files
+    "outDir": "dist", // Output directory for declarations
+    "module": "ESNext", // Module type
+    "target": "ESNext", // Target language version
+    "strict": true, // Enable all strict type-checking options
+    "esModuleInterop": true, // For compatibility with CommonJS and ESModules
+    "moduleResolution": "node",
+  },
+  "include": [
+    "src"
+  ]
+}
