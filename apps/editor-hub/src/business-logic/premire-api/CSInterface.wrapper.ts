@@ -1,6 +1,7 @@
 import { CSInterface } from "@extendscript/csinterface/dist/v8";
 import { NodeWrapper } from "../node.wrapper";
 import axios from "axios";
+import { rejects } from "assert";
 
 /**
  * This wrapper's goal is to identify which environment the app is running in
@@ -20,10 +21,14 @@ export class CSInterfaceWrapper {
 
   public declareJSXFunctions = async (): Promise<void> => {
     if (!this.node.isNodeEnv) return;
-    
+
     const { data: jsonParser } = await axios.get("extendScript/json2.js");
-    const { data: jsxCsInterfaceXDeclarations } = await axios.get("extendScript/index.js");
-    const { data: jsxEditorHubDeclarations } = await axios.get("extendScript/projectItem.js");
+    const { data: jsxCsInterfaceXDeclarations } = await axios.get(
+      "extendScript/index.js"
+    );
+    const { data: jsxEditorHubDeclarations } = await axios.get(
+      "extendScript/projectItem.js"
+    );
     await this.evalScript(jsonParser);
     await this.evalScript(jsxCsInterfaceXDeclarations);
     await this.evalScript(jsxEditorHubDeclarations);
@@ -33,19 +38,22 @@ export class CSInterfaceWrapper {
     script: string,
     callback: (response: string) => void = (response) => response
   ) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (!this.node.isNodeEnv) return resolve("Mocked value");
 
       this.csInterface.evalScript(script, (response) => {
-        return resolve(callback(response));
+        if (CSInterfaceWrapper.isEvalScriptError(response))
+          return reject(response);
+
+        resolve(callback(response));
       });
     });
   };
 
   static isEvalScriptError = (response: string): boolean => {
-    if(response === 'EvalScript error.'){
-      return true
+    if (response === "EvalScript error.") {
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 }
