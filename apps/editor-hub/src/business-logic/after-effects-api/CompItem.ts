@@ -19,29 +19,18 @@ export class CompItem extends AVItem {
   public readonly selectedLayers: Layer[];
   public readonly selectedProperties: (Property | PropertyGroup)[];
 
-  constructor({
-    bgColor,
-    dropFrame,
-    frameDuration,
-    hideShyLayers,
-    layers,
-    markerProperty,
-    motionBlur,
-    numLayers,
-    selectedLayers,
-    selectedProperties,
-  }: CompItemProps) {
-    super();
-    this.bgColor = bgColor;
-    this.dropFrame = dropFrame;
-    this.frameDuration = frameDuration;
-    this.hideShyLayers = hideShyLayers;
-    this.layers = layers;
-    this.markerProperty = markerProperty;
-    this.motionBlur = motionBlur;
-    this.numLayers = numLayers;
-    this.selectedLayers = selectedLayers;
-    this.selectedProperties = selectedProperties;
+  constructor(compItemProps: CompItemProps) {
+    super(compItemProps);
+    this.bgColor = compItemProps.bgColor;
+    this.dropFrame = compItemProps.dropFrame;
+    this.frameDuration = compItemProps.frameDuration;
+    this.hideShyLayers = compItemProps.hideShyLayers;
+    this.layers = compItemProps.layers;
+    this.markerProperty = compItemProps.markerProperty;
+    this.motionBlur = compItemProps.motionBlur;
+    this.numLayers = compItemProps.numLayers;
+    this.selectedLayers = compItemProps.selectedLayers;
+    this.selectedProperties = compItemProps.selectedProperties;
   }
 
   public readonly duplicate = async () => {};

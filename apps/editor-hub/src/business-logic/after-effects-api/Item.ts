@@ -11,6 +11,7 @@ import {
   RangedInteger_0_16,
   TypeName,
 } from "./types";
+import { parseResponseObject } from "./util";
 
 const csInterface = new CSInterfaceWrapper();
 
@@ -44,6 +45,36 @@ export class Item {
 
   public readonly remove = () => {};
 
+  public readonly setParentFolder = (
+    parentFolder: FolderItem
+  ): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      try {
+        csInterface.evalScript(
+          `_Item_setParentFolder(${this.id}, ${parentFolder.id})`,
+          (response) => {
+            const responseObject = parseResponseObject(response);
+            if (!responseObject)
+              return reject(
+                "Something went wrong when attempting to parse response from ExtendScript"
+              );
+
+            if (!responseObject.success)
+              return reject(
+                "Something went wrong running _Item_setParentFolder()"
+              );
+          }
+        );
+        resolve();
+      } catch (e) {
+        console.error(e);
+        reject(e);
+      }
+    });
+  };
+
+  /**STATIC METHODS */
+
   public static readonly getByIndex = async (
     index: number
   ): Promise<FootageItem | CompItem | FolderItem | null> => {
@@ -52,32 +83,33 @@ export class Item {
         if (CSInterfaceWrapper.isEvalScriptError(response))
           reject(new Error(response));
 
-        try{
-          const createdItem = this.getItemFromResponseData(response)
-          resolve(createdItem)
-        }catch(e){
-          reject(e)
+        try {
+          const createdItem = this.getItemFromResponseData(response);
+          resolve(createdItem);
+        } catch (e) {
+          reject(e);
         }
       });
     });
   };
 
-  public static readonly getItemFromResponseData = (responseData: string): FootageItem | CompItem | FolderItem => {
+  public static readonly getItemFromResponseData = (
+    responseData: string,
+    expectedTypeName?: TypeName
+  ): FootageItem | CompItem | FolderItem | null => {
     const typeName = this.validateTypeName(responseData);
     if (!typeName) throw new Error("Could not find typeName");
+    if (expectedTypeName && expectedTypeName !== typeName) return null;
 
     let itemProps = JSON.parse(responseData);
 
     switch (typeName) {
       case "Footage":
-        return (new FootageItem(itemProps as FootageItemProps));
-        break;
+        return new FootageItem(itemProps as FootageItemProps);
       case "Composition":
-        return (new CompItem(itemProps as CompItemProps));
-        break;
+        return new CompItem(itemProps as CompItemProps);
       case "Folder":
-        return (new FolderItem(itemProps as FolderItemProps));
-        break;
+        return new FolderItem(itemProps as FolderItemProps);
       default:
         throw new Error("Could not find typeName");
     }
@@ -91,11 +123,11 @@ export class Item {
         if (CSInterfaceWrapper.isEvalScriptError(response))
           reject(new Error(response));
 
-        try{
-          const createdItem = this.getItemFromResponseData(response)
-          resolve(createdItem)
-        }catch(e){
-          reject(e)
+        try {
+          const createdItem = this.getItemFromResponseData(response);
+          resolve(createdItem);
+        } catch (e) {
+          reject(e);
         }
       });
     });

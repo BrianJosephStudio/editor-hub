@@ -1,8 +1,11 @@
 import { CSInterfaceWrapper } from "../premire-api/CSInterface.wrapper";
+import { CompItem } from "./CompItem";
 import { File } from "./File";
 import { FolderItem } from "./FolderItem";
+import { FootageItem } from "./FootageItem";
 import { Item } from "./Item";
 import { ItemCollection } from "./ItemCollection";
+import { parseResponseObject } from "./util";
 
 const csInterface = new CSInterfaceWrapper();
 
@@ -41,7 +44,27 @@ export class Project {
     this.selection = selection;
   }
 
-  public readonly importFile = () => {};
+  public readonly importFile = (path: string): Promise<FootageItem | CompItem> => {
+    return new Promise((resolve, reject) => {
+      try{
+        csInterface.evalScript(`_Project_importFile('${path}')`, (response) => {
+          const responseObject = parseResponseObject(response)
+          if(!responseObject.success)
+            return reject('Something went wrong running _Project_importFile()')
+          
+          const importedItem = Item.getItemFromResponseData(responseObject.value)
+
+          resolve(importedItem as FootageItem | CompItem)
+        })
+        
+      }catch(e){
+        console.error(e)
+        reject(e)
+      }
+      
+    })
+  };
+
   public readonly item = (index: number) =>  Item.getByIndex(index)
   public readonly itemByID = (id: number) => Item.getByIndex(id)
   public readonly layerByID = () => {};

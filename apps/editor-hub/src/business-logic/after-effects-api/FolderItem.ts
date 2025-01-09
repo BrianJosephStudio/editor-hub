@@ -20,16 +20,13 @@ export class FolderItem extends Item {
     return new Promise((resolve, reject) => {
       csInterface.evalScript(`_folderItem_items(${this.id})`, (response) => {
         const responseObject = parseResponseObject(response);
-        if (!responseObject)
-          return reject(
-            "Something went wrong when attempting to parse response from"
-          );
 
         if (!responseObject.success)
-          return reject("Something went wrong running _folderItem_items()");
+          return reject("Something went wrong running _FolderItem_items()");
 
         try {
-          const itemArray = this.parseItemArray(responseObject.value as any[]);
+          const itemsArray = JSON.parse(responseObject.value) as any[];
+          const itemArray = this.parseItemArray(itemsArray);
           const itemCollection = new ItemCollection(this.id, itemArray);
           resolve(itemCollection);
         } catch (e) {
@@ -61,9 +58,12 @@ export class FolderItem extends Item {
     const isArray = Array.isArray(itemArray);
     if (!isArray) throw new Error("itemArray input is not an array");
 
-    const itemObjectArray = itemArray.map((responseData) =>
-      Item.getItemFromResponseData(responseData)
-    );
+    const itemObjectArray = itemArray.map((responseData) => {
+      const item = Item.getItemFromResponseData(responseData);
+      if (!item) throw new Error("getItemFromResponseData returned null");
+      return item;
+    });
+
     return itemObjectArray;
   };
 }
