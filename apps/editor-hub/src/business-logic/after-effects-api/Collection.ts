@@ -2,7 +2,7 @@ import { Item } from "./Item";
 import { Layer } from "./Layer";
 
 export class Collection {
-  private readonly entries: Item[] | Layer[] ;
+  public readonly entries: Item[] | Layer[] ;
   public readonly length: number;
 
   constructor(entries: Item[] | Layer[]) {

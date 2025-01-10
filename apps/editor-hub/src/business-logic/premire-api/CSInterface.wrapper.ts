@@ -1,7 +1,6 @@
-import { CSInterface } from "@extendscript/csinterface/dist/v8";
+import { CSInterface, HostEnvironment } from "@extendscript/csinterface/dist/v8";
 import { NodeWrapper } from "../node.wrapper";
 import axios from "axios";
-import { rejects } from "assert";
 
 /**
  * This wrapper's goal is to identify which environment the app is running in
@@ -11,12 +10,14 @@ import { rejects } from "assert";
  */
 
 export class CSInterfaceWrapper {
+  public hostEnvironment: HostEnvironment
   protected node: NodeWrapper;
   protected csInterface: CSInterface;
 
   constructor() {
     this.node = new NodeWrapper();
     this.csInterface = new CSInterface();
+    this.hostEnvironment = this.csInterface.hostEnvironment
   }
 
   public declareJSXFunctions = async (): Promise<void> => {

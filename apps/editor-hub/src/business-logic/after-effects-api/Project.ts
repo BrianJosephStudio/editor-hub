@@ -10,68 +10,65 @@ import { parseResponseObject } from "./util";
 const csInterface = new CSInterfaceWrapper();
 
 interface ProjectObjectProps {
-  activeItem: Item;
   file: File;
-  items: ItemCollection;
   numItems: number;
   rootFolder: FolderItem;
-  selection: Item[];
 }
 
 export class Project {
-  public readonly activeItem: Item;
   public readonly file: File;
-  public readonly items: ItemCollection;
   public readonly numItems: number;
   public readonly rootFolder: FolderItem;
-  public readonly selection: Item[];
 
-  static instance: Project | undefined;
+  private static instance: Project | undefined;
 
   private constructor({
-    activeItem,
     file,
-    items,
     numItems,
     rootFolder,
-    selection,
   }: ProjectObjectProps) {
-    this.activeItem = activeItem;
     this.file = file;
-    this.items = items;
     this.numItems = numItems;
     this.rootFolder = rootFolder;
-    this.selection = selection;
   }
 
-  public readonly importFile = (path: string): Promise<FootageItem | CompItem> => {
-    return new Promise((resolve, reject) => {
-      try{
-        csInterface.evalScript(`_Project_importFile('${path}')`, (response) => {
-          const responseObject = parseResponseObject(response)
-          if(!responseObject.success)
-            return reject('Something went wrong running _Project_importFile()')
-          
-          const importedItem = Item.getItemFromResponseData(responseObject.value)
-
-          resolve(importedItem as FootageItem | CompItem)
-        })
-        
-      }catch(e){
-        console.error(e)
-        reject(e)
-      }
-      
-    })
+  public readonly items = async (): Promise<ItemCollection> => {
+    return this.rootFolder.items()
   };
 
-  public readonly item = (index: number) =>  Item.getByIndex(index)
-  public readonly itemByID = (id: number) => Item.getByIndex(id)
+  public readonly importFile = (
+    path: string
+  ): Promise<FootageItem | CompItem> => {
+    return new Promise((resolve, reject) => {
+      try {
+        csInterface.evalScript(`_Project_importFile('${path}')`, (response) => {
+          const responseObject = parseResponseObject(response);
+          if (!responseObject.success)
+            return reject("Something went wrong running _Project_importFile()");
+
+          const importedItem = Item.getItemFromResponseData(
+            responseObject.value
+          );
+
+          resolve(importedItem as FootageItem | CompItem);
+        });
+      } catch (e) {
+        console.error(e);
+        reject(e);
+      }
+    });
+  };
+
+  public readonly activeItem = () => {}
+  public readonly selection = () => {}
+
+  public readonly item = (index: number) => Item.getByIndex(index);
+  public readonly itemByID = (id: number) => Item.getByIndex(id);
   public readonly layerByID = () => {};
   public readonly save = () => {};
   public readonly showWindow = () => {};
 
-  static readonly getInstance = async (): Promise<Project> => {
+  public static readonly getInstance = async (): Promise<Project> => {
     if (this.instance) return this.instance;
 
     try {
@@ -81,6 +78,7 @@ export class Project {
       throw new Error(e as any);
     }
   };
+
   private static readonly getProjectProperties =
     (): Promise<ProjectObjectProps> => {
       return new Promise<ProjectObjectProps>((resolve, reject) => {
@@ -106,16 +104,21 @@ export class Project {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
       if (
-        !parsedResponse.activeItem ||
         !parsedResponse.file ||
-        !parsedResponse.items ||
         !parsedResponse.numItems ||
-        !parsedResponse.rootFolder ||
-        !parsedResponse.selection
+        !parsedResponse.rootFolder
       )
         return null;
 
-      return parsedResponse as ProjectObjectProps;
+      const rootFolder = Item.getItemFromResponseData(JSON.stringify(parsedResponse.rootFolder), 'Folder')
+      if(!rootFolder) throw 'Could not parse root folder'
+      const projectObjectProps: ProjectObjectProps = {
+        file: parsedResponse.file,
+        numItems: parsedResponse.numItems,
+        rootFolder: rootFolder as FolderItem
+      }
+
+      return projectObjectProps;
     } catch (e) {
       console.error(e);
       return null;
