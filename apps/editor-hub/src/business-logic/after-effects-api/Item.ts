@@ -101,7 +101,7 @@ export class Item {
     if (!typeName) throw new Error("Could not find typeName");
     if (expectedTypeName && expectedTypeName !== typeName) return null;
 
-    let itemProps = JSON.parse(responseData);
+    const itemProps = JSON.parse(responseData);
 
     switch (typeName) {
       case "Footage":

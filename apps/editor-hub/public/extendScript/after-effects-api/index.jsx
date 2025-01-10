@@ -20,7 +20,7 @@ function _folderItem_items(id) {
     var response = _createResponseObject(value, true);
     return response;
   } catch (e) {
-    var response = _createResponseObject(
+    return _createResponseObject(
       e /*might need to use a prop instead?*/,
       false
     );
@@ -50,7 +50,7 @@ function _ItemCollection_addComp(
     var response = _createResponseObject(value, true);
     return response;
   } catch (e) {
-    var response = _createResponseObject(
+    return _createResponseObject(
       e /*might need to use a prop instead?*/,
       false
     );
@@ -65,7 +65,7 @@ function _ItemCollection_addFolder(parentItemId, name) {
     var response = _createResponseObject(value, true);
     return response;
   } catch (e) {
-    var response = _createResponseObject(
+    return _createResponseObject(
       e /*might need to use a prop instead?*/,
       false
     );
@@ -80,7 +80,7 @@ function _Item_setParentFolder(itemId, parentFolderId) {
     var response = _createResponseObject(null, true);
     return response;
   } catch (e) {
-    var response = _createResponseObject(
+    return _createResponseObject(
       e /*might need to use a prop instead?*/,
       false
     );
@@ -98,4 +98,15 @@ function _Project_importFile(path) {
   } catch (e) {
     var response = _createResponseObject(e, false);
   }
+}
+
+function _CompItem_layers(parentCompId){
+    try{
+        var parentCompItem = app.project.itemByID(parentCompId)
+        var value = JSON.stringify(parentCompItem.layers)
+        var response = _createResponseObject(value, true)
+        return response
+    }catch(e){
+        return _createResponseObject(e, false)
+    }
 }

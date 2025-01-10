@@ -1,17 +1,18 @@
 import { Item } from "./Item";
+import { Layer } from "./Layer";
 
 export class Collection {
-  private readonly items: Item[];
+  private readonly entries: Item[] | Layer[] ;
   public readonly length: number;
 
-  constructor(items: Item[]) {
-    this.items = items;
-    this.length = items.length;
+  constructor(entries: Item[] | Layer[]) {
+    this.entries = entries;
+    this.length = entries.length;
 
     return new Proxy(this, {
       get: (target, prop) => {
         if (typeof prop === "string" && !isNaN(Number(prop))) {
-          return target.items[Number(prop)]; // Access array element
+          return target.entries[Number(prop)];
         }
         return (target as any)[prop];
       },
