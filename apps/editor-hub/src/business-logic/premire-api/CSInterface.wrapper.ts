@@ -22,7 +22,15 @@ export class CSInterfaceWrapper {
 
   public declareJSXFunctions = async (): Promise<void> => {
     if (!this.node.isNodeEnv) return;
-
+    if(this.hostEnvironment.appId === 'PPRO'){
+      await this.declarPremiereJSX()
+    }
+    if(this.hostEnvironment.appId === 'AEFT'){
+      await this.declareAfterEffectsJSX()
+    }
+  };
+  
+  private readonly declarPremiereJSX = async () => {
     const { data: jsonParser } = await axios.get("extendScript/json2.js");
     const { data: jsxCsInterfaceXDeclarations } = await axios.get(
       "extendScript/index.js"
@@ -33,7 +41,17 @@ export class CSInterfaceWrapper {
     await this.evalScript(jsonParser);
     await this.evalScript(jsxCsInterfaceXDeclarations);
     await this.evalScript(jsxEditorHubDeclarations);
-  };
+  }
+  
+  private readonly declareAfterEffectsJSX = async () => {
+    const { data: jsonParser } = await axios.get("extendScript/json2.js");
+    const { data: jsxCsInterfaceXDeclarations } = await axios.get(
+      "extendScript/after-effects-api/index.jsx"
+    );
+    await this.evalScript(jsonParser);
+    await this.evalScript(jsxCsInterfaceXDeclarations);
+
+  }
 
   public evalScript = async (
     script: string,
@@ -41,7 +59,6 @@ export class CSInterfaceWrapper {
   ) => {
     return new Promise((resolve, reject) => {
       if (!this.node.isNodeEnv) return resolve("Mocked value");
-
       this.csInterface.evalScript(script, (response) => {
         if (CSInterfaceWrapper.isEvalScriptError(response))
           return reject(response);

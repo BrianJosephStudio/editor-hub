@@ -4,6 +4,7 @@ import { Item } from "./Item";
 import { CSInterfaceWrapper } from "../premire-api/CSInterface.wrapper";
 import { parseResponseObject } from "./util";
 import { FolderItem } from "./FolderItem";
+import { Project } from "./Project";
 
 const csInterface = new CSInterfaceWrapper();
 
@@ -47,7 +48,7 @@ export class ItemCollection extends Collection {
                 "Something went wrong running _ItemCollection_addComp()"
               );
 
-            const createdItem = Item.getItemFromResponseData(
+            const createdItem = Project.getItemFromResponseData(
               responseObject.value,
               "Composition"
             );
@@ -82,7 +83,7 @@ export class ItemCollection extends Collection {
                 "Something went wrong running _ItemCollection_addFolder()"
               );
 
-            const createdItem = Item.getItemFromResponseData(
+            const createdItem = Project.getItemFromResponseData(
               responseObject.value,
               "Folder"
             );

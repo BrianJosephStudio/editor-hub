@@ -13,9 +13,29 @@ function _createResponseObject(value, success) {
   }
 }
 
+function getItemByID (id) {
+  if(id === 0) return app.project.rootFolder;
+  return app.project.itemByID(id)
+}
+
+function _Project_getProjectProperties() {
+  try {
+    var output = {
+      file: app.project.file,
+      rootFolder: app.project.rootFolder,
+    };
+    var value = JSON.stringify(output);
+    var responseObject = _createResponseObject(value, true);
+    return responseObject;
+  } catch (e) {
+    return _createResponseObject(e, false);
+  }
+}
+
 function _folderItem_items(id) {
   try {
-    var folderItem = app.project.itemByID(id);
+    var folderItem = getItemByID(id);
+    alert(folderItem)
     var value = JSON.stringify(folderItem.items);
     var response = _createResponseObject(value, true);
     return response;
@@ -37,7 +57,7 @@ function _ItemCollection_addComp(
   framerate
 ) {
   try {
-    var parentItem = app.project.itemByID(parentItemId);
+    var parentItem = getItemByID(parentItemId);
     var createdcomp = parentItem.items.addComp(
       name,
       width,
@@ -59,7 +79,7 @@ function _ItemCollection_addComp(
 
 function _ItemCollection_addFolder(parentItemId, name) {
   try {
-    var parentItem = app.project.itemByID(parentItemId);
+    var parentItem = getItemByID(parentItemId);
     var createdFolder = parentItem.items.addFolder(name);
     var value = JSON.stringify(createdFolder);
     var response = _createResponseObject(value, true);
@@ -74,8 +94,8 @@ function _ItemCollection_addFolder(parentItemId, name) {
 
 function _Item_setParentFolder(itemId, parentFolderId) {
   try {
-    var item = app.project.itemByID(itemId);
-    var parentFolder = app.project.itemByID(parentFolderId);
+    var item = getItemByID(itemId);
+    var parentFolder = getItemByID(parentFolderId);
     item.parentFolder = parentFolder;
     var response = _createResponseObject(null, true);
     return response;
@@ -100,13 +120,13 @@ function _Project_importFile(path) {
   }
 }
 
-function _CompItem_layers(parentCompId){
-    try{
-        var parentCompItem = app.project.itemByID(parentCompId)
-        var value = JSON.stringify(parentCompItem.layers)
-        var response = _createResponseObject(value, true)
-        return response
-    }catch(e){
-        return _createResponseObject(e, false)
-    }
+function _CompItem_layers(parentCompId) {
+  try {
+    var parentCompItem = getItemByID(parentCompId);
+    var value = JSON.stringify(parentCompItem.layers);
+    var response = _createResponseObject(value, true);
+    return response;
+  } catch (e) {
+    return _createResponseObject(e, false);
+  }
 }

@@ -3,6 +3,7 @@ import { CompItem } from "./CompItem";
 import { FootageItem } from "./FootageItem";
 import { Item } from "./Item";
 import { ItemCollection } from "./ItemCollection";
+import { Project } from "./Project";
 import { FolderItemProps } from "./types";
 import { parseResponseObject } from "./util";
 
@@ -19,10 +20,11 @@ export class FolderItem extends Item {
   public readonly items = async (): Promise<ItemCollection> => {
     return new Promise((resolve, reject) => {
       csInterface.evalScript(`_folderItem_items(${this.id})`, (response) => {
+        console.log(response)
         const responseObject = parseResponseObject(response);
 
         if (!responseObject.success)
-          return reject("Something went wrong running _FolderItem_items()");
+          throw "Something went wrong running _FolderItem_items()";
 
         try {
           const itemsArray = JSON.parse(responseObject.value) as any[];
@@ -44,7 +46,11 @@ export class FolderItem extends Item {
   ): boolean => {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
-      if (!parsedResponse.items || !parsedResponse.numItems) return false;
+      if (
+        parsedResponse.items === undefined || 
+        parsedResponse.numItems === undefined ||
+        parsedResponse.typeName !== 'Folder'
+      ) return false;
       return true;
     } catch (e) {
       console.error(e);
@@ -59,7 +65,7 @@ export class FolderItem extends Item {
     if (!isArray) throw new Error("itemArray input is not an array");
 
     const itemObjectArray = itemArray.map((responseData) => {
-      const item = Item.getItemFromResponseData(responseData);
+      const item = Project.getItemFromResponseData(responseData);
       if (!item) throw new Error("getItemFromResponseData returned null");
       return item;
     });
