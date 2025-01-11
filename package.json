@@ -7,7 +7,9 @@
         "apps/*"
     ],
     "scripts": {
-        "deploy": "sudo docker compose down -v && NODE_ENV=production sudo docker compose --env-file .env.production up --build",
+        "deploy": "bun run compose:down && bun run compose:up",
+        "compose:up": "NODE_ENV=production sudo docker compose --env-file .env.production up --build",
+        "compose:down": "NODE_ENV=production sudo docker compose --env-file .env.production down -v",
         "build:libs": "./workflows/build-libs.sh"
     }
 }
