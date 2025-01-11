@@ -23,6 +23,7 @@ export const AgentTags: TagObject[] = [
     {tag:"sage",displayName:"Sage",description:"Player is playing Sage", unique: true, timeless: true, protected: true, keybind: "w", id: "ag019"},
     {tag:"skye",displayName:"Skye",description:"Player is playing Skye", unique: true, timeless: true, protected: true, keybind: "s", id: "ag020"},
     {tag:"sova",displayName:"Sova",description:"Player is playing Sova", unique: true, timeless: true, protected: true, keybind: "z", id: "ag021"},
+    {tag:"tejo",displayName:"Tejo",description:"Player is playing Tejo", unique: true, timeless: true, protected: true, keybind: "u", id: "ag025"},
     {tag:"viper",displayName:"Viper",description:"Player is playing Viper", unique: true, timeless: true, protected: true, keybind: "v", id: "ag022"},
     {tag:"vyse",displayName:"Vyse",description:"Player is playing Vyse", unique: true, timeless: true, protected: true, keybind: "f", id: "ag025"},
     {tag:"yoru",displayName:"Yoru",description:"Player is playing Yoru", unique: true, timeless: true, protected: true, keybind: "y", id: "ag023"}
