@@ -79,9 +79,9 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
       (agentTag) =>
         agentTag.tag === currentFileParsed.agent.toLocaleLowerCase()
     );
-    const inGameClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c002")
+    const streamerClipTag = GenericTags.clipType.tags.find(tagObject => tagObject.id === "c003")
 
-    if (!currentMap || !currentAgent || !inGameClipTag)
+    if (!currentMap || !currentAgent || !streamerClipTag)
       throw new Error("Map, Agent, or ClipType tags are wrong in resource path");
 
     const mapTagIds = MapTags.map((mapTag) => {
@@ -99,7 +99,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
     addTags([
       currentAgent,
       currentMap,
-      inGameClipTag
+      streamerClipTag
     ], 0, exclusiveTagIds)
   }
 
