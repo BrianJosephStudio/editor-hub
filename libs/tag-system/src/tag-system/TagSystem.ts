@@ -71,6 +71,7 @@ export const GenericTags: TagSystem = {
             {tag:"marshal",displayName:"Marshal",description:"Player gets a kill with the Marshal", unique: true, timeless: true, protected: false, keybind: "m", id: "g009"},
             {tag:"operator",displayName:"Operator",description:"Player gets a kill with the Operator", unique: true, timeless: true, protected: false, keybind: "o", id: "g010"},
             {tag:"odin",displayName:"Odin",description:"Player gets a kill with the Odin", unique: true, timeless: true, protected: false, keybind: "i", id: "g011"},
+            {tag:"outlaw",displayName:"Outlaw",description:"Player gets a kill with the Outlaw", unique: true, timeless: true, protected: false, keybind: "w", id: "g019"},
             {tag:"phantom",displayName:"Phantom",description:"Player gets a kill with the Phantom", unique: true, timeless: true, protected: false, keybind: "p", id: "g012"},
             {tag:"sheriff",displayName:"Sheriff",description:"Player gets a kill with the Sheriff", unique: true, timeless: true, protected: false, keybind: "s", id: "g013"},
             {tag:"shorty",displayName:"Shorty",description:"Player gets a kill with the Shorty", unique: true, timeless: true, protected: false, keybind: "r", id: "g014"},
@@ -94,7 +95,7 @@ export const GenericTags: TagSystem = {
             {tag:"decayed",displayName:"Decayed",description:"Player gets decayed", unique: false, timeless: false, protected: false, keybind: "d", id: "s005"},
             {tag:"trailed",displayName:"Trailed",description:"player gets trailed", unique: false, timeless: false, protected: false, keybind: "t", id: "s006"},
             {tag:"supressed",displayName:"Supressed",description:"Player is supressed", unique: false, timeless: false, protected: false, keybind: "p", id: "s007"},
-            {tag:"detained",displayName:"Detained",description:"Player is detained", unique: false, timeless: false, protected: false, keybind: "n", id: "s008"},
+            {tag:"detained",displayName:"Detained",description:"Player is detained", unique: false, timeless: false, protected: false, keybind: "e", id: "s008"},
             {tag:"healed",displayName:"Healed",description:"Player gets healing from an ally", unique: false, timeless: false, protected: false, keybind: "h", id: "s009"},
             {tag:"pinged",displayName:"Pinged",description:"Player gets pinged", unique: false, timeless: false, protected: false, keybind: "g", id: "s010"},
             {tag:"slowed",displayName:"Slowed",description:"Player is slowed", unique: false, timeless: false, protected: false, keybind: "w", id: "s011"},
@@ -113,6 +114,7 @@ export const GenericTags: TagSystem = {
         tags: [
             {tag:"cclip",displayName:"Custom Clip",description:"Clip is a custom clip", unique: true, timeless: true, protected: false, keybind: "c", id: "c001"},
             {tag:"igclip",displayName:"In-Game Clip",description:"Clip showcases a real game", unique: true, timeless: true, protected: false, keybind: "i", id: "c002"},
+            {tag:"strmclip",displayName:"Streamer Clip",description:"Clip showcases a game by a famous streamer", unique: true, timeless: true, protected: false, keybind: "s", id: "c003"},
             {tag:"deathmatch",displayName:"Death match",description:"Clip comes from a deathmatch", unique: true, timeless: true, protected: false, keybind: "d", id: "c004"}
         ],
         groupName: 'Clip Type',
@@ -138,9 +140,12 @@ export const GenericTags: TagSystem = {
         tags: [
             {tag:"kill",displayName:"Kill",description:"Player got a kill", unique: false, timeless: false, protected: false, keybind: "k", id: "k001"},
             {tag:"death",displayName:"Death",description:"Player gets killed", unique: false, timeless: false, protected: false, keybind: "d", id: "k002"},
+            {tag:"headshot",displayName:"Headshot",description:"Player gets a headshot kill", unique: false, timeless: false, protected: false, keybind: "h", id: "n002"},
+            {tag:"wb",displayName:"Wall Bang",description:"Player got a kill by shooting through an obstacle", unique: false, timeless: false, protected: false, keybind: "w", id: "n005"},
+            {tag:"bk",displayName:"Blind Kill",description:"Player got a kill without vision of the enemy", unique: false, timeless: false, protected: false, keybind: "b", id: "n006"},
             {tag:"ace",displayName:"Ace",description:"Player gets an ace", unique: true, timeless: false, protected: false, keybind: "x", id: "k007"},
             {tag:"opd",displayName:"Opped",description:"Player got killed by an Operator", unique: false, timeless: false, protected: false, keybind: "o", id: "k008"},
-            {tag:"kba",displayName:"Kill by Ability",description:"Player gets a kill with the one of their abilities", unique: false, timeless: false, protected: false, keybind: "a", id: "k009"}
+            {tag:"kba",displayName:"Kill by Ability",description:"Player gets a kill with the one of their abilities", unique: false, timeless: false, protected: false, keybind: "a", id: "k009"},
         ],
         groupName: 'KDA',
         keybindGroup: "k",
@@ -161,12 +166,18 @@ export const GenericTags: TagSystem = {
     },
     mapAreas:{
         tags: [
-            {tag:"asite",displayName:"A site",description:"Important action occurs at or near A Site", unique: true, timeless: false, protected: false, keybind: "a", id: "z001"},
-            {tag:"bsite",displayName:"B site",description:"Important action occurs at or near B Site", unique: true, timeless: false, protected: false, keybind: "b", id: "z002"},
-            {tag:"csite",displayName:"C site",description:"Important action occurs at or near C Site", unique: true, timeless: false, protected: false, keybind: "c", id: "z003"},
-            {tag:"mid",displayName:"",description:"Important action occurs at or near mid", unique: true, timeless: false, protected: false, keybind: "m", id: "z004"},
-            {tag:"aspawn",displayName:"attacker-spawn",description:"Important action occurs at or near Attacker Spawn", unique: true, timeless: false, protected: false, keybind: "x", id: "z005"},
-            {tag:"dspawn",displayName:"defender-spawn",description:"Important action occurs at or near Defender Spawn", unique: true, timeless: false, protected: false, keybind: "o", id: "z006"},
+            {tag:"asite",displayName:"A site",description:"Player walks into A Site", unique: true, timeless: false, protected: false, keybind: "a", id: "z001"},
+            {tag:"aside",displayName:"A side",description:"Player walks into A Side", unique: true, timeless: false, protected: false, keybind: "q", id: "z007"},
+            {tag:"bsite",displayName:"B site",description:"Player walks into B Site", unique: true, timeless: false, protected: false, keybind: "b", id: "z002"},
+            {tag:"bside",displayName:"B side",description:"Player walks into B Side", unique: true, timeless: false, protected: false, keybind: "v", id: "z008"},
+            {tag:"csite",displayName:"C site",description:"Player walks into C Site", unique: true, timeless: false, protected: false, keybind: "c", id: "z003"},
+            {tag:"garage",displayName:"Garage",description:"Player walks into Garage", unique: true, timeless: false, protected: false, keybind: "g", id: "z009"},
+            {tag:"heaven",displayName:"Heaven",description:"Player walks into Heaven", unique: true, timeless: false, protected: false, keybind: "g", id: "z010"},
+            {tag:"market",displayName:"Market",description:"Player walks into Market", unique: true, timeless: false, protected: false, keybind: "k", id: "z011"},
+            {tag:"mid",displayName:"Mid",description:"Player walks into Mid", unique: true, timeless: false, protected: false, keybind: "m", id: "z004"},
+            {tag:"lobby",displayName:"Lobby",description:"Player walks into Lobby", unique: true, timeless: false, protected: false, keybind: "l", id: "z012"},
+            {tag:"aspawn",displayName:"attacker-spawn",description:"Player walks into Attacker Spawn", unique: true, timeless: false, protected: false, keybind: "x", id: "z005"},
+            {tag:"dspawn",displayName:"defender-spawn",description:"Player walks into Defender Spawn", unique: true, timeless: false, protected: false, keybind: "o", id: "z006"},
         ],
         groupName: 'Map Areas',
         keybindGroup: "n",
@@ -177,11 +188,8 @@ export const GenericTags: TagSystem = {
     mechanics:{
         tags: [
             {tag:"jigglepeak",displayName:"Jiggle Peak",description:"Player jiggle peeks at some point", unique: false, timeless: false, protected: false, keybind: "j", id: "n001"},
-            {tag:"headshot",displayName:"Headshot",description:"Player gets a headshot kill", unique: false, timeless: false, protected: false, keybind: "h", id: "n002"},
             {tag:"swing",displayName:"Swing",description:"Player wide-swings an angle", unique: false, timeless: false, protected: false, keybind: "s", id: "n003"},
             {tag:"trade",displayName:"Trade",description:"Player got a kill by trading an ally", unique: false, timeless: false, protected: false, keybind: "t", id: "n004"},
-            {tag:"wb",displayName:"Wall Bang",description:"Player got a kill by shooting through an obstacle", unique: false, timeless: false, protected: false, keybind: "w", id: "n005"},
-            {tag:"bk",displayName:"Blind Kill",description:"Player got a kill without vision of the enemy", unique: false, timeless: false, protected: false, keybind: "b", id: "n006"}
         ],
         groupName: 'Mechanics',
         keybindGroup: "m",
@@ -203,15 +211,16 @@ export const GenericTags: TagSystem = {
         tags: [
             {tag:"spikeplant",displayName:"Planted Spike",description:"Player planted the spike", unique: true, timeless: false, protected: false, keybind: "p", id: "e001"},
             {tag:"spikedefuse",displayName:"Defused Spike",description:"Player defused the spike", unique: true, timeless: false, protected: false, keybind: "o", id: "e002"},
+            {tag:"pplant",displayName:"Post-Plant",description:"Important action occurs while planted spike counts down", unique: true, timeless: false, protected: false, keybind: "a", id: "t007"},
             {tag:"clutch",displayName:"Clutch",description:"Player clutched the round", unique: true, timeless: true, protected: false, keybind: "c", id: "e003"},
             {tag:"spikeblow",displayName:"Spike Blow",description:"Spike goes off during the clip", unique: true, timeless: false, protected: false, keybind: "x", id: "e004"},
             {tag:"tp",displayName:"Teleportation",description:"Player teleported using an ability or going through a teleporter", unique: false, timeless: false, protected: false, keybind: "t", id: "e005"},
-            {tag:"thrifty",displayName:"Thrifty",description:"Player's team won round where their team were on a resource disadvantage", unique: true, timeless: true, protected: false, keybind: "c", id: "e006"},
+            {tag:"thrifty",displayName:"Thrifty",description:"Player's team won round where their team were on a resource disadvantage", unique: true, timeless: true, protected: false, keybind: "r", id: "e006"},
             {tag:"flawless",displayName:"Flawless",description:"Player's team won round with no casualty", unique: true, timeless: true, protected: false, keybind: "f", id: "e012"},
             {tag:"won",displayName:"Won Game",description:"Player's team won the match on this round", unique: true, timeless: true, protected: false, keybind: "v", id: "e013"},
             {tag:"defeat",displayName:"Defeat",description:"Player's team lost the match on this round", unique: true, timeless: true, protected: false, keybind: "d", id: "e014"},
             {tag:"winround",displayName:"Won Round",description:"Player's team won this round", unique: true, timeless: true, protected: false, keybind: "w", id: "e015"},
-            {tag:"lostround",displayName:"Lost Round",description:"Player's team lost this round", unique: true, timeless: true, protected: false, keybind: "l", id: "e016"}
+            {tag:"lostround",displayName:"Lost Round",description:"Player's team lost this round", unique: true, timeless: true, protected: false, keybind: "l", id: "e016"},
         ],
         groupName: 'Game Events',
         keybindGroup: "e",
@@ -241,7 +250,6 @@ export const GenericTags: TagSystem = {
             {tag:"lurker",displayName:"Lurker",description:"Player is lurking", unique: false, timeless: false, protected: false, keybind: "l", id: "t004"},
             {tag:"teamplay",displayName:"Team Play",description:"Clip showcases a successful team play", unique: false, timeless: false, protected: false, keybind: "t", id: "t005"},
             {tag:"retake",displayName:"Retake",description:"Player attempts to retake a site where the spike has been planted", unique: false, timeless: false, protected: false, keybind: "g", id: "t006"},
-            {tag:"pplant",displayName:"Post-Plant",description:"Important action occurs while planted spike counts down", unique: true, timeless: false, protected: false, keybind: "p", id: "t007"},
             {tag:"lineup",displayName:"Line-Up",description:"Player performs a line-up ability cast", unique: false, timeless: false, protected: false, keybind: "l", id: "t008"}
         ],
         groupName: 'Game Tactics',
