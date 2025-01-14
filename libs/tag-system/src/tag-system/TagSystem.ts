@@ -172,7 +172,7 @@ export const GenericTags: TagSystem = {
             {tag:"bside",displayName:"B side",description:"Player walks into B Side", unique: true, timeless: false, protected: false, keybind: "v", id: "z008"},
             {tag:"csite",displayName:"C site",description:"Player walks into C Site", unique: true, timeless: false, protected: false, keybind: "c", id: "z003"},
             {tag:"garage",displayName:"Garage",description:"Player walks into Garage", unique: true, timeless: false, protected: false, keybind: "g", id: "z009"},
-            {tag:"heaven",displayName:"Heaven",description:"Player walks into Heaven", unique: true, timeless: false, protected: false, keybind: "g", id: "z010"},
+            {tag:"heaven",displayName:"Heaven",description:"Player walks into Heaven", unique: true, timeless: false, protected: false, keybind: "h", id: "z010"},
             {tag:"market",displayName:"Market",description:"Player walks into Market", unique: true, timeless: false, protected: false, keybind: "k", id: "z011"},
             {tag:"mid",displayName:"Mid",description:"Player walks into Mid", unique: true, timeless: false, protected: false, keybind: "m", id: "z004"},
             {tag:"lobby",displayName:"Lobby",description:"Player walks into Lobby", unique: true, timeless: false, protected: false, keybind: "l", id: "z012"},
