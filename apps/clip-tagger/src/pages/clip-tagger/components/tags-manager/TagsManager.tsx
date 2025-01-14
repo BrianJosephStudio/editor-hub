@@ -43,7 +43,8 @@ export const TagsManager = () => {
           padding: "0.6rem",
           placeContent: 'center',
           flexWrap: 'wrap',
-          overflow: 'auto'
+          overflow: 'auto',
+          minHeight: '18rem'
         }}
       >
         {Object.entries(GenericTags).map(([groupName, tagGroup], index) => (

@@ -175,7 +175,7 @@ export const TagsDisplay = () => {
           display: "flex",
           flexDirection: "column",
           flexGrow: 1,
-          minWidth: '16rem'
+          minWidth: '24rem'
         }}
       >
         <Box
@@ -305,7 +305,7 @@ export const TagsDisplay = () => {
                   event.preventDefault();
                   setPlayheadHoverVisible(true);
                 }}
-              ></TagDisplayItem>
+              />
             ))}
           </Box>
         </Box>
