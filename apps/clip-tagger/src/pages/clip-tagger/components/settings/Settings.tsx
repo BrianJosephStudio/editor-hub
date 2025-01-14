@@ -23,7 +23,8 @@ export const Settings = () => {
       sx={{
         display: "flex",
         placeContent: "flex-start",
-        backgroundColor: 'hsl(0, 0.00%, 62.70%)'
+        backgroundColor: 'hsl(0, 0.00%, 62.70%)',
+        paddingX: '1rem'
       }}
     >
       <TextField

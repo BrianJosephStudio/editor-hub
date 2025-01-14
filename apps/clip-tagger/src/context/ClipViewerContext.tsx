@@ -4,6 +4,7 @@ import Cookies from 'js-cookie'
 interface ClipViewerContextProps {
   targetClip: string;
   setTargetClip: (path: string) => void;
+  targetClipName: string;
   nextVideoSource: string;
   setNextVideoSource: React.Dispatch<React.SetStateAction<string>>;
   currentVideoSource: string;
@@ -31,6 +32,7 @@ export const useClipViewer = () => {
 
 export const ClipViewerProvider = ({ children }: { children: ReactNode }) => {
   const [targetClip, setTargetClip] = useState<string>("");
+  const [targetClipName, setTargetClipName] = useState<string>("");
   const [currentVideoSource, setCurrentVideoSource] = useState<string>("");
   const [nextVideoSource, setNextVideoSource] = useState<string>("");
   const [pauseOnInput, setPauseOnInput] = useState<boolean>(() => {
@@ -69,11 +71,17 @@ export const ClipViewerProvider = ({ children }: { children: ReactNode }) => {
     Cookies.set("currentVolume", (currentVolume * 100).toString());
   }, [currentVolume]);
 
+  useEffect(() => {
+    if(!targetClip) return
+    setTargetClipName(targetClip.split("/").pop()!)
+  }, [targetClip]);
+
   return (
     <ClipViewerContext.Provider
       value={{
         targetClip,
         setTargetClip,
+        targetClipName,
         currentVideoSource,
         setCurrentVideoSource,
         nextVideoSource,
