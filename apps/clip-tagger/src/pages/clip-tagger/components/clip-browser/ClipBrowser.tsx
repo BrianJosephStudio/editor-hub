@@ -9,6 +9,7 @@ import { useKeybind } from "../../../../context/KeyBindContext";
 import { useTags } from "../../../../context/TagsContext";
 import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
 import apiClient from "../../../../api/ApiClient";
+import { useAuthorization } from "../../../../context/Authorization.context";
 
 const apiHost = import.meta.env.VITE_API_HOST;
 const clipsRootPath = import.meta.env.VITE_CLIPS_ROOT_FOLDER as string;
@@ -22,6 +23,8 @@ export const ClipBrowser = () => {
     clipBrowserModifier,
   } = useKeybind();
   const { setLabeledTagReference } = useTags();
+
+  const { isAdmin } = useAuthorization()
 
   const {
     BrowserList,
@@ -127,7 +130,7 @@ export const ClipBrowser = () => {
       }}
     >
       <PathNav path={currentFolder}></PathNav>
-      {clipLevel && !isRenaming && (
+      {isAdmin && clipLevel && !isRenaming && (
         <Button
           sx={{
             textJustify: 'center',

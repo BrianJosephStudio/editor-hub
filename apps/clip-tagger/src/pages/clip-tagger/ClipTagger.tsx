@@ -1,4 +1,4 @@
-import { Box } from "@mui/material"
+import { Box, Stack, Typography } from "@mui/material"
 import { ClipBrowser } from "../../pages/clip-tagger/components/clip-browser/ClipBrowser"
 import { ClipViewer } from "../../pages/clip-tagger/components/clip-viewer/ClipViewer"
 import { TagsManager } from "../../pages/clip-tagger/components/tags-manager/TagsManager"
@@ -14,7 +14,7 @@ export const ClipTagger = () => {
   const { AppRoot } = useAppContext()
 
   const { getActiveItem, focusNextItem, focusPreviousItem, handleBackNavigation } = useFolderNavigation()
-  const { videoPlayer, skipTime } = useClipViewer()
+  const { videoPlayer, skipTime, targetClipName } = useClipViewer()
   const { setBlockGroupLevelListeners } = useKeybind();
   const { removeLastAddedTag } = useTags()
 
@@ -91,7 +91,10 @@ export const ClipTagger = () => {
           flexGrow: 1
         }}
       >
-        <Settings></Settings>
+        <Stack direction={'row'} alignItems={'center'} justifyContent={'space-between'}>
+          <Typography flexGrow={'1'}>{targetClipName}</Typography>
+          <Settings></Settings>
+        </Stack>
         <ClipViewer></ClipViewer>
         <TagsManager></TagsManager>
       </Box>

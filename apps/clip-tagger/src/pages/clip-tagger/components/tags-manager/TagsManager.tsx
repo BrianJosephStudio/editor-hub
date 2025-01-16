@@ -17,7 +17,7 @@ export const TagsManager = () => {
   const { setStarterTags, setLabeledTagReference, setUndoTagHistory } = useTags();
 
   useEffect(() => {
-    if(!targetClip) return
+    if (!targetClip) return
     setLabeledTagReference({})
     setUndoTagHistory([])
     const getMetadata = async () => {
@@ -25,7 +25,7 @@ export const TagsManager = () => {
       const labeledTagReference = labelTagReference(unlabeledTagReference)
       if (Object.keys(labeledTagReference).length === 0) {
         await setStarterTags()
-      }else{
+      } else {
         setLabeledTagReference(labeledTagReference)
       }
     };
@@ -43,15 +43,20 @@ export const TagsManager = () => {
           padding: "0.6rem",
           placeContent: 'center',
           flexWrap: 'wrap',
-          overflow: 'auto'
+          overflow: 'auto',
+          minHeight: '18rem'
         }}
       >
-        {Object.keys(GenericTags).map((groupName, index) => (
-          <TagsGroup
-            tagsGroup={GenericTags[groupName]}
-            groupName={groupName}
-            key={index}
-          ></TagsGroup>
+        {Object.entries(GenericTags).map(([groupName, tagGroup], index) => (
+          <>
+            {!tagGroup.iterable &&
+              <TagsGroup
+                tagsGroup={GenericTags[groupName]}
+                groupName={groupName}
+                key={index}
+              ></TagsGroup>
+            }
+          </>
         ))}
       </Box>
     </>
