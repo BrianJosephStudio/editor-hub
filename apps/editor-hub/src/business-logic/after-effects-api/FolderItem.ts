@@ -22,7 +22,6 @@ export class FolderItem extends Item {
       csInterface.evalScript(`_folderItem_items(${this.id})`, (response) => {
         console.log(response)
         const responseObject = parseResponseObject(response);
-
         if (!responseObject.success)
           throw "Something went wrong running _FolderItem_items()";
 
@@ -47,10 +46,11 @@ export class FolderItem extends Item {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
       if (
-        parsedResponse.items === undefined || 
+        parsedResponse.items === undefined ||
         parsedResponse.numItems === undefined ||
-        parsedResponse.typeName !== 'Folder'
-      ) return false;
+        parsedResponse.typeName !== "Folder"
+      )
+        return false;
       return true;
     } catch (e) {
       console.error(e);

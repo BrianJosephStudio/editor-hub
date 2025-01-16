@@ -72,7 +72,7 @@ export class ItemCollection extends Collection {
       try {
         csInterface.evalScript(
           `_ItemCollection_addFolder(
-        '${this.parentItemId}',
+        ${this.parentItemId},
         '${name}'
         )`,
           (response) => {

@@ -1,15 +1,3 @@
-import { AVItem } from "./AVItem";
-import { CompItem } from "./CompItem";
-import { FolderItem } from "./FolderItem";
-import { FootageItem } from "./FootageItem";
-import { Item } from "./Item";
-import {
-  CompItemProps,
-  FolderItemProps,
-  FootageItemProps,
-  TypeName,
-} from "./types";
-
 interface ResponseObject {
   value: string;
   success: boolean;

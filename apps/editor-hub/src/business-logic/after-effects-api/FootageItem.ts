@@ -23,7 +23,9 @@ export class FootageItem extends AVItem {
 
   public static readonly isFootageItem = (extendScriptResponse: string): boolean => {
     try {
-        const parsedResponse = JSON.parse(extendScriptResponse)
+      console.log("a ver", extendScriptResponse)
+      const parsedResponse = JSON.parse(extendScriptResponse)
+      console.log("getting footage item", parsedResponse)
         if(
             !parsedResponse.file ||
             !parsedResponse.mainSource

@@ -15,7 +15,6 @@ export class Item {
   public readonly id: number;
   public readonly label: RangedInteger_0_16;
   public readonly name: string;
-  public readonly parentFolder: any;
   public readonly typeName: "Folder" | "Footage" | "Composition";
 
   constructor({
@@ -23,14 +22,12 @@ export class Item {
     id,
     label,
     name,
-    parentFolder,
     typeName,
   }: ItemObjectProps) {
     this.comment = comment;
     this.id = id;
     this.label = label;
     this.name = name;
-    this.parentFolder = parentFolder;
     this.typeName = typeName;
   }
 
@@ -82,19 +79,18 @@ export class Item {
       )
         throw "Object doesn´t match ItemObject schema";
 
-      let parentFolder: FolderItem | null = null
-      if(parsedResponse.parentFolder !== null){
+      // let parentFolder: FolderItem | null = null
+      // if(parsedResponse.parentFolder !== null){
 
-        const parentFolderResponseData = JSON.stringify(parsedResponse.parentFolder)
-        parentFolder =  Project.getItemFromResponseData(parentFolderResponseData, 'Folder') as FolderItem | null
-      }
+      //   const parentFolderResponseData = JSON.stringify(parsedResponse.parentFolder)
+      //   parentFolder =  Project.getItemFromResponseData(parentFolderResponseData, 'Folder') as FolderItem | null
+      // }
 
       const itemObjectProps: ItemObjectProps = {
         comment: parsedResponse.comment as string,
         id: parsedResponse.id as number,
         name: parsedResponse.name as string,
         label: parsedResponse.label as RangedInteger_0_16,
-        parentFolder,
         typeName: parsedResponse.typeName as TypeName
       }
 

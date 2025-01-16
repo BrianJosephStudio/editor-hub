@@ -13,9 +13,9 @@ function _createResponseObject(value, success) {
   }
 }
 
-function getItemByID (id) {
-  if(id === 0) return app.project.rootFolder;
-  return app.project.itemByID(id)
+function getItemByID(id) {
+  if (id === 0) return app.project.rootFolder;
+  return app.project.itemByID(id);
 }
 
 function _Project_getProjectProperties() {
@@ -36,7 +36,22 @@ function _folderItem_items(id) {
   try {
     var folderItem = getItemByID(id);
     alert(folderItem)
-    var value = JSON.stringify(folderItem.items);
+    alert(folderItem.numItems)
+    var value;
+    if (folderItem.numItems > 0) {
+      var items = [];
+      for (var i = 1; i <= folderItem.numItems; i++) {
+        alert(folderItem.items[i])
+        items.push(folderItem.items[i]);
+      }
+      alert(items)
+      alert(items.length)
+      alert(items[0].name)
+      value = JSON.stringify([]);
+    } else {
+      value = JSON.stringify([]);
+    }
+    alert(value)
     var response = _createResponseObject(value, true);
     return response;
   } catch (e) {
@@ -97,7 +112,7 @@ function _Item_setParentFolder(itemId, parentFolderId) {
     var item = getItemByID(itemId);
     var parentFolder = getItemByID(parentFolderId);
     item.parentFolder = parentFolder;
-    var response = _createResponseObject(null, true);
+    var response = _createResponseObject('void', true);
     return response;
   } catch (e) {
     return _createResponseObject(

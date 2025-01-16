@@ -36,19 +36,20 @@ export class AVItem extends Item {
   public static readonly isAVItem = (extendScriptResponse: string) => {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
+      console.log("getting av item props", parsedResponse)
       if (
-        !parsedResponse.duration ||
-        !parsedResponse.frameDuration ||
-        !parsedResponse.frameRate ||
-        !parsedResponse.height ||
-        !parsedResponse.width ||
-        !parsedResponse.footageMissing ||
-        !parsedResponse.hasAudio ||
-        !parsedResponse.hasVideo ||
-        !parsedResponse.isMediaReplacementCompatible ||
-        !parsedResponse.time ||
-        !parsedResponse.usedIn ||
-        !parsedResponse.useProxy
+        parsedResponse.duration === undefined ||
+        parsedResponse.frameDuration === undefined ||
+        parsedResponse.frameRate === undefined ||
+        parsedResponse.height === undefined ||
+        parsedResponse.width === undefined ||
+        parsedResponse.footageMissing === undefined ||
+        parsedResponse.hasAudio === undefined ||
+        parsedResponse.hasVideo === undefined ||
+        parsedResponse.isMediaReplacementCompatible === undefined ||
+        parsedResponse.time === undefined ||
+        parsedResponse.usedIn === undefined ||
+        parsedResponse.useProxy === undefined
       )
         return false;
       return true;

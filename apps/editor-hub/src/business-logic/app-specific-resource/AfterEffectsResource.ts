@@ -5,7 +5,7 @@ import { TypeName } from "../after-effects-api/types";
 
 
 export class AfterEffectsResource {
-  private setPoints: boolean = false //TODO: wip
+  private setPoints: boolean = false //TODO: wip 
   private inPoint: number = 2 //TODO: wip
   private outPoint: number = 10 //TODO: wip
 
@@ -33,6 +33,7 @@ export class AfterEffectsResource {
     const sequentialPiping = binPathArray.map((folderName) => {
       return async (previousFolder: FolderItem): Promise<FolderItem> => {
         const items = await previousFolder.items()
+        console.log("entries", items.entries)
         const newFolder = await items.addFolder(folderName)
         return newFolder
       }

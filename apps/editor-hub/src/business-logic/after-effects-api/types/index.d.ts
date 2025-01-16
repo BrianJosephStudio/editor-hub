@@ -82,7 +82,6 @@ export interface ItemObjectProps {
   id: number;
   label: RangedInteger_0_16;
   name: string;
-  parentFolder: FolderItem | null;
   typeName: TypeName;
 }
 
