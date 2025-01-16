@@ -1,11 +1,11 @@
 import { Box, Dialog, DialogContent, DialogTitle, IconButton, SxProps, Typography, useMediaQuery } from "@mui/material"
-import { TagGroup, TagObject } from "../types/tags";
 import { useTagsContext } from "../contexts/Tags.context";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
 import { Close } from "@mui/icons-material";
 import { Theme } from "@emotion/react";
 import './TagsModal.css'
+import { GenericTags, TagGroup, TagObject } from "@editor-hub/tag-system";
 
 export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsModal: () => void }) => {
   const { activeTags } = useSelector((state: RootState) => state.tags)
@@ -89,7 +89,6 @@ export const TagsDialog = ({ open, closeTagsModal }: { open: boolean, closeTagsM
 }
 
 export const TagGroupsContainer = () => {
-  const { genericTags } = useSelector((state: RootState) => state.tags)
   
   return (
       <Box
@@ -100,7 +99,7 @@ export const TagGroupsContainer = () => {
           flexGrow: '1',
         }}
       >
-        {Object.values(genericTags).map((tagGroup, index) => (
+        {Object.values(GenericTags).map((tagGroup, index) => (
           <TagGroupItem tagGroup={tagGroup} keyValue={index}></TagGroupItem>
         ))}
     </Box>

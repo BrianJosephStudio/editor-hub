@@ -1,11 +1,11 @@
 import { Box } from "@mui/material";
 import { Folder } from './components/Folder'
-import { Metadata } from "../../types/dropbox";
 import { useEffect, useState } from "react";
 import { fetchClickedFolderMetadata, fetchInitialMetadata, fetchRootFolders, resolveTreeStructure } from "../../util/fileBrowser.util";
 import './FileBrowser.css'
-import { TagSystem } from "../../types/tags";
 import { FileTreeNode } from "../../types/app";
+import { Metadata } from "@editor-hub/dropbox-types"
+import { TagSystem } from "@editor-hub/tag-system";
 
 
 export const FileBrowser = ({

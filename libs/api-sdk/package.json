@@ -1,0 +1,22 @@
+{
+  "name": "@editor-hub/api-sdk",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build": "npx tsc -p tsconfig.json",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@editor-hub/dropbox-types": "workspace:*",
+    "@editor-hub/tag-system": "workspace:*",
+    "axios": "^1.7.9"
+  }
+}
