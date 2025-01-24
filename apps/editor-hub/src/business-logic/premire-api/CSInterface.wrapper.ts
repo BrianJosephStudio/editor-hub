@@ -23,14 +23,14 @@ export class CSInterfaceWrapper {
   public declareJSXFunctions = async (): Promise<void> => {
     if (!this.node.isNodeEnv) return;
     if(this.hostEnvironment.appId === 'PPRO'){
-      await this.declarPremiereJSX()
+      await this.declarePremiereJSX()
     }
     if(this.hostEnvironment.appId === 'AEFT'){
       await this.declareAfterEffectsJSX()
     }
   };
   
-  private readonly declarPremiereJSX = async () => {
+  private readonly declarePremiereJSX = async () => {
     const { data: jsonParser } = await axios.get("extendScript/json2.js");
     const { data: jsxCsInterfaceXDeclarations } = await axios.get(
       "extendScript/index.js"

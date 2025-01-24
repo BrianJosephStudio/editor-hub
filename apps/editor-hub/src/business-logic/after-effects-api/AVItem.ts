@@ -36,7 +36,6 @@ export class AVItem extends Item {
   public static readonly isAVItem = (extendScriptResponse: string) => {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
-      console.log("getting av item props", parsedResponse)
       if (
         parsedResponse.duration === undefined ||
         parsedResponse.frameDuration === undefined ||

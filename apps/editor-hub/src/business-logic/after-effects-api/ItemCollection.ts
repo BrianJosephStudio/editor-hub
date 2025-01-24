@@ -79,9 +79,8 @@ export class ItemCollection extends Collection {
             const responseObject = parseResponseObject(response);
 
             if (!responseObject.success)
-              return reject(
-                "Something went wrong running _ItemCollection_addFolder()"
-              );
+              throw "Something went wrong running _ItemCollection_addFolder()"
+              
 
             const createdItem = Project.getItemFromResponseData(
               responseObject.value,

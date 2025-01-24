@@ -1,8 +1,9 @@
 import { Item } from "./Item";
 import { Layer } from "./Layer";
+import { ItemObjectProps, LayerProps } from "./types";
 
 export class Collection {
-  public readonly entries: Item[] | Layer[] ;
+  public readonly entries: ItemObjectProps[] | LayerProps[] ;
   public readonly length: number;
 
   constructor(entries: Item[] | Layer[]) {

@@ -20,7 +20,6 @@ export class FolderItem extends Item {
   public readonly items = async (): Promise<ItemCollection> => {
     return new Promise((resolve, reject) => {
       csInterface.evalScript(`_folderItem_items(${this.id})`, (response) => {
-        console.log(response)
         const responseObject = parseResponseObject(response);
         if (!responseObject.success)
           throw "Something went wrong running _FolderItem_items()";
@@ -46,7 +45,6 @@ export class FolderItem extends Item {
     try {
       const parsedResponse = JSON.parse(extendScriptResponse);
       if (
-        parsedResponse.items === undefined ||
         parsedResponse.numItems === undefined ||
         parsedResponse.typeName !== "Folder"
       )
@@ -65,7 +63,7 @@ export class FolderItem extends Item {
     if (!isArray) throw new Error("itemArray input is not an array");
 
     const itemObjectArray = itemArray.map((responseData) => {
-      const item = Project.getItemFromResponseData(responseData);
+      const item = Project.getItemFromResponseData(JSON.stringify(responseData));
       if (!item) throw new Error("getItemFromResponseData returned null");
       return item;
     });

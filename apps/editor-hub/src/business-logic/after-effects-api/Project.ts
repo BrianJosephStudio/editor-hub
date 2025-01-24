@@ -70,15 +70,17 @@ export class Project {
 
   /**STATIC METHODS */
   public static readonly getInstance = async (): Promise<Project> => {
-    if (this.instance) return this.instance;
-    await csInterface.declareJSXFunctions();
-
-    try {
-      const projectObjectProperties = await this.getProjectProperties();
-      return new Project(projectObjectProperties);
-    } catch (e) {
-      throw new Error(e as any);
+    if (!this.instance){
+      await csInterface.declareJSXFunctions();
+  
+      try {
+        const projectObjectProperties = await this.getProjectProperties();
+        this.instance =  new Project(projectObjectProperties);
+      } catch (e) {
+        throw new Error(e as any);
+      }
     }
+    return this.instance;
   };
 
   private static readonly getProjectProperties =
@@ -151,8 +153,6 @@ export class Project {
 
     const itemProps = JSON.parse(responseData);
 
-    console.log("itemProps", itemProps);
-
     switch (typeName) {
       case "Footage":
         return new FootageItem(itemProps as FootageItemProps);
@@ -190,8 +190,7 @@ export class Project {
   ): ProjectObjectProps => {
     const parsedResponse = JSON.parse(projectData);
     if (
-      parsedResponse.file === undefined ||
-      parsedResponse.rootFolder === undefined
+      parsedResponse.file === undefined
     )
       throw "projectData did not match ProjectProps schema";
 

@@ -67,14 +67,12 @@ export class Item {
     extendScriptResponse: string
   ): ItemObjectProps | null => {
     try {
-      console.log("isProjectItem", extendScriptResponse)
       const parsedResponse = JSON.parse(extendScriptResponse);
       if (
         parsedResponse.comment === undefined ||
         parsedResponse.id === undefined ||
         parsedResponse.name === undefined ||
         parsedResponse.label === undefined ||
-        parsedResponse.parentFolder === undefined ||
         parsedResponse.typeName === undefined
       )
         throw "Object doesn´t match ItemObject schema";
