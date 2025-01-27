@@ -1,8 +1,9 @@
 import { NodeWrapper } from "./node.wrapper";
 import { FileTreeNode } from "../types/app";
 import apiClient from "../api/ApiClient";
-import { ProjectItem } from "./premire-api/classes/ProjectItem";
-import { Project } from "./premire-api/classes/Project";
+import { CSInterfaceWrapper } from "./premire-api/CSInterface.wrapper";
+import { PremiereResource } from "./app-specific-resource/PremiereResource";
+import { AfterEffectsResource } from "./app-specific-resource/AfterEffectsResource";
 
 const { isNodeEnv, fsPromises } = new NodeWrapper();
 
@@ -11,11 +12,9 @@ export class Resource {
   public readonly resourcePath: string;
   public readonly uri: string;
   public readonly folderPath: string;
-  private setPoints: boolean = false //TODO: wip
-  private inPoint: number = 2 //TODO: wip
-  private outPoint: number = 10 //TODO: wip
   public binPathArray: string[]
-  private projectItem?: ProjectItem
+  private premiereResource: PremiereResource
+  private afterEffectsResource: AfterEffectsResource
 
   constructor(fileTreeNode: FileTreeNode, resourcePath: string) {
     this.fileTreeNode = fileTreeNode;
@@ -23,6 +22,8 @@ export class Resource {
     this.uri = `${this.resourcePath}${this.fileTreeNode.path}`;
     this.folderPath = this.getDirName(this.uri)
     this.binPathArray = this.getBinPath()
+    this.premiereResource = new PremiereResource()
+    this.afterEffectsResource = new AfterEffectsResource()
   }
 
   download = async () => {
@@ -45,37 +46,17 @@ export class Resource {
   };
 
   import = async () => {
-    if (!isNodeEnv) return console.log("Import function has been triggered for ", this.fileTreeNode.name)
+    if (!isNodeEnv) return console.log("Import function has been triggered for ", this.fileTreeNode.name);
 
-    const project = await Project.getInstance()
+    const {hostEnvironment: {appId}} = new CSInterfaceWrapper()
 
-    const createdBin = await this.createBinRecursive(this.binPathArray)
-    if (!createdBin) {
-      return console.error(createdBin)
+    if(appId === "PPRO"){
+      this.premiereResource.import(this.uri, this.binPathArray)
     }
-
-    await project.importFile(this.uri, true, createdBin, false)
-    await this.getProjectItem()
-    await this.setInOutPoints()
+    if(appId === "AEFT"){
+      this.afterEffectsResource.import(this.uri, this.binPathArray)
+      }
   };
-
-  private getProjectItem = async (): Promise<void> => {
-    try {
-      const importedProjectItem = await ProjectItem.getProjectItemBySourcePath(this.uri)
-      this.projectItem = importedProjectItem
-    } catch (e) {
-      console.error(e)
-    }
-  }
-
-  private setInOutPoints = async (): Promise<void> => {
-    if (!this.setPoints) return;
-    if (!this.projectItem || !(this.projectItem instanceof ProjectItem)) {
-      return console.error('projectItem is not initialized')
-    }
-    await this.projectItem.setInPoint(this.inPoint, 4)
-    await this.projectItem.setOutPoint(this.outPoint, 4)
-  }
 
   private getBinPath = (): string[] => {
     const dirPath = this.getDirName(this.fileTreeNode.path)
@@ -86,23 +67,5 @@ export class Resource {
 
   private getDirName = (path: string): string => {
     return path.replace(/[/\\][^/\\]*$/, '');
-  }
-
-  private createBinRecursive = async (binPathArray: string[]): Promise<ProjectItem> => {
-    const initialBin = await ProjectItem.getRootItem()
-
-    const sequentialPiping = binPathArray.map((folderName) => {
-      return async (previousBin: ProjectItem): Promise<ProjectItem> => {
-        const newBin = await previousBin.createBin(folderName, true)
-        return newBin
-      }
-    })
-
-    const finalBin = await sequentialPiping.reduce(
-      (promiseChain, currentFunction) => promiseChain.then(currentFunction),
-      Promise.resolve(initialBin) // Start with the initial bin
-    );
-
-    return finalBin;
   }
 }

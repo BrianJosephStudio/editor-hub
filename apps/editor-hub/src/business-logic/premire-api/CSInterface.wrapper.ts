@@ -1,4 +1,4 @@
-import { CSInterface } from "@extendscript/csinterface/dist/v8";
+import { CSInterface, HostEnvironment } from "@extendscript/csinterface/dist/v8";
 import { NodeWrapper } from "../node.wrapper";
 import axios from "axios";
 
@@ -10,42 +10,68 @@ import axios from "axios";
  */
 
 export class CSInterfaceWrapper {
+  public hostEnvironment: HostEnvironment
   protected node: NodeWrapper;
   protected csInterface: CSInterface;
 
   constructor() {
     this.node = new NodeWrapper();
     this.csInterface = new CSInterface();
+    this.hostEnvironment = this.csInterface.hostEnvironment
   }
 
   public declareJSXFunctions = async (): Promise<void> => {
     if (!this.node.isNodeEnv) return;
-    
+    if(this.hostEnvironment.appId === 'PPRO'){
+      await this.declarePremiereJSX()
+    }
+    if(this.hostEnvironment.appId === 'AEFT'){
+      await this.declareAfterEffectsJSX()
+    }
+  };
+  
+  private readonly declarePremiereJSX = async () => {
     const { data: jsonParser } = await axios.get("extendScript/json2.js");
-    const { data: jsxCsInterfaceXDeclarations } = await axios.get("extendScript/index.js");
-    const { data: jsxEditorHubDeclarations } = await axios.get("extendScript/projectItem.js");
+    const { data: jsxCsInterfaceXDeclarations } = await axios.get(
+      "extendScript/index.js"
+    );
+    const { data: jsxEditorHubDeclarations } = await axios.get(
+      "extendScript/projectItem.js"
+    );
     await this.evalScript(jsonParser);
     await this.evalScript(jsxCsInterfaceXDeclarations);
     await this.evalScript(jsxEditorHubDeclarations);
-  };
+  }
+  
+  private readonly declareAfterEffectsJSX = async () => {
+    const { data: jsonParser } = await axios.get("extendScript/json2.js");
+    const { data: jsxCsInterfaceXDeclarations } = await axios.get(
+      "extendScript/after-effects-api/index.jsx"
+    );
+    await this.evalScript(jsonParser);
+    await this.evalScript(jsxCsInterfaceXDeclarations);
+
+  }
 
   public evalScript = async (
     script: string,
     callback: (response: string) => void = (response) => response
   ) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
       if (!this.node.isNodeEnv) return resolve("Mocked value");
-
       this.csInterface.evalScript(script, (response) => {
-        return resolve(callback(response));
+        if (CSInterfaceWrapper.isEvalScriptError(response))
+          return reject(response);
+
+        resolve(callback(response));
       });
     });
   };
 
   static isEvalScriptError = (response: string): boolean => {
-    if(response === 'EvalScript error.'){
-      return true
+    if (response === "EvalScript error.") {
+      return true;
     }
-    return false
-  }
+    return false;
+  };
 }
