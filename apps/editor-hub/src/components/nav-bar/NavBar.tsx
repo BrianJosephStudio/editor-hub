@@ -1,4 +1,4 @@
-import { Box, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
+import { Box, Button, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { AccountCircle, AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
@@ -6,6 +6,9 @@ import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
+import { CSInterfaceWrapper } from "../../business-logic/premire-api/CSInterface.wrapper";
+
+const csInterface = new CSInterfaceWrapper()
 
 export const NavBar = () => {
   const { isAuthorized } = useAuthorization()
@@ -57,6 +60,9 @@ export const NavBar = () => {
             padding: '0.6rem',
           }}
         />
+        <Button
+        onClick={() => console.log(csInterface.hostEnvironment)}
+        >Test</Button>
         <IconButton
           onClick={() => setMenuOpen(true)}
           sx={{ marginLeft: 'auto', '&:focus': { outline: 'none' } }}

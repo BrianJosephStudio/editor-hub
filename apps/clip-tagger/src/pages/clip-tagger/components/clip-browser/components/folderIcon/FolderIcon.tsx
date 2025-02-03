@@ -23,16 +23,13 @@ export const FolderIcon = ({
   const { setCurrentFolder, setActiveItem, lastItemName } = useFolderNavigation()
 
   useEffect(() => {
-    if (active && folderElement.current) {
+    if (
+      folderElement.current &&
+      (active  || entry.name.toLowerCase() === lastItemName.toLowerCase())
+    ) { 
       folderElement.current.focus()
     }
-  }, [active])
-
-  useEffect(() => {
-    if(entry.name.toLowerCase() !== lastItemName.toLowerCase() || !folderElement.current) return;
-
-    folderElement.current.focus()
-  },[lastItemName])
+  }, [active, lastItemName])
 
   return (
     <ListItem
@@ -69,7 +66,7 @@ export const FolderIcon = ({
       onClick={clickCallback}
 
       onKeyDown={(event) => {
-        if(event.key !== "Enter") return;
+        if (event.key !== "Enter") return;
         setCurrentFolder(
           entry.path_lower!.replace(
             clipsRootPath.toLowerCase(),
