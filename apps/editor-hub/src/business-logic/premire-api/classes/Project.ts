@@ -13,15 +13,17 @@ export class Project extends CSInterfaceWrapper {
   }
 
   static getInstance = async (): Promise<Project> => {
-    if (Project.instance) return Project.instance;
-    const csInterface = new CSInterfaceWrapper()
-    await csInterface.declareJSXFunctions()
-
-    const rootItem = await ProjectItem.getRootItem();
-
-    const project = new Project(rootItem);
-
-    return project
+    if (!this.instance) {
+      const csInterface = new CSInterfaceWrapper()
+      await csInterface.declareJSXFunctions()
+      
+      const rootItem = await ProjectItem.getRootItem();
+      const project = new Project(rootItem);
+      
+      this.instance = project
+    }
+    
+    return this.instance;
   };
 
   static getProjectItem = (nodeId: string): ProjectItem | undefined => {
@@ -32,9 +34,8 @@ export class Project extends CSInterfaceWrapper {
 
   static addProjectItem = (projectItem: ProjectItem) => {
     const foundItem = Project.getProjectItem(projectItem.nodeId)
-    if (foundItem) throw new Error("Project item already exists");
+    if (foundItem) return;
     Project.projectItems.push(projectItem)
-
   }
 
   importFile = async (
