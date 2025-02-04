@@ -12,4 +12,4 @@ export interface FileTreeNode {
   temporary_link?: string;
 }
 
-export type AppEnvironment = 'production' | 'qa' | 'dev' | 'localhost' | null
+export type AppEnvironment = 'production' | 'qa' | 'dev' | 'localhost' | 'staging' | null

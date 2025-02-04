@@ -1,4 +1,4 @@
-import { Box, Button, Dialog, DialogActions, DialogTitle, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, useMediaQuery } from "@mui/material";
+import { Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
 import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
@@ -6,19 +6,17 @@ import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
-import { CSInterfaceWrapper } from "../../business-logic/premire-api/CSInterface.wrapper";
 import { useAppEnvironment } from "../../contexts/AppEnvironment.context";
-
-const csInterface = new CSInterfaceWrapper()
+import { AppEnvironment } from "../../types/app";
 
 export const NavBar = () => {
   const { isAuthorized } = useAuthorization()
   const navigate = useNavigate()
   const location = useLocation();
-  const {appVersion, switchAppEnvironment} = useAppEnvironment()
+  const { appEnvironment, setNewAppEnvironment } = useAppEnvironment()
   const { user } = useUser();
+  const { isAdmin } = useAuthorization()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 
   const isWiderThan10Rem = useMediaQuery('(min-width:18rem')
 
@@ -142,6 +140,26 @@ export const NavBar = () => {
 
         </List>
         <Stack sx={{ backgroundColor: 'hsl(0, 0%, 20%)', paddingY: '1rem' }}>
+          <FormControl sx={{right: '-30 !important'}} size="medium">
+            <InputLabel sx={{color: 'white'}} id="app-version">version</InputLabel>
+            <Select
+              labelId="app-version"
+              // autoWidth
+              sx={{
+                color: 'white'
+              }}
+              value={appEnvironment as string}
+              onChange={(event: SelectChangeEvent) => {
+                setNewAppEnvironment(event.target.value as AppEnvironment);
+              }}
+            >
+              <MenuItem value={'production'}>Latest</MenuItem>
+              <MenuItem value={'qa'}>Beta</MenuItem>
+              {isAdmin || appEnvironment === 'dev' && <MenuItem value={'dev'}>Dev</MenuItem>}
+              {isAdmin || appEnvironment === 'localhost' && <MenuItem value={'localhost'}>Localhost</MenuItem>}
+              {isAdmin || appEnvironment === 'staging' && <MenuItem value={'staging'}>Staging</MenuItem>}
+            </Select>
+          </FormControl>
           <Typography
             id={`nava-bar:app-version`}
             data-testid={`nava-bar:app-version`}
@@ -154,26 +172,8 @@ export const NavBar = () => {
           >
             app version - {packageJson.version}
           </Typography>
-          <Button onClick={() => setDialogOpen(true)}>{appVersion}</Button>
         </Stack>
       </Drawer>
-
-      <Dialog open={dialogOpen} sx={{
-      }}>
-        <DialogTitle
-          sx={{
-            fontSize: 16,
-            textAlign: 'center',
-            display: 'flex',
-            placeContent: 'center',
-            fontWeight: 300
-          }}
-        >You're about to switch to the {appVersion === 'Latest' ? 'beta' : 'latest'} version. You can switch back and forth between versions at any time</DialogTitle>
-        <DialogActions>
-          <Button onClick={switchAppEnvironment}>Confirm</Button>
-          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
-        </DialogActions>
-      </Dialog>
     </>
   );
 };
