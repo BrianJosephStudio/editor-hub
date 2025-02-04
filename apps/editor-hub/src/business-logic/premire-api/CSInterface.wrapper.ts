@@ -36,7 +36,7 @@ export class CSInterfaceWrapper {
       "extendScript/index.js"
     );
     const { data: jsxEditorHubDeclarations } = await axios.get(
-      "extendScript/projectItem.js"
+      "extendScript/ProjectItem.js"
     );
     await this.evalScript(jsonParser);
     await this.evalScript(jsxCsInterfaceXDeclarations);
