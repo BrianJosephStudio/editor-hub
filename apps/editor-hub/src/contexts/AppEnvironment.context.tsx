@@ -31,9 +31,8 @@ export const AppEnvironmentProvider = ({ children }: { children: ReactNode }) =>
 
     const { appEnvironment, setAppEnvironment } = appEnvironmentClient
 
-    if (appEnvironment === 'production') setAppEnvironment('qa')
-    if (appEnvironment === 'qa') setAppEnvironment('production')
-    if (appEnvironment === 'localhost') setAppEnvironment('production')
+    if (appEnvironment === 'production') setAppEnvironment('qa');
+    setAppEnvironment('production')
   }
 
   useEffect(() => {
