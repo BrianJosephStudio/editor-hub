@@ -11,3 +11,5 @@ export interface FileTreeNode {
   children?: FileTreeNode[];
   temporary_link?: string;
 }
+
+export type AppEnvironment = 'production' | 'qa' | 'dev' | 'localhost' | 'staging' | null

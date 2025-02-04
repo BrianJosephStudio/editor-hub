@@ -1,20 +1,21 @@
-import { Box, Button, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
+import { Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AccountCircle, AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
+import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
 import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
-import { CSInterfaceWrapper } from "../../business-logic/premire-api/CSInterface.wrapper";
-
-const csInterface = new CSInterfaceWrapper()
+import { useAppEnvironment } from "../../contexts/AppEnvironment.context";
+import { AppEnvironment } from "../../types/app";
 
 export const NavBar = () => {
   const { isAuthorized } = useAuthorization()
   const navigate = useNavigate()
   const location = useLocation();
+  const { appEnvironment, setNewAppEnvironment } = useAppEnvironment()
   const { user } = useUser();
+  const { isAdmin } = useAuthorization()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
 
   const isWiderThan10Rem = useMediaQuery('(min-width:18rem')
@@ -60,9 +61,6 @@ export const NavBar = () => {
             padding: '0.6rem',
           }}
         />
-        <Button
-        onClick={() => console.log(csInterface.hostEnvironment)}
-        >Test</Button>
         <IconButton
           onClick={() => setMenuOpen(true)}
           sx={{ marginLeft: 'auto', '&:focus': { outline: 'none' } }}
@@ -72,7 +70,7 @@ export const NavBar = () => {
       </Box>
 
       <Drawer open={menuOpen} anchor="right" onClose={() => setMenuOpen(false)}>
-        <List sx={{ backgroundColor: 'hsl(0, 0%, 20%)', height: '100%', color: 'hsl(0, 0.00%, 90%)' }}>
+        <List sx={{ backgroundColor: 'hsl(0, 0%, 20%)', flexGrow: 1, color: 'hsl(0, 0.00%, 90%)' }}>
           <ListItem sx={{ display: 'flex', gap: '0.6rem', placeItems: 'center', width: '100%' }}>
             <ListItemAvatar>
               <Box sx={{ position: 'relative' }}>
@@ -127,7 +125,7 @@ export const NavBar = () => {
           </ListItem>
 
           {isAuthorized && pages.map(({ title, path, listItemIcon }) => (
-            <ListItem disablePadding onClick={() => navigate(path)}
+            <ListItem key={title} disablePadding onClick={() => navigate(path)}
               sx={{
                 backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
               }}
@@ -139,16 +137,42 @@ export const NavBar = () => {
             </ListItem>
           ))}
 
-          <ListItem>
-            <ListItemText
-              id={`nava-bar:app-version`}
-              data-testid={`nava-bar:app-version`}
-              color={'white'}
-            >
-              app version - {packageJson.version}
-            </ListItemText>
-          </ListItem>
+
         </List>
+        <Stack sx={{ backgroundColor: 'hsl(0, 0%, 20%)', paddingY: '1rem' }}>
+          <FormControl sx={{right: '-30 !important'}} size="medium">
+            <InputLabel sx={{color: 'white'}} id="app-version">version</InputLabel>
+            <Select
+              labelId="app-version"
+              // autoWidth
+              sx={{
+                color: 'white'
+              }}
+              value={appEnvironment as string}
+              onChange={(event: SelectChangeEvent) => {
+                setNewAppEnvironment(event.target.value as AppEnvironment);
+              }}
+            >
+              <MenuItem value={'production'}>{ isAdmin ? 'Production' : 'Latest'}</MenuItem>
+              <MenuItem value={'qa'}>{ isAdmin ? 'QA' : 'Beta'}</MenuItem>
+              {(isAdmin || appEnvironment === 'dev') && <MenuItem value={'dev'}>Dev</MenuItem>}
+              {(isAdmin || appEnvironment === 'localhost') && <MenuItem value={'localhost'}>Localhost</MenuItem>}
+              {(isAdmin || appEnvironment === 'staging') && <MenuItem value={'staging'}>Staging</MenuItem>}
+            </Select>
+          </FormControl>
+          <Typography
+            id={`nava-bar:app-version`}
+            data-testid={`nava-bar:app-version`}
+            color={'hsl(0, 0%, 75%)'}
+            fontSize={13}
+            sx={{
+              display: 'flex',
+              placeContent: 'center'
+            }}
+          >
+            app version - {packageJson.version}
+          </Typography>
+        </Stack>
       </Drawer>
     </>
   );
