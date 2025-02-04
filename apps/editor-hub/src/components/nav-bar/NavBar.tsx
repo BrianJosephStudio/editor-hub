@@ -63,9 +63,6 @@ export const NavBar = () => {
             padding: '0.6rem',
           }}
         />
-        <Button
-          onClick={() => console.log(csInterface.hostEnvironment)}
-        >Test</Button>
         <IconButton
           onClick={() => setMenuOpen(true)}
           sx={{ marginLeft: 'auto', '&:focus': { outline: 'none' } }}
