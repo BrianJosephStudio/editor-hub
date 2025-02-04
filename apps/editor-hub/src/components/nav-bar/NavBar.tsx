@@ -1,12 +1,13 @@
-import { Box, Button, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
+import { Box, Button, Dialog, DialogActions, DialogTitle, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AccountCircle, AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
+import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
 import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
 import { CSInterfaceWrapper } from "../../business-logic/premire-api/CSInterface.wrapper";
+import { useAppEnvironment } from "../../contexts/AppEnvironment.context";
 
 const csInterface = new CSInterfaceWrapper()
 
@@ -14,8 +15,10 @@ export const NavBar = () => {
   const { isAuthorized } = useAuthorization()
   const navigate = useNavigate()
   const location = useLocation();
+  const {appVersion, switchAppEnvironment} = useAppEnvironment()
   const { user } = useUser();
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false)
 
   const isWiderThan10Rem = useMediaQuery('(min-width:18rem')
 
@@ -61,7 +64,7 @@ export const NavBar = () => {
           }}
         />
         <Button
-        onClick={() => console.log(csInterface.hostEnvironment)}
+          onClick={() => console.log(csInterface.hostEnvironment)}
         >Test</Button>
         <IconButton
           onClick={() => setMenuOpen(true)}
@@ -72,7 +75,7 @@ export const NavBar = () => {
       </Box>
 
       <Drawer open={menuOpen} anchor="right" onClose={() => setMenuOpen(false)}>
-        <List sx={{ backgroundColor: 'hsl(0, 0%, 20%)', height: '100%', color: 'hsl(0, 0.00%, 90%)' }}>
+        <List sx={{ backgroundColor: 'hsl(0, 0%, 20%)', flexGrow: 1, color: 'hsl(0, 0.00%, 90%)' }}>
           <ListItem sx={{ display: 'flex', gap: '0.6rem', placeItems: 'center', width: '100%' }}>
             <ListItemAvatar>
               <Box sx={{ position: 'relative' }}>
@@ -139,17 +142,41 @@ export const NavBar = () => {
             </ListItem>
           ))}
 
-          <ListItem>
-            <ListItemText
-              id={`nava-bar:app-version`}
-              data-testid={`nava-bar:app-version`}
-              color={'white'}
-            >
-              app version - {packageJson.version}
-            </ListItemText>
-          </ListItem>
+
         </List>
+        <Stack sx={{ backgroundColor: 'hsl(0, 0%, 20%)', paddingY: '1rem' }}>
+          <Typography
+            id={`nava-bar:app-version`}
+            data-testid={`nava-bar:app-version`}
+            color={'hsl(0, 0%, 75%)'}
+            fontSize={13}
+            sx={{
+              display: 'flex',
+              placeContent: 'center'
+            }}
+          >
+            app version - {packageJson.version}
+          </Typography>
+          <Button onClick={() => setDialogOpen(true)}>{appVersion}</Button>
+        </Stack>
       </Drawer>
+
+      <Dialog open={dialogOpen} sx={{
+      }}>
+        <DialogTitle
+          sx={{
+            fontSize: 16,
+            textAlign: 'center',
+            display: 'flex',
+            placeContent: 'center',
+            fontWeight: 300
+          }}
+        >You're about to switch to the {appVersion === 'Latest' ? 'beta' : 'latest'} version. You can switch back and forth between versions at any time</DialogTitle>
+        <DialogActions>
+          <Button onClick={switchAppEnvironment}>Confirm</Button>
+          <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </>
   );
 };

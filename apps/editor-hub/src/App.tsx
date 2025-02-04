@@ -10,6 +10,7 @@ import { AudioGallery } from "./pages/audio-gallery/AudioGallery";
 import { FileBrowserProvider } from "./contexts/FileBrowser.context";
 import { IsAuthorized, ProtectedRoute, UnauthorizedUser } from "./components/auth-screens/UnauthorizedUser";
 import { AuthorizationProvider } from "./contexts/Authorization.context";
+import { AppEnvironmentProvider } from "./contexts/AppEnvironment.context";
 
 function App() {
   return (
@@ -27,7 +28,9 @@ function App() {
         }}
       >
         <AuthorizationProvider>
-          <NavBar></NavBar>
+          <AppEnvironmentProvider>
+            <NavBar></NavBar>
+          </AppEnvironmentProvider>
           <FileBrowserProvider>
             <Routes>
               <Route path="/" element={
