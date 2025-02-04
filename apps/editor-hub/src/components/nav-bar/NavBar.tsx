@@ -125,7 +125,7 @@ export const NavBar = () => {
           </ListItem>
 
           {isAuthorized && pages.map(({ title, path, listItemIcon }) => (
-            <ListItem disablePadding onClick={() => navigate(path)}
+            <ListItem key={title} disablePadding onClick={() => navigate(path)}
               sx={{
                 backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
               }}
