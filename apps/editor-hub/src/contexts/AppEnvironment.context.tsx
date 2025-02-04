@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode, useRef, useEffect } from "react";
+import { createContext, useContext, useState, ReactNode, useEffect } from "react";
 import { AppEnvironmentClient } from "../business-logic/AppEnvironment";
 import { AppEnvironment } from "../types/app";
 
