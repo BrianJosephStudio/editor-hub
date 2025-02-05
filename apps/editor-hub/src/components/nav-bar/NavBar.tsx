@@ -1,7 +1,7 @@
 import { Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
+import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie, Settings } from "@mui/icons-material";
 import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -30,6 +30,11 @@ export const NavBar = () => {
       title: "Audio Gallery",
       path: "audio-gallery",
       listItemIcon: <Headset sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+    },
+    {
+      title: "Settings",
+      path: "settings",
+      listItemIcon: <Settings sx={{ fill: 'hsl(213, 98%, 68%)' }} />
     }
   ]
 
