@@ -1,4 +1,4 @@
-import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack } from "@mui/material"
+import { Box, FormControl, InputLabel, MenuItem, Select, SelectChangeEvent, Stack, Typography } from "@mui/material"
 import { useSettings } from "../../contexts/Settings.context"
 
 export const SettingsPage = () => {
@@ -18,11 +18,12 @@ export const SettingsPage = () => {
             sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                alignItems: 'space-around',
-                padding: '2rem'
+                alignItems: 'center',
+                padding: '1rem',
+                gap: '1rem'
             }}
         >
-            <Stack direction={'column'} sx={{}}>
+            <Stack direction={'column'}>
                 <FormControl>
                     <InputLabel sx={{ color: 'white' }}>Download Location</InputLabel>
                     <Select
