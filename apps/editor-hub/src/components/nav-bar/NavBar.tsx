@@ -170,8 +170,8 @@ export const NavBar = () => {
                 setNewAppEnvironment(event.target.value as AppEnvironment);
               }}
             >
-              <MenuItem value={'production'}>{isAdmin ? 'Production' : 'Latest'}</MenuItem>
-              <MenuItem value={'qa'}>{isAdmin ? 'QA' : 'Beta'}</MenuItem>
+              <MenuItem value={'production'}>Production</MenuItem>
+              <MenuItem value={'qa'}>QA</MenuItem>
               {(isAdmin || appEnvironment === 'dev') && <MenuItem value={'dev'}>Dev</MenuItem>}
               {(isAdmin || appEnvironment === 'localhost') && <MenuItem value={'localhost'}>Localhost</MenuItem>}
               {(isAdmin || appEnvironment === 'staging') && <MenuItem value={'staging'}>Staging</MenuItem>}
