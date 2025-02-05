@@ -29,7 +29,7 @@ export const SettingsProvider = ({ children }: { children: ReactNode }) => {
         const isValidValue = assertCookieIsDownloadLocation(value)
         if(!isValidValue) throw 'received select value is invalid'
 
-        Cookies.set(downloadLocationCookieName, value)
+        Cookies.set(downloadLocationCookieName, value, {expires: 730})
         setDownloadLocation(value)
     }
 
