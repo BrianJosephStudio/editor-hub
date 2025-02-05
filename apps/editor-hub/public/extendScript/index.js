@@ -205,3 +205,7 @@ function getProjectItemReference(referenceId) {
 function deleteProjectItemReference(referenceId) {
   delete CSInterfaceX.projectItems[referenceId]
 }
+
+function _Project_getProjectPath() {
+  return app.project.path
+}

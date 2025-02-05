@@ -1,7 +1,6 @@
 import { CSInterfaceWrapper } from "../premire-api/CSInterface.wrapper";
 import { AVItem } from "./AVItem";
 import { CompItem } from "./CompItem";
-import { File } from "./File";
 import { FolderItem } from "./FolderItem";
 import { FootageItem } from "./FootageItem";
 import { Item } from "./Item";
@@ -17,18 +16,15 @@ import { parseResponseObject } from "./util";
 const csInterface = new CSInterfaceWrapper();
 
 interface ProjectObjectProps {
-  file: File;
   rootFolder: FolderItem;
 }
 
 export class Project {
-  public readonly file: File;
   public readonly rootFolder: FolderItem;
 
   private static instance: Project | undefined;
 
-  private constructor({ file, rootFolder }: ProjectObjectProps) {
-    this.file = file;
+  private constructor({ rootFolder }: ProjectObjectProps) {
     this.rootFolder = rootFolder;
   }
 
@@ -36,11 +32,36 @@ export class Project {
     return this.rootFolder.items();
   };
 
+  public readonly getProjectFsName = () => {
+    return new Promise<string | null>((resolve, reject) => {
+      try{
+        csInterface.evalScript(`_Project_getProjectFsName()`, response => {
+          const responseObject = parseResponseObject(response);
+
+          if (!responseObject.success)
+            return reject("Something went wrong running _Project_getProjectFsName()");
+
+          const parsedValue = JSON.parse(responseObject.value) as string
+
+          if(parsedValue === null) return resolve(null);
+
+          const projectPath = parsedValue.replace(/\\/g, '/')
+
+          resolve(projectPath)
+        })
+      }catch(e){
+        console.error(e)
+        reject(e)
+      }
+    })
+  }
+
   public readonly importFile = (
     path: string
   ): Promise<FootageItem | CompItem> => {
     return new Promise((resolve, reject) => {
       try {
+        console.log("path", path)
         csInterface.evalScript(`_Project_importFile('${path}')`, (response) => {
           const responseObject = parseResponseObject(response);
           if (!responseObject.success)
@@ -59,23 +80,23 @@ export class Project {
     });
   };
 
-  public readonly activeItem = () => {};
-  public readonly selection = () => {};
+  public readonly activeItem = () => { };
+  public readonly selection = () => { };
 
   public readonly item = (index: number) => Project.getByIndex(index);
   public readonly itemByID = (id: number) => Project.getByIndex(id);
-  public readonly layerByID = () => {};
-  public readonly save = () => {};
-  public readonly showWindow = () => {};
+  public readonly layerByID = () => { };
+  public readonly save = () => { };
+  public readonly showWindow = () => { };
 
   /**STATIC METHODS */
   public static readonly getInstance = async (): Promise<Project> => {
-    if (!this.instance){
+    if (!this.instance) {
       await csInterface.declareJSXFunctions();
-  
+
       try {
         const projectObjectProperties = await this.getProjectProperties();
-        this.instance =  new Project(projectObjectProperties);
+        this.instance = new Project(projectObjectProperties);
       } catch (e) {
         throw new Error(e as any);
       }
@@ -190,7 +211,7 @@ export class Project {
   ): ProjectObjectProps => {
     const parsedResponse = JSON.parse(projectData);
     if (
-      parsedResponse.file === undefined
+      parsedResponse.rootFolder === undefined
     )
       throw "projectData did not match ProjectProps schema";
 
@@ -201,7 +222,6 @@ export class Project {
 
     if (!rootFolder) throw "Could not parse root folder";
     const projectObjectProps: ProjectObjectProps = {
-      file: parsedResponse.file,
       rootFolder: rootFolder as FolderItem,
     };
 

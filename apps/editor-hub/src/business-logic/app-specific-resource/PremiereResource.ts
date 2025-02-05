@@ -9,6 +9,13 @@ export class PremiereResource {
 
   constructor() {}
 
+  public static readonly getProjectPath = async (): Promise<string> => {
+    const project = await Project.getInstance()
+
+    const path = await project.getProjectPath()
+
+    return path
+  }
   public readonly import = async (uri: string, binPathArray: string[]) => {
     const project = await Project.getInstance();
 
