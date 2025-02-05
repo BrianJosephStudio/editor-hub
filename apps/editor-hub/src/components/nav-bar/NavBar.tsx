@@ -73,7 +73,7 @@ export const NavBar = () => {
               padding: '0.6rem',
             }}
           />
-          {appEnvironment !== 'production' && <Typography color={'hsl(178, 98%, 50%)'} fontSize={'0.8rem'}>{appEnvironment}</Typography>}
+          {appEnvironment !== 'production' && <Typography color={'hsl(202, 100.00%, 61.00%)'} fontSize={'0.8rem'}>{appEnvironment}</Typography>}
         </Stack>
         <Typography>
           {pageName}
