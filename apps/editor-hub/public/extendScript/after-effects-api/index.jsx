@@ -36,10 +36,22 @@ function createStringifiableCopy(original) {
 function _Project_getProjectProperties() {
   try {
     var output = {
-      file: app.project.file,
       rootFolder: createStringifiableCopy(app.project.rootFolder),
     };
     var value = JSON.stringify(output);
+    var responseObject = _createResponseObject(value, true);
+    return responseObject;
+  } catch (e) {
+    return _createResponseObject(e.message, false);
+  }
+}
+
+function _Project_getProjectFsName() {
+  try {
+    var value = JSON.stringify(null)
+    if(app.project.file){
+      value = JSON.stringify(app.project.file.fsName);
+    }
     var responseObject = _createResponseObject(value, true);
     return responseObject;
   } catch (e) {

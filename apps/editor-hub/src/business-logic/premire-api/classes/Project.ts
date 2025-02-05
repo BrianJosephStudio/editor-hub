@@ -38,6 +38,22 @@ export class Project extends CSInterfaceWrapper {
     Project.projectItems.push(projectItem)
   }
 
+  getProjectPath = () => {
+    return new Promise<string>((resolve, reject) => {
+      try{
+        if(!this.node.isNodeEnv) return resolve("/")
+        this.evalScript(`_Project_getProjectPath()`, (response) => {
+          const projectPath = response.replace(/\\/g, "/")
+          const projectFolderPath = this.node.path!.dirname(projectPath)
+          resolve(projectFolderPath)
+        })
+      }catch(e){
+        console.error(e)
+        reject(e)
+      }
+    })
+  }
+
   importFile = async (
     filePath: string,
     suppressUI: boolean,
