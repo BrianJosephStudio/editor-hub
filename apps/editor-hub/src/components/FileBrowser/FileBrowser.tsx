@@ -3,7 +3,7 @@ import { Folder } from './components/Folder'
 import { useEffect, useState } from "react";
 import { fetchClickedFolderMetadata, fetchInitialMetadata, fetchRootFolders, resolveTreeStructure } from "../../util/fileBrowser.util";
 import './FileBrowser.css'
-import { FileTreeNode } from "../../types/app";
+import { FileTreeName, FileTreeNode } from "../../types/app";
 import { Metadata } from "@editor-hub/dropbox-types"
 import { TagSystem } from "@editor-hub/tag-system";
 
@@ -11,6 +11,7 @@ import { TagSystem } from "@editor-hub/tag-system";
 export const FileBrowser = ({
   fileTree,
   fetchUpFront,
+  fileTreeName,
   rootPath,
   noFilter,
   genericTags,
@@ -19,6 +20,7 @@ export const FileBrowser = ({
 }: {
   fileTree: FileTreeNode
   fetchUpFront?: number
+  fileTreeName: FileTreeName
   rootPath: string
   noFilter?: boolean
   genericTags?: TagSystem
@@ -31,7 +33,7 @@ export const FileBrowser = ({
   //This hook assembles the fileTree any time we fetch new metadata
   useEffect(() => {
     if (clipMetadataBatch.length === 0 || !fileTree) return;
-    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, rootPath, noFilter, genericTags);
+    const builtRoot = resolveTreeStructure(fileTree, clipMetadataBatch, fileTreeName, rootPath, noFilter, genericTags);
     setNewFileTree(builtRoot)
     setFoldersRendered(true);
   }, [clipMetadataBatch]);

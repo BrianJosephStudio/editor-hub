@@ -1,6 +1,6 @@
 import { Metadata } from "@editor-hub/dropbox-types";
 import apiClient from "../api/ApiClient";
-import { FileTreeNode } from "../types/app";
+import { FileTreeName, FileTreeNode } from "../types/app";
 import { TagObject, TagSystem } from "@editor-hub/tag-system";
 
 export const fetchRootFolders = async (rootPath: string): Promise<Metadata[]> => {
@@ -58,6 +58,7 @@ export const fetchClickedFolderMetadata = async (
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
+  fileTreeName: FileTreeName,
   rootPath: string,
   noFilter?: boolean,
   genericTags?: TagSystem,
@@ -80,6 +81,7 @@ export const resolveTreeStructure = (
       ) {
         let newFileTreeNode: FileTreeNode = {
           name: metadata.name,
+          fileTreeName,
           tag: metadata[".tag"],
           path: getMetadataPath(rootPath, metadata.path_lower!),
           filtered: !!noFilter ? true : false,
@@ -113,6 +115,7 @@ export const resolveTreeStructure = (
           newFileTreeNode = resolveTreeStructure(
             newFileTreeNode,
             newMetadata,
+            fileTreeName,
             rootPath,
             noFilter,
             genericTags
@@ -124,7 +127,36 @@ export const resolveTreeStructure = (
 
       return null;
     })
-    .filter((child) => !!child);
+    .filter((child) => !!child)
+
+  if (currentFileTreeNode.path !== "/" || currentFileTreeNode.fileTreeName !== 'inGameFootage')
+    children.sort((a, b) => {
+      // 1. Sort by tag (folders first)
+      if (a.tag !== b.tag) {
+        return a.tag === "folder" ? -1 : 1;
+      }
+    
+      // 2. Extract number from name using regex /_(\d+)\.\d+$/
+      const getNumber = (name: string) => {
+        const match = name.match(/_(\d+)\.\d+$/);
+        return match ? parseInt(match[1], 10) : null;
+      };
+    
+      const numA = getNumber(a.name);
+      const numB = getNumber(b.name);
+    
+      // 3. Sort by extracted number if both have a valid number
+      if (numA !== null && numB !== null) {
+        return numA - numB;
+      }
+    
+      // 4. If only one has a number, prioritize the one with a number
+      if (numA !== null) return -1;
+      if (numB !== null) return 1;
+    
+      // 5. Sort alphabetically if no numbers are found
+      return a.name.localeCompare(b.name);
+    });
 
   if (
     !newFileTreeNode.children ||
