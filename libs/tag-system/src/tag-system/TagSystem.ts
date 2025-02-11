@@ -75,7 +75,7 @@ export const GenericTags: TagSystem = {
             {tag:"phantom",displayName:"Phantom",description:"Player gets a kill with the Phantom", unique: true, timeless: true, protected: false, keybind: "p", id: "g012"},
             {tag:"sheriff",displayName:"Sheriff",description:"Player gets a kill with the Sheriff", unique: true, timeless: true, protected: false, keybind: "s", id: "g013"},
             {tag:"shorty",displayName:"Shorty",description:"Player gets a kill with the Shorty", unique: true, timeless: true, protected: false, keybind: "r", id: "g014"},
-            {tag:"spectre",displayName:"Spectre",description:"Player gets a kill with the Spectre", unique: true, timeless: true, protected: false, keybind: "r", id: "g015"},
+            {tag:"spectre",displayName:"Spectre",description:"Player gets a kill with the Spectre", unique: true, timeless: true, protected: false, keybind: "e", id: "g015"},
             {tag:"stinger",displayName:"Stinger",description:"Player gets a kill with the Stinger", unique: true, timeless: true, protected: false, keybind: "t", id: "g016"},
             {tag:"vandal",displayName:"Vandal",description:"Player gets a kill with the Vandal", unique: true, timeless: true, protected: false, keybind: "v", id: "g017"},
             {tag:"knife",displayName:"Knife",description:"Player gets a kill with their Knife", unique: true, timeless: true, protected: false, keybind: "k", id: "g018"}
