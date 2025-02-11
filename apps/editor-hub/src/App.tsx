@@ -11,6 +11,8 @@ import { FileBrowserProvider } from "./contexts/FileBrowser.context";
 import { IsAuthorized, ProtectedRoute, UnauthorizedUser } from "./components/auth-screens/UnauthorizedUser";
 import { AuthorizationProvider } from "./contexts/Authorization.context";
 import { AppEnvironmentProvider } from "./contexts/AppEnvironment.context";
+import { SettingsPage } from "./pages/settings/Settings";
+import { SettingsProvider } from "./contexts/Settings.context";
 
 function App() {
   return (
@@ -31,38 +33,46 @@ function App() {
           <AppEnvironmentProvider>
             <NavBar></NavBar>
           </AppEnvironmentProvider>
-          <FileBrowserProvider>
-            <Routes>
-              <Route path="/" element={
-                <ProtectedRoute>
+          <SettingsProvider>
+            <FileBrowserProvider>
+              <Routes>
+                <Route path="/" element={
+                  <ProtectedRoute>
 
-                  <Navigate to="/video-gallery" />
-                </ProtectedRoute>
-              } />
+                    <Navigate to="/video-gallery" />
+                  </ProtectedRoute>
+                } />
 
-              <Route path="video-gallery" element={
-                <ProtectedRoute>
-                  <VideoGalleryProvider>
-                    <VideoGallery></VideoGallery>
-                  </VideoGalleryProvider>
-                </ProtectedRoute>
-              } />
+                <Route path="video-gallery" element={
+                  <ProtectedRoute>
+                    <VideoGalleryProvider>
+                      <VideoGallery></VideoGallery>
+                    </VideoGalleryProvider>
+                  </ProtectedRoute>
+                } />
 
-              <Route path="audio-gallery" element={
-                <ProtectedRoute>
-                  <AudioGalleryProvider>
-                    <AudioGallery></AudioGallery>
-                  </AudioGalleryProvider>
-                </ProtectedRoute>
-              } />
+                <Route path="audio-gallery" element={
+                  <ProtectedRoute>
+                    <AudioGalleryProvider>
+                      <AudioGallery></AudioGallery>
+                    </AudioGalleryProvider>
+                  </ProtectedRoute>
+                } />
 
-              <Route path="unauthorized" element={
-                <IsAuthorized>
-                  <UnauthorizedUser />
-                </IsAuthorized>
-              }></Route>
-            </Routes>
-          </FileBrowserProvider>
+                <Route path="settings" element={
+                  <ProtectedRoute>
+                    <SettingsPage></SettingsPage>
+                  </ProtectedRoute>
+                } />
+
+                <Route path="unauthorized" element={
+                  <IsAuthorized>
+                    <UnauthorizedUser />
+                  </IsAuthorized>
+                }></Route>
+              </Routes>
+            </FileBrowserProvider>
+          </SettingsProvider>
         </AuthorizationProvider>
       </Box>
     </BrowserRouter>

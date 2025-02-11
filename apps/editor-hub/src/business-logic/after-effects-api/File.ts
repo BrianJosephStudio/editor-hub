@@ -1,1 +1,4 @@
-export class File {}
+export interface File {
+    fsName: string
+    path: string
+}

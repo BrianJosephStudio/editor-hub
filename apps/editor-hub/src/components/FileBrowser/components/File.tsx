@@ -3,11 +3,11 @@ import { FileTreeNode } from "../../../types/app";
 import { Audiotrack, Download, PlayArrow, Theaters } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { Resource } from "../../../business-logic/Resource";
-import { AppPaths } from "../../../business-logic/AppPaths";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
 import { useFileBrowser } from "../../../contexts/FileBrowser.context";
 import { getMimeType } from "../../../util/fileType";
+import { useSettings } from "../../../contexts/Settings.context";
 
 export const File = ({
   fileTreeNode,
@@ -20,6 +20,7 @@ export const File = ({
 }) => {
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
+  const {downloadLocation} = useSettings()
   const { tabIndex, setTabIndex } = useFileBrowser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileType, setFileType] = useState<"video" | "image" | "audio" | undefined>()
@@ -125,10 +126,9 @@ export const File = ({
             <Download
               onClick={async () => {
                 setIsLoading(true);
-                const appPaths = new AppPaths();
-                const resource = new Resource(
+                const resource = await Resource.getInstance(
                   fileTreeNode,
-                  appPaths.inGameFootage
+                  downloadLocation
                 );
                 await resource.download();
                 await resource.import();

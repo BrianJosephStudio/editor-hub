@@ -1,9 +1,9 @@
 import { Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie } from "@mui/icons-material";
+import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie, Settings } from "@mui/icons-material";
 import packageJson from "../../../package.json";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
 import { useAppEnvironment } from "../../contexts/AppEnvironment.context";
@@ -17,6 +17,7 @@ export const NavBar = () => {
   const { user } = useUser();
   const { isAdmin } = useAuthorization()
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
+  const [pageName, setPageName] = useState<string>("")
 
   const isWiderThan10Rem = useMediaQuery('(min-width:18rem')
 
@@ -30,10 +31,21 @@ export const NavBar = () => {
       title: "Audio Gallery",
       path: "audio-gallery",
       listItemIcon: <Headset sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+    },
+    {
+      title: "Settings",
+      path: "settings",
+      listItemIcon: <Settings sx={{ fill: 'hsl(213, 98%, 68%)' }} />
     }
   ]
 
   const userName = user?.firstName ?? user?.primaryEmailAddress?.emailAddress.split("@")[0] ?? "Anonym";
+
+  useEffect(() => {
+    pages.forEach(page => {
+      if(location.pathname.includes(page.path)) setPageName(page.title)
+    })
+  },[location])
   return (
     <>
       <Box
@@ -41,29 +53,34 @@ export const NavBar = () => {
         id={`nava-bar:container`}
         data-testid={`nava-bar:container`}
         sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "flex-end",
+          display: "grid",
+          gridTemplateColumns: 'repeat(3, 1fr)',
           width: "100%",
-          placeItems: "center",
+          alignItems: 'center',
           backgroundColor: "hsl(0, 0%, 20%)",
           padding: '0'
         }}
       >
-        <Box
-          component={"img"}
-          id={`nava-bar:app-logo`}
-          data-testid={`nava-bar:app-logo`}
-          src={clipTaggerLogo}
-          sx={{
-            maxHeight: "1.1rem",
-            // gridColumn: "2/3",
-            padding: '0.6rem',
-          }}
-        />
+        <Stack direction={'row'} alignItems={'center'}>
+          <Box
+            component={"img"}
+            id={`nava-bar:app-logo`}
+            data-testid={`nava-bar:app-logo`}
+            src={clipTaggerLogo}
+            sx={{
+              maxHeight: "1.1rem",
+              // gridColumn: "2/3",
+              padding: '0.6rem',
+            }}
+          />
+          {appEnvironment !== 'production' && <Typography color={'hsl(202, 100.00%, 61.00%)'} fontSize={'0.8rem'}>{appEnvironment}</Typography>}
+        </Stack>
+        <Typography>
+          {pageName}
+        </Typography>
         <IconButton
           onClick={() => setMenuOpen(true)}
-          sx={{ marginLeft: 'auto', '&:focus': { outline: 'none' } }}
+          sx={{ justifySelf: 'flex-end', '&:focus': { outline: 'none' } }}
         >
           <MenuIcon color="primary"></MenuIcon>
         </IconButton>
@@ -140,8 +157,8 @@ export const NavBar = () => {
 
         </List>
         <Stack sx={{ backgroundColor: 'hsl(0, 0%, 20%)', paddingY: '1rem' }}>
-          <FormControl sx={{right: '-30 !important'}} size="medium">
-            <InputLabel sx={{color: 'white'}} id="app-version">version</InputLabel>
+          <FormControl sx={{ right: '-30 !important' }} size="medium">
+            <InputLabel sx={{ color: 'white' }} id="app-version">version</InputLabel>
             <Select
               labelId="app-version"
               // autoWidth
@@ -153,8 +170,8 @@ export const NavBar = () => {
                 setNewAppEnvironment(event.target.value as AppEnvironment);
               }}
             >
-              <MenuItem value={'production'}>{ isAdmin ? 'Production' : 'Latest'}</MenuItem>
-              <MenuItem value={'qa'}>{ isAdmin ? 'QA' : 'Beta'}</MenuItem>
+              <MenuItem value={'production'}>Production</MenuItem>
+              <MenuItem value={'qa'}>QA</MenuItem>
               {(isAdmin || appEnvironment === 'dev') && <MenuItem value={'dev'}>Dev</MenuItem>}
               {(isAdmin || appEnvironment === 'localhost') && <MenuItem value={'localhost'}>Localhost</MenuItem>}
               {(isAdmin || appEnvironment === 'staging') && <MenuItem value={'staging'}>Staging</MenuItem>}

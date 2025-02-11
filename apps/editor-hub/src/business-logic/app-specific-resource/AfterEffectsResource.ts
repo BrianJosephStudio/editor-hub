@@ -2,12 +2,22 @@ import { FolderItem } from "../after-effects-api/FolderItem";
 import { Item } from "../after-effects-api/Item";
 import { Project } from "../after-effects-api/Project";
 import { FolderItemProps, ItemObjectProps, TypeName } from "../after-effects-api/types";
+import { Resource } from "../Resource";
 
 
 export class AfterEffectsResource {
   private setPoints: boolean = false //TODO: wip 
   private inPoint: number = 2 //TODO: wip
   private outPoint: number = 10 //TODO: wip
+
+  public static readonly getProjectPath = async (): Promise<string | null> => {
+    const project = await Project.getInstance()
+
+    const projectFsName = await project.getProjectFsName()
+    if(projectFsName === null) return null;
+    const projectPath = Resource.getDirName(projectFsName)
+    return projectPath
+  }
 
   public readonly import = async (uri: string, binPathArray: string[]) => {
     try {
@@ -38,7 +48,7 @@ export class AfterEffectsResource {
           if (!itemProps.typeName || !itemProps.name || itemProps.typeName !== 'Folder' || itemProps.name !== folderName) return false;
           return true
         })
-        if(existingFolderProps && FolderItem.isFolderItem(JSON.stringify(existingFolderProps))) return new FolderItem(existingFolderProps as FolderItemProps);
+        if (existingFolderProps && FolderItem.isFolderItem(JSON.stringify(existingFolderProps))) return new FolderItem(existingFolderProps as FolderItemProps);
         const newFolder = await items.addFolder(folderName)
         return newFolder
       }
