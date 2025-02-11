@@ -47,7 +47,7 @@ const ProjectForm: React.FC = () => {
       setJobFinished(true)
       
       const { data: { projectLink, uploadLink } } = await axios.post<CreatedProjectData>(url, body)
-
+      
       const updatedProjectName = `${projectType === 2 ? "S" : ""}${projectNumber} - ${projectName}`
       setProjectFullName(updatedProjectName)
       setProjectFolderLink(projectLink)
@@ -56,6 +56,11 @@ const ProjectForm: React.FC = () => {
       console.error(e)
     }
   };
+  
+        const copyToClipboard = () => {
+          const textToCopy = `Script\nProject\nUploads`
+            navigator.clipboard.writeText(textToCopy);
+        };
 
   const handleProjectTypeChange = (e: ChangeEvent<HTMLSelectElement>) => {
     setProjectType(Number(e.target.value));
@@ -122,6 +127,9 @@ const ProjectForm: React.FC = () => {
           title='File Uploads Url'
           url={filesRequestLink}
           ></URLDisplay>
+          <button
+            onClick={copyToClipboard}
+          >Copy Link Text</button>
         </div>
       }
     </>
