@@ -3,8 +3,8 @@ import ReactDOM from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 import { ClerkProvider, SignedIn, SignedOut } from "@clerk/clerk-react";
-import { UnauthenticatedUser } from "./pages/clip-tagger/components/auth-pages/UnauthenticatedUser.tsx";
-import { MobileDeviceWarningModal } from "./pages/clip-tagger/components/other/MobileDeviceWarningModal.tsx";
+import { UnauthenticatedUser } from "./components/auth-pages/UnauthenticatedUser.tsx";
+import { MobileDeviceWarningModal } from "./components/other/MobileDeviceWarningModal.tsx";
 import MobileDetect from 'mobile-detect'
 
 const PUBLISHABLE_KEY = import.meta.env.VITE_CLERK_PUBLISHABLE_KEY;

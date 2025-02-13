@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { NoAccounts } from "@mui/icons-material";
 import { Navigate } from "react-router";
-import { useAuthorization } from "../../../../context/Authorization.context";
+import { useAuthorization } from "../../context/Authorization.context";
 import { ReactNode } from "react";
 
 export const UnauthorizedUser = () => {
