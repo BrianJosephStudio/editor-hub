@@ -1,6 +1,6 @@
 import { ClipUpload } from "@editor-hub/api-sdk/dist/ClipUploads";
 import { Metadata } from "@editor-hub/dropbox-types";
-import { createContext, useContext, ReactNode, useState, useEffect } from "react";
+import { createContext, useContext, ReactNode, useState } from "react";
 
 interface ClipUploadContextProps {
     clipUploads: ClipUpload[],
