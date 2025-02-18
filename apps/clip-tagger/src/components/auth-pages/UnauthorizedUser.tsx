@@ -1,7 +1,7 @@
 import { Box, Typography } from "@mui/material";
 import { NoAccounts } from "@mui/icons-material";
 import { Navigate } from "react-router";
-import { useAuthorization } from "../../../../context/Authorization.context";
+import { useAuthorization } from "../../context/Authorization.context";
 import { ReactNode } from "react";
 
 export const UnauthorizedUser = () => {
@@ -46,10 +46,11 @@ export const UnauthorizedUser = () => {
   );
 };
 
-export const ProtectedRoute = ({ children }: { children: ReactNode }) => {
-  const { isAuthorized } = useAuthorization()
-
-  if (!isAuthorized) {
+export const ProtectedRoute = ({ children, adminOnly }: { children: ReactNode; adminOnly?: boolean }) => {
+  const { isAuthorized, isAdmin } = useAuthorization()
+  
+  if (!isAuthorized || (adminOnly && !isAdmin)) {
+    console.log("redirecting to")
     return <Navigate to="/unauthorized" />;
   }
 

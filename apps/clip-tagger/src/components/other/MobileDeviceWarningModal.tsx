@@ -1,6 +1,6 @@
 import { ErrorOutline } from "@mui/icons-material";
 import { Box, Typography } from "@mui/material";
-import clipTaggerLogo from "../../../../../public/editor-hub-clip-tagger-logo.svg";
+import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
 
 export const MobileDeviceWarningModal = () => {
   return (

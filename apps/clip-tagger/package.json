@@ -1,7 +1,7 @@
 {
   "name": "clip-tagger",
   "private": true,
-  "version": "0.4.1",
+  "version": "1.0.0",
   "type": "module",
   "author": "Brian Ure",
   "scripts": {
@@ -11,15 +11,16 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@editor-hub/api-sdk": "workspace:*",
-    "@editor-hub/tag-system": "workspace:*",
-    "@editor-hub/dropbox-types": "workspace:*",
     "@auth0/auth0-react": "^2.2.4",
     "@clerk/clerk-react": "^5.15.4",
+    "@editor-hub/api-sdk": "workspace:*",
+    "@editor-hub/dropbox-types": "workspace:*",
+    "@editor-hub/tag-system": "workspace:*",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/icons-material": "^5.15.20",
     "@mui/material": "^5.15.20",
+    "@reduxjs/toolkit": "^2.5.1",
     "@types/react-router-dom": "^5.3.3",
     "@types/uuid": "^10.0.0",
     "axios": "^1.7.2",
@@ -27,8 +28,11 @@
     "mobile-detect": "^1.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-dropzone": "^14.3.5",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^7.1.1",
-    "uuid": "^11.0.3"
+    "sonner": "^1.7.4",
+    "uuid": "^11.0.5"
   },
   "devDependencies": {
     "@types/axios": "^0.14.0",

@@ -31,5 +31,13 @@ router.post('/properties/remove', await dropboxFilePropertiesProxy());
 
 router.post('/properties/update', await dropboxFilePropertiesProxy());
 
+router.post('/upload_session/start_batch', await dropboxFilesProxy());
+
+router.post('/upload_session/append_v2', await dropboxContentProxy());
+
+router.post('/upload_session/finish_batch/check', await dropboxFilesProxy());
+
+router.post('/upload_session/finish_batch', await dropboxFilesProxy());
+
 
 export { router }
