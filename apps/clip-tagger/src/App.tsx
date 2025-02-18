@@ -39,7 +39,7 @@ function App() {
               </ProtectedRoute>
             } />
             <Route path="/upload" element={
-              <ProtectedRoute>
+              <ProtectedRoute adminOnly>
                 <ClipUploadProvider>
                   <ClipUploader />
                 </ClipUploadProvider>
