@@ -10,6 +10,9 @@ import { FolderNavigationProvider } from "./context/FolderNavigationContext";
 import { ClipViewerProvider } from "./context/ClipViewerContext";
 import { KeybindProvider } from "./context/KeyBindContext";
 import { TagsProvider } from "./context/TagsContext";
+import { ClipUploader } from "./pages/clip-uploader/ClipUploader";
+import { ClipUploadProvider } from "./context/ClipUploadContext";
+import { Toaster } from 'sonner';
 
 function App() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -17,6 +20,7 @@ function App() {
 
   return (
     <AppProvider>
+      <Toaster richColors/>
       <BrowserRouter basename="clip-tagger">
         <AuthorizationProvider>
           <NavBar />
@@ -27,11 +31,18 @@ function App() {
                   <FolderNavigationProvider currentPath={currentPath ?? ""}>
                     <ClipViewerProvider>
                       <TagsProvider>
-                        <ClipTagger></ClipTagger>
+                        <ClipTagger />
                       </TagsProvider>
                     </ClipViewerProvider>
                   </FolderNavigationProvider>
                 </KeybindProvider>
+              </ProtectedRoute>
+            } />
+            <Route path="/upload" element={
+              <ProtectedRoute>
+                <ClipUploadProvider>
+                  <ClipUploader />
+                </ClipUploadProvider>
               </ProtectedRoute>
             } />
             <Route path="unauthorized" element={
