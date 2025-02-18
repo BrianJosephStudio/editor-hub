@@ -7,6 +7,7 @@ const initialState: {
     sfxFileTree: FileTreeNode
 } = {
     inGameFootageFileTree: {
+        fileTreeName: 'inGameFootage',
         name: "root",
         tag: "folder",
         path: "/",
@@ -14,6 +15,7 @@ const initialState: {
         children: [],
     },
     musicTrackFileTree: {
+        fileTreeName: 'music',
         name: "root",
         tag: "folder",
         path: "/",
@@ -21,6 +23,7 @@ const initialState: {
         children: [],
     },
     sfxFileTree: {
+        fileTreeName: 'sfx',
         name: "root",
         tag: "folder",
         path: "/",

@@ -134,6 +134,7 @@ export const AudioGallery = () => {
         {tab === "music" &&
           <FileBrowser
             fileTree={musicTrackFileTree}
+            fileTreeName="music"
             rootPath={musicTracksRootPath}
             noFilter={true}
             setNewFileTree={(newFileTree) => dispatch(setNewMusicTrackTree(newFileTree))}
@@ -159,6 +160,7 @@ export const AudioGallery = () => {
         {tab === "sfx" &&
           <FileBrowser
             fileTree={sfxFileTree}
+            fileTreeName={'sfx'}
             rootPath={sfxRootPath}
             setNewFileTree={(newFileTree) => dispatch(setNewSfxTrackTree(newFileTree))}
             noFilter={true}
