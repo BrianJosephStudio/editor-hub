@@ -1,14 +1,14 @@
 import { Box, Drawer, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, useMediaQuery } from "@mui/material";
-import clipTaggerLogo from "../../../../../public/editor-hub-clip-tagger-logo.svg";
+import clipTaggerLogo from "../../../public/editor-hub-clip-tagger-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AddAPhoto, Logout, Menu as MenuIcon, Style } from "@mui/icons-material";
-import packageJson from "../../../../../package.json";
+import { AddAPhoto, CloudUpload, Logout, Menu as MenuIcon, Style } from "@mui/icons-material";
+import packageJson from "../../../package.json";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
-import { useAuthorization } from "../../../../context/Authorization.context";
+import { useAuthorization } from "../../context/Authorization.context";
 
 export const NavBar = () => {
-  const { isAuthorized } = useAuthorization()
+  const { isAuthorized, isAdmin } = useAuthorization()
   const navigate = useNavigate()
   const location = useLocation();
   const { user } = useUser();
@@ -20,7 +20,14 @@ export const NavBar = () => {
     {
       title: "Clip Tagger",
       path: "/",
+      adminOnly: false,
       listItemIcon: <Style sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+    },
+    {
+      title: "Upload Clips",
+      path: "/upload",
+      adminOnly: true,
+      listItemIcon: <CloudUpload sx={{ fill: 'hsl(213, 98%, 68%)' }} />
     }
   ]
 
@@ -114,17 +121,21 @@ export const NavBar = () => {
             </SignOutButton>
           </ListItem>
 
-          {isAuthorized && pages.map(({ title, path, listItemIcon }) => (
-            <ListItem disablePadding onClick={() => navigate(path)}
-              sx={{
-                backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>{listItemIcon}</ListItemIcon>
-                <ListItemText>{title}</ListItemText>
-              </ListItemButton>
-            </ListItem>
+          {isAuthorized && pages.map(({ title, path, listItemIcon, adminOnly }) => (
+            <>
+            {(adminOnly === false || isAdmin) && (
+              <ListItem disablePadding onClick={() => navigate(path)}
+                sx={{
+                  backgroundColor: location.pathname === path ? "hsl(213, 0%, 40%)" : null
+                }}
+              >
+                <ListItemButton>
+                  <ListItemIcon>{listItemIcon}</ListItemIcon>
+                  <ListItemText>{title}</ListItemText>
+                </ListItemButton>
+              </ListItem>
+            )}
+            </>
           ))}
 
           <ListItem>
