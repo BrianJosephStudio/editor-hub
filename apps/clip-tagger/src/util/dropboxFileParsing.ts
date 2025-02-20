@@ -27,7 +27,11 @@ export class ParsedFileName {
       const parsedFileName = this.name.split("_").filter((data) => data);
       const parsedIndex = parseInt(parsedFileName.pop()!.split(".")[0]!);
       
-      this.isProperlyNamed = fileNameRegex.test(this.name)
+      const passesRegex = fileNameRegex.test(this.name)
+      const includesAgentName = this.name.includes(this.agent)
+      const includesMapName= this.name.includes(this.map)
+      const includesPatchNumber= this.name.includes(this.patch)
+      this.isProperlyNamed = passesRegex && includesAgentName && includesMapName && includesPatchNumber
   
       if (typeof parsedIndex != "number") {
         throw new Error();
