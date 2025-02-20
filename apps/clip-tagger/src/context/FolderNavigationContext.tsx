@@ -2,6 +2,7 @@ import { createContext, useContext, useState, ReactNode, useRef } from "react";
 import apiClient from "../api/ApiClient";
 import { ParsedFileName } from "../util/dropboxFileParsing";
 import { Metadata } from "@editor-hub/dropbox-types";
+import { getNextAvailableIndex } from "../util/fileRenaming";
 
 interface FolderNavigationContextProps {
   BrowserList: React.RefObject<HTMLUListElement>;
@@ -56,11 +57,11 @@ export const FolderNavigationProvider = ({
     if (pathSegments.length < 1) return;
 
     const start = pathSegments.length - count;
-    const newSegments = pathSegments;    
+    const newSegments = pathSegments;
     const deletedSegments = newSegments.splice(start, 10);
     const newActiveItemName = deletedSegments[0]
     const newPath = `/${newSegments.join("/")}`;
-    
+
     setCurrentFolder(newPath);
     setLastItemName(newActiveItemName)
   };
@@ -72,19 +73,7 @@ export const FolderNavigationProvider = ({
   };
 
   const setFolderEntryNames = async (folderEntries: Metadata[]): Promise<boolean> => {
-    const currentIndexes = folderEntries.map((folderEntry) => {
-      const parsedFileName = new ParsedFileName(folderEntry.path_lower!, 0);
-
-      if (parsedFileName.isProperlyNamed) {
-        return parsedFileName.index;
-      } else {
-        return null;
-      }
-    }).filter((data) => data !== null);
-
-
-    //@ts-ignore
-    let newCurrentIndex = Math.max(-1, ...currentIndexes) + 1;
+    let newCurrentIndex = getNextAvailableIndex(folderEntries)
 
     const dropboxFiles = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'file')
     const dropboxFolders = folderEntries.filter((folderEntry) => folderEntry[".tag"] === 'folder')

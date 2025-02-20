@@ -7,7 +7,7 @@ export interface ListFolderResponse {
   export type Metadata = FileMetadata | FolderMetadata;
   
   interface FileMetadata {
-    ".tag": "file";
+    ".tag": "file" | 'success';
     name: string; // The last component of the path (including extension). This never contains a slash.
     id: string; // A unique identifier for the file.
     client_modified: string; // Timestamp in "%Y-%m-%dT%H:%M:%SZ" format. Modification time set by the desktop client.
@@ -28,6 +28,23 @@ export interface ListFolderResponse {
     content_hash?: string; // A 64-character hash of the file content for integrity verification.
     file_lock_info?: FileLockMetadata; // Metadata for the file's current lock, if any.
   }
+
+  interface UploadStartBatchResponse {
+    session_ids: string[]
+}
+
+  interface UploadCheckResponse {
+    '.tag': 'completed' | 'in_progress'
+    entries?: UploadSessionFinishbatchResultEntry[]
+  }
+
+  interface UploadSessionFinishbatchResultEntry extends Omit<FileMetadata, "tag"> {
+    tag: "success" | "failure";
+}
+
+interface UploadSessionFinishBatchResult {
+  async_job_id: string
+}
   
   interface FolderMetadata {
     ".tag": "folder";
