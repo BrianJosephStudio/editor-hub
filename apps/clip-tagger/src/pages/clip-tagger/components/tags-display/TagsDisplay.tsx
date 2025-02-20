@@ -32,10 +32,15 @@ export const TagsDisplay = () => {
     return (currentTime / duration) * 100;
   }
 
-  const resetTagsHandler = async () => {
+  const resetAllTagsHandler = async () => {
     setDialogOpen(false)
     setLabeledTagReference({})
     await resetTags(targetClip)
+    await setStarterTags()
+  }
+
+  const resetBaseTagsHandler = async () => {
+    setDialogOpen(false)
     await setStarterTags()
   }
 
@@ -166,7 +171,8 @@ export const TagsDisplay = () => {
       <Dialog open={dialogOpen}>
         <DialogTitle>Are you sure you want to reset tags for this clip?</DialogTitle>
         <DialogActions>
-          <Button onClick={resetTagsHandler}>Reset</Button>
+          <Button variant="contained" onClick={resetAllTagsHandler}>Reset All</Button>
+          <Button variant="contained" onClick={resetBaseTagsHandler}>Reset Base Tags Only</Button>
           <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
         </DialogActions>
       </Dialog>
