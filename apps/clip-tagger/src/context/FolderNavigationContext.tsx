@@ -8,6 +8,10 @@ interface FolderNavigationContextProps {
   BrowserList: React.RefObject<HTMLUListElement>;
   currentFolder: string;
   setCurrentFolder: React.Dispatch<React.SetStateAction<string>>;
+  deleteClipModalOpen: boolean;
+  setDeleteClipModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  clipToDelete: Metadata | null;
+  setClipToDelete: React.Dispatch<React.SetStateAction<Metadata | null>>;
   currentFolderEntries: Metadata[];
   setCurrentFolderEntries: React.Dispatch<React.SetStateAction<Metadata[]>>;
   activeItem: number | null;
@@ -50,6 +54,8 @@ export const FolderNavigationProvider = ({
   const [activeItem, setActiveItem] = useState<number | null>(null);
   const [pathSegments, setPathSegments] = useState<string[]>([]);
   const [lastItemName, setLastItemName] = useState<string>("")
+  const [deleteClipModalOpen, setDeleteClipModalOpen] = useState<boolean>(false)
+  const [clipToDelete, setClipToDelete] = useState<Metadata | null>(null)
 
   const BrowserList = useRef<HTMLUListElement>(null)
 
@@ -147,6 +153,10 @@ export const FolderNavigationProvider = ({
         setCurrentFolder,
         currentFolderEntries,
         setCurrentFolderEntries,
+        deleteClipModalOpen,
+        setDeleteClipModalOpen,
+        clipToDelete,
+        setClipToDelete,
         activeItem,
         setActiveItem,
         handleBackNavigation,

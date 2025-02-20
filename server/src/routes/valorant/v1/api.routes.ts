@@ -39,5 +39,6 @@ router.post('/upload_session/finish_batch/check', await dropboxFilesProxy());
 
 router.post('/upload_session/finish_batch', await dropboxFilesProxy());
 
+router.post('/delete_v2', await dropboxFilesProxy());
 
 export { router }

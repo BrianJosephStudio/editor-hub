@@ -369,6 +369,15 @@ export class ApiClient {
   }
 
   public uploadClips = (clipUploads: ClipUpload[]) => uploadClips(this.apiHost, clipUploads)
-  
+
   public checkClipUploadJob = (jobId: string) => checkClipUploadJob(this.apiHost, jobId)
+
+  public delete = async (path: string) => {
+    const url = `${this.apiHost}/delete_v2`
+    const body = { path }
+
+    const { data } = await axios.post(url, body)
+
+    return data
+  }
 }

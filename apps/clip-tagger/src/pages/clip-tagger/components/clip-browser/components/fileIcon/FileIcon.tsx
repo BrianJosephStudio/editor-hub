@@ -22,7 +22,12 @@ export const FileIcon = ({
 }) => {
   const { targetClip, setCurrentVideoSource, setNextVideoSource, setTargetClip } =
     useClipViewer();
-  const { activeItem, setActiveItem } = useFolderNavigation();
+  const {
+    activeItem,
+    setActiveItem,
+    setDeleteClipModalOpen,
+    setClipToDelete,
+  } = useFolderNavigation();
 
   const folderElement = useRef<HTMLDivElement>(null);
   const [cachedFile, setCachedFile] = useState<string>("");
@@ -123,13 +128,17 @@ export const FileIcon = ({
       }}
 
       onFocus={() => setActiveItem(itemIndex)}
-      
-      onDoubleClick={(event) => {
+
+      onDoubleClick={async (event) => {
         event.preventDefault();
 
-        if(event.altKey){
-           return apiClient.createSharedLinkWithSettings(entry.path_lower!)
+        if (event.altKey) {
+          return apiClient.createSharedLinkWithSettings(entry.path_lower!)
             .then(sharedLinkResponse => window.open(sharedLinkResponse.url))
+        }
+        if (event.ctrlKey) {
+          setClipToDelete(entry)
+          return setDeleteClipModalOpen(true)
         }
         setTargetClip(entry.path_lower!);
         setCurrentVideoSource(cachedFile ? cachedFile : localTemporaryLink!);
