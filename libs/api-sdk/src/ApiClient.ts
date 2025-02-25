@@ -1,6 +1,8 @@
 import axios from "axios";
 import type { ListFolderResponse, Metadata, SharedLinkResponse } from "@editor-hub/dropbox-types";
 import { UnlabeledTagReference, TimeCode } from "@editor-hub/tag-system";
+import { checkClipUploadJob, uploadClips } from "./utils/uploadClip";
+import { ClipUpload } from "./ClipUploads";
 
 export class ApiClient {
   private apiHost: string;
@@ -363,6 +365,19 @@ export class ApiClient {
     const {
       data
     } = await axios.post(url, undefined, { headers, responseType: 'arraybuffer' });
+    return data
+  }
+
+  public uploadClips = (clipUploads: ClipUpload[]) => uploadClips(this.apiHost, clipUploads)
+
+  public checkClipUploadJob = (jobId: string) => checkClipUploadJob(this.apiHost, jobId)
+
+  public delete = async (path: string) => {
+    const url = `${this.apiHost}/delete_v2`
+    const body = { path }
+
+    const { data } = await axios.post(url, body)
+
     return data
   }
 }

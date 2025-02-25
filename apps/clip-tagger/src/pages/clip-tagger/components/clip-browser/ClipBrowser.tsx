@@ -7,7 +7,7 @@ import { useFolderNavigation } from "../../../../context/FolderNavigationContext
 import { useClipViewer } from "../../../../context/ClipViewerContext";
 import { useKeybind } from "../../../../context/KeyBindContext";
 import { useTags } from "../../../../context/TagsContext";
-import { Box, Button, CircularProgress, List, Typography } from "@mui/material";
+import { Box, Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, List, Typography } from "@mui/material";
 import apiClient from "../../../../api/ApiClient";
 import { useAuthorization } from "../../../../context/Authorization.context";
 
@@ -36,6 +36,9 @@ export const ClipBrowser = () => {
     setActiveItem,
     setFolderEntryNames,
     pathSegments,
+    deleteClipModalOpen,
+    setDeleteClipModalOpen,
+    clipToDelete,
   } = useFolderNavigation();
 
   const {
@@ -90,6 +93,13 @@ export const ClipBrowser = () => {
     setIsRenaming(false);
   };
 
+  const handleDeleteClip = async () => {
+    setDeleteClipModalOpen(false)
+    if(!clipToDelete) throw new Error('Clip to delete was expected to be defined but it is not')
+    await apiClient.delete(clipToDelete.path_lower!)
+    window.location.reload();
+  }
+
   useEffect(() => {
     (async () => {
       setActiveItem(0);
@@ -121,84 +131,97 @@ export const ClipBrowser = () => {
   );
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: 'column',
-        minWidth: "20rem",
-        minHeight: 0,
-      }}
-    >
-      <PathNav path={currentFolder}></PathNav>
-      {isAdmin && clipLevel && !isRenaming && (
-        <Button
-          sx={{
-            textJustify: 'center',
-            height: "2rem",
-          }}
-          onClick={autoRenameFolders}
-        >
-          Auto-name clips
-        </Button>
-      )}
-      {clipLevel && isRenaming && (
-        <Box
-          sx={{
-            display: "flex",
-            gap: "0.4rem",
-            placeContent: "center",
-            width: "100%",
-            paddingY: "0.4rem",
-          }}
-        >
-          <CircularProgress size={24}></CircularProgress>
-          <Typography>Renaming...</Typography>
-        </Box>
-      )}
-      <List
-        ref={BrowserList}
-        disablePadding
+    <>
+      <Box
         sx={{
-          overflowY: 'auto',
+          display: "flex",
+          flexDirection: 'column',
+          minWidth: "20rem",
+          minHeight: 0,
         }}
       >
-        {!loadingContent &&
-          currentFolderEntries.map((entry, index) => (
-            <>
-              {entry[".tag"] === "folder" && (
-                <FolderIcon
-                  entry={entry}
-                  itemIndex={index}
-                  active={activeItem === index}
-                  clickCallback={() => setActiveItem(index)}
-                  openFolderCallback={() => {
-                    setCurrentFolder(
-                      entry.path_lower!.replace(
-                        clipsRootPath.toLowerCase(),
-                        ""
-                      )
-                    );
-                  }}
-                ></FolderIcon>
-              )}
+        <PathNav path={currentFolder}></PathNav>
+        {isAdmin && clipLevel && !isRenaming && (
+          <Button
+            sx={{
+              textJustify: 'center',
+              height: "2rem",
+            }}
+            onClick={autoRenameFolders}
+          >
+            Auto-name clips
+          </Button>
+        )}
+        {clipLevel && isRenaming && (
+          <Box
+            sx={{
+              display: "flex",
+              gap: "0.4rem",
+              placeContent: "center",
+              width: "100%",
+              paddingY: "0.4rem",
+            }}
+          >
+            <CircularProgress size={24}></CircularProgress>
+            <Typography>Renaming...</Typography>
+          </Box>
+        )}
+        <List
+          ref={BrowserList}
+          disablePadding
+          sx={{
+            overflowY: 'auto',
+          }}
+        >
+          {!loadingContent &&
+            currentFolderEntries.map((entry, index) => (
+              <>
+                {entry[".tag"] === "folder" && (
+                  <FolderIcon
+                    entry={entry}
+                    itemIndex={index}
+                    active={activeItem === index}
+                    clickCallback={() => setActiveItem(index)}
+                    openFolderCallback={() => {
+                      setCurrentFolder(
+                        entry.path_lower!.replace(
+                          clipsRootPath.toLowerCase(),
+                          ""
+                        )
+                      );
+                    }}
+                  ></FolderIcon>
+                )}
 
-              {entry[".tag"] === "file" && (
-                <FileIcon
-                  entry={entry}
-                  itemIndex={index}
-                  key={index}
-                  active={activeItem === index}
-                  clickCallback={() => setActiveItem(index)}
-                ></FileIcon>
-              )}
-            </>
+                {entry[".tag"] === "file" && (
+                  <FileIcon
+                    entry={entry}
+                    itemIndex={index}
+                    key={index}
+                    active={activeItem === index}
+                    clickCallback={() => setActiveItem(index)}
+                  ></FileIcon>
+                )}
+              </>
+            ))}
+        </List>
+
+        {loadingContent &&
+          [1, 2, 3].map(() => (
+            <FolderIconPlaceHolder />
           ))}
-      </List>
-
-      {loadingContent &&
-        [1, 2, 3].map(() => (
-          <FolderIconPlaceHolder />
-        ))}
-    </Box >
+      </Box >
+      <Dialog open={deleteClipModalOpen} onClose={() => setDeleteClipModalOpen(false)}>
+          <DialogTitle>Deleting Clip</DialogTitle>
+          <DialogContent>
+            <Typography>Are you sure you want to delete this clip?</Typography>
+            <Typography>{clipToDelete?.name ?? 'error, no clip was detected, please go back.'}</Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteClip}>Delete</Button>
+            <Button onClick={() => setDeleteClipModalOpen(false)}>Cancel</Button>
+          </DialogActions>
+      </Dialog>
+    </>
   );
 };
