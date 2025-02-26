@@ -8,7 +8,9 @@
     ],
     "scripts": {
         "deploy": "npm run compose:down && npm run compose:up",
+        "deploy:debug": "npm run compose:down && npm run compose:up:debug",
         "compose:up": "NODE_ENV=production sudo docker compose --env-file .env.production up --build -d",
+        "compose:up:debug": "NODE_ENV=production sudo docker compose --env-file .env.production up --build",
         "compose:down": "NODE_ENV=production sudo docker compose --env-file .env.production down -v",
         "build:libs": "./workflows/build-libs.sh"
     }

@@ -36,6 +36,7 @@ services:
       - auth-app:/app//server/apps/authorization/dist
       - clip-tagger:/app/server/public/clip-tagger
       - editor-hub:/app/server/public/editor-hub
+      - project-manager:/app/server/public/project-manager
       - ./authCode:/app/server/authCode
     depends_on:
       dependencies:
@@ -45,6 +46,8 @@ services:
       clip-tagger:
         condition: service_started
       editor-hub:
+        condition: service_started
+      project-manager:
         condition: service_started
   authorization:
     container_name: authorization-${ENVIRONMENT}
@@ -95,12 +98,31 @@ services:
     depends_on:
       dependencies:
         condition: service_completed_successfully
+  project-manager:
+    container_name: project-manager-${ENVIRONMENT}
+    build:
+      context: ./apps/project-manager
+      dockerfile_inline: |
+        FROM oven/bun
+        WORKDIR /app/project-manager
+        COPY . .
+    command: ["bun", "run", "build"]
+    volumes:
+      - root_node_modules:/app/node_modules
+      - project-manager_node_modules:/app/project-manager/node_modules
+      - libs:/app/libs
+      - project-manager:/app/project-manager/dist
+    depends_on:
+      dependencies:
+        condition: service_completed_successfully
 volumes:
   auth-app:
   clip-tagger:
   editor-hub:
+  project-manager:
   root_node_modules:
   server_node_modules:
   clip-tagger_node_modules:
   editor-hub_node_modules:
+  project-manager_node_modules:
   libs:
