@@ -1,6 +1,6 @@
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress, Stack, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
-import { Audiotrack, Download, FiberManualRecord, PlayArrow, Theaters } from "@mui/icons-material";
+import { Audiotrack, Download, FiberManualRecord, PlayArrow, PlayCircle, Theaters } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { Resource } from "../../../business-logic/Resource";
 import { useSelector } from "react-redux";
@@ -8,6 +8,7 @@ import { RootState } from "../../../redux/store";
 import { useFileBrowser } from "../../../contexts/FileBrowser.context";
 import { getMimeType } from "../../../util/fileType";
 import { useSettings } from "../../../contexts/Settings.context";
+import { FileMetadata } from "@editor-hub/dropbox-types/src/types/dropbox";
 
 export const File = ({
   fileTreeNode,
@@ -22,10 +23,11 @@ export const File = ({
   const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
   const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
 
-  const {downloadLocation} = useSettings()
+  const { downloadLocation } = useSettings()
   const { tabIndex, setTabIndex } = useFileBrowser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileType, setFileType] = useState<"video" | "image" | "audio" | undefined>()
+  const [isNew, setIsNew] = useState<boolean>(false);
   const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const currentTabIndex = tabIndex;
@@ -47,7 +49,15 @@ export const File = ({
   }, [])
 
   useEffect(() => {
-    if(
+    const modifiedDate = new Date((fileTreeNode.metadata as FileMetadata).server_modified); // Convert string to Date
+    const twoWeeksAgo = new Date(); // Current date
+    twoWeeksAgo.setDate(twoWeeksAgo.getDate() - 7); // Subtract 14 days
+
+    setIsNew(modifiedDate >= twoWeeksAgo);
+  }, [])
+
+  useEffect(() => {
+    if (
       (currentVideoSource && currentVideoSource.path.includes(fileTreeNode.path)) ||
       (currentAudioSource && currentAudioSource.path.includes(fileTreeNode.path))
     )
@@ -55,6 +65,7 @@ export const File = ({
     setIsPlaying(false)
 
   }, [currentVideoSource, currentAudioSource])
+
 
   return (
     <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
@@ -102,13 +113,17 @@ export const File = ({
             gap: "0.3rem",
           }}
         >
-          { fileType === "video" && 
-            <Theaters sx={{ fill: 'white)' }}/>
+          {fileType === "video" &&
+            <Theaters sx={{ fill: 'white)' }} />
           }
-          { fileType === "audio" && 
-            <Audiotrack sx={{ fill: 'white)' }}/>
+          {fileType === "audio" &&
+            <Audiotrack sx={{ fill: 'white)' }} />
           }
           <Typography>{fileTreeNode.name}</Typography>
+
+          {isNew && <Typography component={'p'} title="added within the last week" sx={{color: 'hsl(350, 100.00%, 65.70%)'}}>new</Typography>}
+          {isPlaying && <Stack title="currently playing"><PlayCircle sx={{ fill: 'hsl(213, 68%, 68%)', fontSize: '1rem' }} /></Stack>}
+
           {isLoading && (
             <CircularProgress
               size={16}
@@ -117,7 +132,6 @@ export const File = ({
               sx={{ fill: "white" }}
             ></CircularProgress>
           )}
-          {isPlaying && <FiberManualRecord sx={{fill: 'hsl(213, 68%, 68%)', fontSize: '0.8rem' }}/>}
           <Box
             sx={{
               display: "flex",
