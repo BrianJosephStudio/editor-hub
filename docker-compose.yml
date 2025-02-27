@@ -33,6 +33,7 @@ services:
       - root_node_modules:/app/node_modules
       - server_node_modules:/app/server/node_modules
       - libs:/app/libs
+      - landing:/app/server/public/landing
       - auth-app:/app//server/apps/authorization/dist
       - clip-tagger:/app/server/public/clip-tagger
       - editor-hub:/app/server/public/editor-hub
@@ -41,6 +42,8 @@ services:
     depends_on:
       dependencies:
         condition: service_completed_successfully
+      landing:
+        condition: service_started
       authorization:
         condition: service_started
       clip-tagger:
@@ -49,6 +52,23 @@ services:
         condition: service_started
       project-manager:
         condition: service_started
+  landing:
+    container_name: landing-${ENVIRONMENT}
+    build:
+      context: ./apps/landing
+      dockerfile_inline: |
+        FROM oven/bun
+        WORKDIR /app/landing
+        COPY . .
+    command: ["bun", "run", "build"]
+    volumes:
+      - root_node_modules:/app/node_modules
+      - landing_node_modules:/app/landing/node_modules
+      - libs:/app/libs
+      - landing:/app/landing/dist
+    depends_on:
+      dependencies:
+        condition: service_completed_successfully
   authorization:
     container_name: authorization-${ENVIRONMENT}
     build:
@@ -116,13 +136,13 @@ services:
       dependencies:
         condition: service_completed_successfully
 volumes:
+  landing:
   auth-app:
   clip-tagger:
   editor-hub:
-  project-manager:
   root_node_modules:
+  landing_node_modules:
   server_node_modules:
   clip-tagger_node_modules:
   editor-hub_node_modules:
-  project-manager_node_modules:
   libs:

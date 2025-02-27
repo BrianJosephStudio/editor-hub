@@ -34,7 +34,7 @@ app.get("/health", (_req, res) => res.send("ok"));
 app.use(express.static(path.resolve(__dirname, "..", "public")))
 
 app.get("/", (_req, res) => {
-  res.sendFile(path.resolve(__dirname, "..", "public", "README.md"))
+  res.redirect('/landing')
 })
 
 app.get('/:appName/*', (req, res) => {
@@ -47,7 +47,6 @@ app.get('/:appName/*', (req, res) => {
     res.status(404).send('App not found');
   }
 });
-
 
 const port = process.env.PORT
 
