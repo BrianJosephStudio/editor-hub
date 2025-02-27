@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="uuid-18fb438a-a374-4bb0-9267-5167df0659cf" data-name="uuid-4f2a22ef-9b66-4c27-9e96-23b47c11b8ac" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86.18 13.31">
+  <defs>
+    <style>
+      .uuid-672682ee-6f90-44b4-9b1e-49e4c79732bd, .uuid-cb7baa19-e4b5-4473-9d59-858647e25aed {
+        isolation: isolate;
+      }
+
+      .uuid-cb7baa19-e4b5-4473-9d59-858647e25aed {
+        fill: #e5e5e5;
+        font-family: SegoeScript-Bold, 'Segoe Script';
+        font-size: 9.96px;
+        font-weight: 700;
+      }
+    </style>
+  </defs>
+  <g class="uuid-672682ee-6f90-44b4-9b1e-49e4c79732bd">
+    <text class="uuid-cb7baa19-e4b5-4473-9d59-858647e25aed" transform="translate(0 8.37)"><tspan x="0" y="0">Project Manager</tspan></text>
+  </g>
+</svg>
