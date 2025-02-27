@@ -140,9 +140,11 @@ volumes:
   auth-app:
   clip-tagger:
   editor-hub:
+  project-manager:
   root_node_modules:
   landing_node_modules:
   server_node_modules:
   clip-tagger_node_modules:
   editor-hub_node_modules:
+  project-manager_node_modules:
   libs:
