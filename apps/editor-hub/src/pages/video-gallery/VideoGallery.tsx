@@ -1,5 +1,5 @@
 import { Bookmark, BookmarkBorder, ExpandLess, ExpandMore, SportsEsports, Widgets } from "@mui/icons-material";
-import { Box, Checkbox, FormControlLabel, IconButton, ListItemText, Typography, useMediaQuery } from "@mui/material";
+import { Box, Checkbox, FormControlLabel, IconButton, ListItemText, Stack, Typography, useMediaQuery } from "@mui/material";
 import { List, ListItem } from "@mui/joy";
 import { KeyboardEvent, useState } from "react";
 import { useVideoGallery } from "../../contexts/VideoGallery.context";
@@ -28,8 +28,8 @@ export const VideoGallery = () => {
 
   const [tagsModalOpen, setTagModalOpen] = useState<boolean>(false)
 
-  const isWideEnough = useMediaQuery('(min-width: 30rem)')
-  const tabBreakingPoint = useMediaQuery('(min-width: 20rem)')
+  const isWideEnough = useMediaQuery('(min-width: 38rem)')
+  const tabBreakingPoint = useMediaQuery('(min-width: 31rem)')
 
   const {
     videoPlayer,
@@ -101,7 +101,6 @@ export const VideoGallery = () => {
           sx={{
             display: 'flex',
             placeItems: 'center',
-            gridTemplateColumns: '1fr 3fr 1fr',
             height: '3rem',
           }}
         >
@@ -116,7 +115,7 @@ export const VideoGallery = () => {
             </IconButton>
           }
 
-          <List orientation="horizontal" sx={{ gap: '1rem', justifyContent: tabBreakingPoint ? 'flex-start' : 'space-around' }}>
+          <List orientation="horizontal" sx={{ flexGrow: 0, padding: 0, gap: '1rem', justifyContent: tabBreakingPoint ? 'flex-start' : 'space-around' }}>
             <ListItem title={tabBreakingPoint ? "" : "In-game Footage"}
               sx={{
                 color: 'white',
@@ -127,6 +126,8 @@ export const VideoGallery = () => {
               {tabBreakingPoint && <ListItemText>In-game Footage</ListItemText>}
             </ListItem>
           </List>
+
+          {currentVideoSource && currentVideoSource.name && <Typography sx={{marginX: 'auto'}}>{currentVideoSource.name}</Typography>}
 
           <Box sx={{
             display: 'flex',

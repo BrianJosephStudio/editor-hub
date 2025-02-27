@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
-import { Audiotrack, Download, PlayArrow, Theaters } from "@mui/icons-material";
+import { Audiotrack, Download, FiberManualRecord, PlayArrow, Theaters } from "@mui/icons-material";
 import { useEffect, useState } from "react";
 import { Resource } from "../../../business-logic/Resource";
 import { useSelector } from "react-redux";
@@ -19,11 +19,14 @@ export const File = ({
   onSourceChange: (fileTreeNode: FileTreeNode) => Promise<void>
 }) => {
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
+  const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
+  const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
 
   const {downloadLocation} = useSettings()
   const { tabIndex, setTabIndex } = useFileBrowser();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [fileType, setFileType] = useState<"video" | "image" | "audio" | undefined>()
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)
@@ -41,7 +44,17 @@ export const File = ({
     if (type === 'audio' || type === 'video' || type === 'image') {
       setFileType(type);
     }
-  })
+  }, [])
+
+  useEffect(() => {
+    if(
+      (currentVideoSource && currentVideoSource.path.includes(fileTreeNode.path)) ||
+      (currentAudioSource && currentAudioSource.path.includes(fileTreeNode.path))
+    )
+      return setIsPlaying(true);
+    setIsPlaying(false)
+
+  }, [currentVideoSource, currentAudioSource])
 
   return (
     <>{(!filterByTags || fileTreeNode.filtered || activeTags.length === 0) &&
@@ -104,6 +117,7 @@ export const File = ({
               sx={{ fill: "white" }}
             ></CircularProgress>
           )}
+          {isPlaying && <FiberManualRecord sx={{fill: 'hsl(213, 68%, 68%)', fontSize: '0.8rem' }}/>}
           <Box
             sx={{
               display: "flex",

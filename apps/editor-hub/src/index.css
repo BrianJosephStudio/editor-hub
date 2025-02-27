@@ -13,9 +13,24 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-@media(max-width:30rem){
+@media(max-width:46rem){
   :root{
     font-size: 14px;
+  }
+}
+@media(max-width:24rem){
+  :root{
+    font-size: 12px;
+  }
+}
+@media(max-width:21rem){
+  :root{
+    font-size: 10px;
+  }
+}
+@media(max-width:18rem){
+  :root{
+    font-size: 8px;
   }
 }
 
