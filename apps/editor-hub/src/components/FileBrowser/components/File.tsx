@@ -9,6 +9,7 @@ import { useFileBrowser } from "../../../contexts/FileBrowser.context";
 import { getMimeType } from "../../../util/fileType";
 import { useSettings } from "../../../contexts/Settings.context";
 import { FileMetadata } from "@editor-hub/dropbox-types/src/types/dropbox";
+import { DragAndDrop } from "./DragAndDrop";
 
 export const File = ({
   fileTreeNode,
@@ -99,78 +100,81 @@ export const File = ({
             outline: "none",
           },
         }}
+        onClick={(event) => event.currentTarget.focus()}
       >
-        <Box
-          component={"div"}
-          id={"file-browser:file:container"}
-          data-testid={"file-browser:file:container"}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            flexGrow: "1",
-            paddingY: "0.3rem",
-            paddingLeft: "0.4rem",
-            gap: "0.3rem",
-          }}
-        >
-          {fileType === "video" &&
-            <Theaters sx={{ fill: 'white)' }} />
-          }
-          {fileType === "audio" &&
-            <Audiotrack sx={{ fill: 'white)' }} />
-          }
-          <Typography>{fileTreeNode.name}</Typography>
-
-          {isNew && <Typography component={'p'} title="added within the last week" sx={{color: 'hsl(350, 100.00%, 65.70%)'}}>new</Typography>}
-          {isPlaying && <Stack title="currently playing"><PlayCircle sx={{ fill: 'hsl(213, 68%, 68%)', fontSize: '1rem' }} /></Stack>}
-
-          {isLoading && (
-            <CircularProgress
-              size={16}
-              // @ts-ignore
-              color="action"
-              sx={{ fill: "white" }}
-            ></CircularProgress>
-          )}
+        <DragAndDrop fileTreeNode={fileTreeNode}>
           <Box
+            component={"div"}
+            id={"file-browser:file:container"}
+            data-testid={"file-browser:file:container"}
             sx={{
               display: "flex",
-              marginLeft: "auto",
-              marginRight: "2rem",
+              alignItems: "center",
+              flexGrow: "1",
+              paddingY: "0.3rem",
+              paddingLeft: "0.4rem",
               gap: "0.3rem",
             }}
           >
-            <PlayArrow
-              onClick={() => {
-                playVideo();
-              }}
-              fontSize="small"
+            {fileType === "video" &&
+              <Theaters sx={{ fill: 'white)' }} />
+            }
+            {fileType === "audio" &&
+              <Audiotrack sx={{ fill: 'white)' }} />
+            }
+            <Typography>{fileTreeNode.name}</Typography>
+
+            {isNew && <Typography component={'p'} title="added within the last week" sx={{ color: 'hsl(350, 100.00%, 65.70%)' }}>new</Typography>}
+            {isPlaying && <Stack title="currently playing"><PlayCircle sx={{ fill: 'hsl(213, 68%, 68%)', fontSize: '1rem' }} /></Stack>}
+
+            {isLoading && (
+              <CircularProgress
+                size={16}
+                // @ts-ignore
+                color="action"
+                sx={{ fill: "white" }}
+              ></CircularProgress>
+            )}
+            <Box
               sx={{
-                "&:hover": {
-                  fill: "#2265b5",
-                },
+                display: "flex",
+                marginLeft: "auto",
+                marginRight: "2rem",
+                gap: "0.3rem",
               }}
-            ></PlayArrow>
-            <Download
-              onClick={async () => {
-                setIsLoading(true);
-                const resource = await Resource.getInstance(
-                  fileTreeNode,
-                  downloadLocation
-                );
-                await resource.download();
-                await resource.import();
-                setIsLoading(false);
-              }}
-              fontSize="small"
-              sx={{
-                "&:hover": {
-                  fill: "#2265b5",
-                },
-              }}
-            ></Download>
+            >
+              <PlayArrow
+                onClick={() => {
+                  playVideo();
+                }}
+                fontSize="small"
+                sx={{
+                  "&:hover": {
+                    fill: "#2265b5",
+                  },
+                }}
+              ></PlayArrow>
+              <Download
+                onClick={async () => {
+                  setIsLoading(true);
+                  const resource = await Resource.getInstance(
+                    fileTreeNode,
+                    downloadLocation
+                  );
+                  await resource.download();
+                  await resource.import();
+                  setIsLoading(false);
+                }}
+                fontSize="small"
+                sx={{
+                  "&:hover": {
+                    fill: "#2265b5",
+                  },
+                }}
+              ></Download>
+            </Box>
           </Box>
-        </Box>
+        </DragAndDrop>
       </Box>
     }</>
   );

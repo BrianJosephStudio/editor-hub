@@ -8,6 +8,7 @@ export class AppPaths{
     public sfxResources: string
     public videoResources: string
     public inGameFootage: string
+    public licenses: string
 
     constructor() {
         const node = new NodeWrapper()
@@ -22,5 +23,6 @@ export class AppPaths{
         this.audioResources = `${this.resources}/audio`
         this.musicResources = `${this.audioResources}/music`
         this.sfxResources = `${this.audioResources}/sfx`
+        this.licenses = `${this.editorHub_documents}/licenses`
     }
 }
