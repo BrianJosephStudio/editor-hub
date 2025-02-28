@@ -1,10 +1,9 @@
 {
   "name": "@editor-hub/dropbox-types",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "main": "src/index.js",
   "module": "src/index.js",
   "types": "src/index.d.ts",
-
   "type": "module",
   "scripts": {
     "build": "npx tsc -p tsconfig.json",

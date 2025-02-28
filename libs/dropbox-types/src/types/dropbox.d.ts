@@ -7,7 +7,7 @@ export interface ListFolderResponse {
   export type Metadata = FileMetadata | FolderMetadata;
   
   interface FileMetadata {
-    ".tag": "file" | 'success';
+    ".tag": "file" | 'folder';
     name: string; // The last component of the path (including extension). This never contains a slash.
     id: string; // A unique identifier for the file.
     client_modified: string; // Timestamp in "%Y-%m-%dT%H:%M:%SZ" format. Modification time set by the desktop client.
