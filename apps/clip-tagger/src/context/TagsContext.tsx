@@ -165,7 +165,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
       const unlabeledTagReference = unlabelTagReference(newTagReference)
 
       apiClient
-        .updateFileProperties(targetClip, unlabeledTagReference)
+        .updateFileProperties(targetClip, JSON.stringify({...unlabeledTagReference}), apiClient.tagTemplateId)
         .then(async (updateSuccessful) => {
           if (!updateSuccessful) {
           }
@@ -202,7 +202,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
 
       const unlabeledTagReference = unlabelTagReference(updatedTagReference)
 
-      apiClient.updateFileProperties(targetClip, unlabeledTagReference);
+      apiClient.updateFileProperties(targetClip, JSON.stringify({...unlabeledTagReference}), apiClient.tagTemplateId);
       return updatedTagReference;
     });
   };
@@ -238,7 +238,7 @@ export const TagsProvider = ({ children }: { children: ReactNode }) => {
 
 
   const resetTags = async (path: string) => {
-    await apiClient.removeFilePropertyGroup(path)
+    await apiClient.removeFilePropertyGroup(path, apiClient.tagTemplateId)
   }
 
   return (
