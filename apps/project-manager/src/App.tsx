@@ -1,12 +1,22 @@
-import { useState } from 'react'
 import CreateProjectFolder from './components/CreateProjectFolder'
 import './App.css'
+import { useAuthorization } from './context/Authorization.context'
+import { UnauthorizedUser } from './components/auth-pages/UnauthorizedUser'
+import { NavBar } from './components/nav-bar/NavBar'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const { isAuthorized } = useAuthorization()
 
   return (
-    <CreateProjectFolder></CreateProjectFolder>
+    <>
+      <NavBar></NavBar>
+      {isAuthorized &&
+        <CreateProjectFolder></CreateProjectFolder>
+      }
+      {!isAuthorized &&
+        <UnauthorizedUser />
+      }
+    </>
   )
 }
 

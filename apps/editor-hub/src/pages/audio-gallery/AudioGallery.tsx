@@ -1,5 +1,5 @@
 import { Audiotrack, ExpandLess, ExpandMore, GraphicEq } from "@mui/icons-material";
-import { Box, IconButton, ListItemText, useMediaQuery } from "@mui/material";
+import { Box, IconButton, ListItemText, Typography, useMediaQuery } from "@mui/material";
 import { List, ListItem } from '@mui/joy'
 import { useAudioGallery } from "../../contexts/AudioGallery.context";
 import { FileBrowser } from "../../components/FileBrowser/FileBrowser";
@@ -103,7 +103,7 @@ export const AudioGallery = () => {
             </IconButton>
           }
 
-          <List orientation="horizontal" sx={{ gap: '1rem', justifyContent: isWideEnough ? 'flex-start' : 'space-around' }}>
+          <List orientation="horizontal" sx={{ flexGrow: 0, gap: '1rem', justifyContent: isWideEnough ? 'flex-start' : 'space-around' }}>
 
             <ListItem title={isWideEnough ? "": 'Music Tracks'} onClick={() => setTab('music')} sx={{
               color: 'white',
@@ -128,6 +128,8 @@ export const AudioGallery = () => {
                 <ListItemText>Sound Effects</ListItemText>
               }
             </ListItem>
+
+            {currentAudioSource && currentAudioSource.name && <Typography sx={{color: 'white', marginX: 'auto', placeContent: 'center'}}>{currentAudioSource.name}</Typography>}
 
           </List>
         </Box>

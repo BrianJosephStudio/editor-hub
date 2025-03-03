@@ -44,6 +44,8 @@ export const TagsDisplay = () => {
     await setStarterTags()
   }
 
+  useEffect(() => setIsVideoReady(false), [targetClip])
+
   useEffect(() => {
     const handleTimeUpdate = () => {
       if (!videoPlayer.current) return;
@@ -76,8 +78,7 @@ export const TagsDisplay = () => {
   }, []);
 
   useEffect(() => {
-    console.log("labels changed!");
-    if (!videoPlayer.current?.duration) return;
+    if (!isVideoReady) return;
     const newExclusiveTags: ExclusiveTags[] = [];
     const newGenericTags: GenericTag[] = [];
 

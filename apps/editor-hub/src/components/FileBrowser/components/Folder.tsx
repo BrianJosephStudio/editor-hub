@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { FileTreeNode } from "../../../types/app";
 import { useEffect, useRef, useState } from "react";
-import { Folder as Foldericon } from "@mui/icons-material";
+import { FiberManualRecord, Folder as Foldericon } from "@mui/icons-material";
 import { File } from "./File";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../redux/store";
@@ -29,13 +29,26 @@ export const Folder = ({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [contentFetched, setContentFetched] = useState<boolean>(false)
+  const [isPlaying, setIsPlaying] = useState<boolean>(false);
 
+  const { currentVideoSource } = useSelector((state: RootState) => state.videoGallery)
+  const { currentAudioSource } = useSelector((state: RootState) => state.audioGallery)
   const { filterByTags, activeTags } = useSelector((state: RootState) => state.tags)
 
   const { tabIndex, setTabIndex } = useFileBrowser();
 
   const currentTabIndex = tabIndex;
   setTabIndex(currentValue => currentValue++)
+
+  useEffect(() => {
+    if(
+      (currentVideoSource && currentVideoSource.path.includes(fileTreeNode.path)) ||
+      (currentAudioSource && currentAudioSource.path.includes(fileTreeNode.path))
+    )
+      return setIsPlaying(true);
+    setIsPlaying(false)
+
+  }, [currentVideoSource, currentAudioSource])
 
   useEffect(() => {
     if (!isRootFolder) return setContentFetched(true);
@@ -100,6 +113,7 @@ export const Folder = ({
             // @ts-ignore
             <CircularProgress size={16} color="action"></CircularProgress>
           )}
+          {isPlaying && <FiberManualRecord sx={{ fill: 'hsl(213, 68%, 68%)', fontSize: '0.8rem' }} />}
         </Box>
         <Box
           ref={childrenContainer}

@@ -37,7 +37,7 @@ const ProjectForm: React.FC = () => {
 
       if (!backendHost || !appName) throw new Error("Missing envs")
 
-      const url = `${backendHost}/${appName}/create-project-folder`
+      const url = `${backendHost}/api/${appName}/create-project-folder`
       const body: ProjectData = {
         projectType,
         projectNumber,
