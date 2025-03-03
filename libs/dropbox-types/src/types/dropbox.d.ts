@@ -39,7 +39,7 @@ export interface ListFolderResponse {
   }
 
   interface UploadSessionFinishbatchResultEntry extends Omit<FileMetadata, "tag"> {
-    tag: "success" | "failure";
+    '.tag': "success" | "failure";
 }
 
 interface UploadSessionFinishBatchResult {
