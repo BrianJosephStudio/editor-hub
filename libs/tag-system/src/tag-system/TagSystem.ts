@@ -26,6 +26,7 @@ export const AgentTags: TagObject[] = [
     {tag:"tejo",displayName:"Tejo",description:"Player is playing Tejo", unique: true, timeless: true, protected: true, keybind: "t", id: "ag026"},
     {tag:"viper",displayName:"Viper",description:"Player is playing Viper", unique: true, timeless: true, protected: true, keybind: "v", id: "ag022"},
     {tag:"vyse",displayName:"Vyse",description:"Player is playing Vyse", unique: true, timeless: true, protected: true, keybind: "f", id: "ag025"},
+    {tag:"waylay",displayName:"Waylay",description:"Player is playing Waylay", unique: true, timeless: true, protected: true, keybind: "y", id: "ag027"},
     {tag:"yoru",displayName:"Yoru",description:"Player is playing Yoru", unique: true, timeless: true, protected: true, keybind: "y", id: "ag023"}
 ]
 export const MapTags: TagObject[] = [

@@ -3,17 +3,21 @@ import type { ListFolderResponse, Metadata, SharedLinkResponse } from "@editor-h
 import { UnlabeledTagReference, TimeCode } from "@editor-hub/tag-system";
 import { checkClipUploadJob, uploadClips } from "./utils/uploadClip";
 import { ClipUpload } from "./ClipUploads";
+import { FileMetadata, PropertyGroup } from "@editor-hub/dropbox-types/src/types/dropbox";
 
 export class ApiClient {
   private apiHost: string;
-  private tagTemplateId: string;
+  public tagTemplateId: string;
+  public trackLicenseTemplateId: string;
 
   constructor(
     apiHost: string,
-    tagTemplateId: string
+    tagTemplateId: string,
+    trackLicenseTemplateId: string
   ) {
     this.apiHost = apiHost;
     this.tagTemplateId = tagTemplateId;
+    this.trackLicenseTemplateId = trackLicenseTemplateId;
   }
   public getTemporaryLink = async (targetClip: string): Promise<string> => {
     const url = `${this.apiHost}/get_temporary_link`;
@@ -31,7 +35,7 @@ export class ApiClient {
     return link;
   };
 
-  private addFilePropertyGroup = async (path: string) => {
+  private addFilePropertyGroup = async (path: string, templateId: string) => {
     const url = `${this.apiHost}/properties/add`;
     const headers = {
       "Content-Type": "application/json",
@@ -41,10 +45,10 @@ export class ApiClient {
       path,
       property_groups: [
         {
-          template_id: this.tagTemplateId,
+          template_id: templateId,
           fields: [
             {
-              name: "tagReference",
+              name: templateId === this.tagTemplateId ? "tagReference" : "trackLicense",
               value: "",
             },
           ],
@@ -55,7 +59,7 @@ export class ApiClient {
     await axios.post(url, body, { headers });
   };
 
-  public removeFilePropertyGroup = async (path: string) => {
+  public removeFilePropertyGroup = async (path: string, templateId: string) => {
     const url = `${this.apiHost}/properties/remove`;
     const headers = {
       "Content-Type": "application/json",
@@ -63,7 +67,7 @@ export class ApiClient {
 
     const body = {
       path,
-      property_template_ids: [this.tagTemplateId]
+      property_template_ids: [templateId]
     };
 
     await axios.post(url, body, { headers });
@@ -71,10 +75,9 @@ export class ApiClient {
 
   public updateFileProperties = async (
     path: string,
-    tagReferenceMaster: UnlabeledTagReference,
+    value: string,
+    templateId: string
   ): Promise<boolean> => {
-    const updatedTagReference = tagReferenceMaster
-    console.log('apiClient 1', updatedTagReference)
 
     const url = `${this.apiHost}/properties/update`;
     const headers = {
@@ -87,15 +90,15 @@ export class ApiClient {
         {
           add_or_update_fields: [
             {
-              name: "tagReference",
-              value: JSON.stringify(updatedTagReference),
+              name: templateId === this.tagTemplateId ? "tagReference" : "trackLicense",
+              value,
             },
           ],
-          template_id: this.tagTemplateId,
+          template_id: templateId,
         },
       ],
     };
-    console.log('apiClient 2', updatedTagReference)
+    console.log('apiClient 2', value)
 
     try {
       console.log("post request!")
@@ -106,42 +109,61 @@ export class ApiClient {
     }
   };
 
-  public getMetadata = async (path: string): Promise<UnlabeledTagReference> => {
+  public getMetadata = async (path: string, templateId: string): Promise<PropertyGroup | null> => {
     const url = `${this.apiHost}/get_metadata`;
-    const headers = {
-      "Content-Type": "application/json",
-    };
-
+    const headers = { "Content-Type": "application/json" };
+  
     const body = {
       path,
       include_property_groups: {
         ".tag": "filter_some",
-        filter_some: [this.tagTemplateId],
+        filter_some: [templateId],
       },
     };
-
+  
     const {
       data: { property_groups },
-    } = await axios.post(url, body, { headers });
+    } = await axios.post<FileMetadata>(url, body, { headers });
 
-    const tagPropertyGroup = property_groups.find((propertyGroup: any) => {
-      return (propertyGroup.template_id = this.tagTemplateId);
-    });
-
+    if(!property_groups) return null
+  
+    return property_groups.find((propertyGroup: any) => propertyGroup.template_id === templateId) || null;
+  };
+  
+  public getLabeledTagReferenceFromMetadata = async (path: string): Promise<UnlabeledTagReference> => {
+    const tagPropertyGroup = await this.getMetadata(path, this.tagTemplateId);
+  
     if (!tagPropertyGroup) {
-      await this.addFilePropertyGroup(path);
+      await this.addFilePropertyGroup(path, this.tagTemplateId);
       return {};
     }
-
-    const tagPropertyGroupField = tagPropertyGroup.fields.find(
-      (field: any) => field.name === "tagReference"
-    );
-
-    if (!tagPropertyGroupField.value) {
+  
+    const fieldName = "tagReference"
+    const tagPropertyGroupField = tagPropertyGroup.fields.find((field: any) => field.name === fieldName);
+  
+    if (!tagPropertyGroupField?.value) {
       return {};
     }
-
+  
     return JSON.parse(tagPropertyGroupField.value);
+  };
+
+  public getTrackLicenseFromMetadata = async (path: string): Promise<string | null> => {
+    const tagPropertyGroup = await this.getMetadata(path, this.trackLicenseTemplateId);
+  
+    if (!tagPropertyGroup) {
+      await this.addFilePropertyGroup(path, this.trackLicenseTemplateId);
+      return null;
+    }
+  
+    const fieldName = "trackLicense";
+    const tagPropertyGroupField = tagPropertyGroup.fields.find((field: any) => field.name === fieldName);
+  
+    if (!tagPropertyGroupField?.value) {
+      return null;
+    }
+  
+    return tagPropertyGroupField.value;
   };
 
   public setTrueNames = (
@@ -250,7 +272,7 @@ export class ApiClient {
     tagObjectId: string,
     newTagEntry: TimeCode[]
   ): Promise<UnlabeledTagReference> => {
-    const upToDateTagReference = await this.getMetadata(path);
+    const upToDateTagReference = await this.getLabeledTagReferenceFromMetadata(path);
     let updatedTagReference: UnlabeledTagReference = upToDateTagReference;
     if (newTagEntry.length === 0) {
       delete updatedTagReference[tagObjectId];
@@ -285,7 +307,7 @@ export class ApiClient {
     };
 
     await axios.post(url, body, { headers });
-    return await this.getMetadata(path);
+    return await this.getLabeledTagReferenceFromMetadata(path);
   };
 
   createSharedLinkWithSettings = async (path: string): Promise<SharedLinkResponse> => {

@@ -1,4 +1,4 @@
-const fileNameRegex = /^\d+\.\d+_(astra|brimstone|breach|chamber|clove|cypher|deadlock|fade|gekko|harbor|iso|jett|kayo|killjoy|neon|omen|phoenix|raze|reyna|sage|skye|sova|tejo|viper|vyse|yoru)_(abyss|ascent|bind|breeze|fracture|haven|icebox|lotus|pearl|split|sunset)_\d+\.\w+$/
+const fileNameRegex = /^\d+\.\d+_(astra|brimstone|breach|chamber|clove|cypher|deadlock|fade|gekko|harbor|iso|jett|kayo|killjoy|neon|omen|phoenix|raze|reyna|sage|skye|sova|tejo|viper|vyse|waylay|yoru)_(abyss|ascent|bind|breeze|fracture|haven|icebox|lotus|pearl|split|sunset)_\d+\.\w+$/
 
 export class ParsedFileName {
     public isProperlyNamed: boolean = false;

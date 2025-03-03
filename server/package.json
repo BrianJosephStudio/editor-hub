@@ -2,7 +2,7 @@
   "name": "hub-server",
   "module": "src/server.html",
   "type": "module",
-  "version": "1.8.1",
+  "version": "1.9.1",
   "scripts": {
     "dev": "NODE_ENV=development bun src/server.ts",
     "serve": "NODE_ENV=production bun src/server.ts"
