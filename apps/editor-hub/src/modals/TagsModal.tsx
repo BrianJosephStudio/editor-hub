@@ -169,8 +169,10 @@ const TagObjectItem = ({ tagObject, sx, onClick }: { tagObject: TagObject, sx?: 
       sx={{
         ...sx,
         display: 'flex',
+        minHeight: '4rem',
         minWidth: '4rem',
         flexDirection: 'column',
+        placeContent: 'center',
         placeItems: 'center',
         padding: '0.4rem',
         borderRadius: '0.4rem',
@@ -184,7 +186,8 @@ const TagObjectItem = ({ tagObject, sx, onClick }: { tagObject: TagObject, sx?: 
         onClick()
       }}
     >
-      <Typography color={'white'} fontSize={'1.4rem'} fontWeight={'600'}>{tagObject.keybind.toUpperCase()}</Typography>
+      {!tagObject.protected && <Typography color={'white'} fontSize={'1.4rem'} fontWeight={'600'}>{tagObject.keybind.toUpperCase()}</Typography>}
+      {tagObject.protected && <Typography color={'white'} fontSize={'1.4rem'} fontWeight={'600'}>{tagObject.displayName[0]}</Typography>}
       <Typography color={'white'} fontSize={'0.6rem'}>{tagObject.displayName}</Typography>
     </Box>
   )
