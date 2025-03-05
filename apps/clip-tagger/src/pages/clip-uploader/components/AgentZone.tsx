@@ -66,7 +66,7 @@ export const AgentZone = ({
         }}>
           <Button variant="outlined" sx={{ flexGrow: '1' }} onClick={() => setMapsDialogOpen(true)}><Add />Add Map</Button>
           {mapZones.map(mapZone => (
-            <MapZone parentFolder={currentFolder} onDelete={onMapDelete} mapZone={mapZone}></MapZone>
+            <MapZone key={mapZone} parentFolder={currentFolder} onDelete={onMapDelete} mapZone={mapZone}></MapZone>
           ))}
         </Stack>
       </Stack>
@@ -106,6 +106,13 @@ const MapDialog = ({
     addToSelection(displayName)
   }
 
+  const onDoubleClick = (selection: string) => {
+    if (!selected.find(selected => selected === selection)) {
+      onAdd([selection], setSelected)
+      onClose()
+    }
+  }
+
   return (
     <Dialog fullWidth open={open} onClose={onClose}>
       <DialogTitle>{agent}</DialogTitle>
@@ -116,7 +123,7 @@ const MapDialog = ({
           }}
         >
           {mapItems.map(map => (
-            <MapDialogItem displayName={map} onClick={onClick} />
+            <MapDialogItem displayName={map} onClick={onClick} onDoubleClick={onDoubleClick}/>
           ))}
         </List>
       </DialogContent>
@@ -130,13 +137,15 @@ const MapDialog = ({
 
 const MapDialogItem = ({
   displayName,
-  onClick
+  onClick,
+  onDoubleClick
 }: {
   displayName: string;
   onClick: (
     displayName: string,
     setActive: React.Dispatch<React.SetStateAction<boolean>>
-  ) => void
+  ) => void;
+  onDoubleClick: (selection: string) => void
 }
 ) => {
   const [active, setActive] = useState<boolean>(false)
@@ -144,6 +153,7 @@ const MapDialogItem = ({
   return (
     <ListItem
       onClick={() => onClick(displayName, setActive)}
+      onDoubleClick={() => onDoubleClick(displayName)}
       sx={{
         backgroundColor: active ? 'hsl(0, 0.00%, 76.10%)' : 'transparent',
         cursor: 'pointer',
