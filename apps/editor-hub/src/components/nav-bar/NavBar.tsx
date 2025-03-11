@@ -1,13 +1,15 @@
 import { Box, Drawer, FormControl, IconButton, InputLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Select, SelectChangeEvent, Stack, Typography, useMediaQuery } from "@mui/material";
 import clipTaggerLogo from "../../../public/editor-hub-logo.svg";
 import { SignOutButton, useUser } from "@clerk/clerk-react";
-import { AddAPhoto, Headset, Logout, Menu as MenuIcon, Movie, Settings } from "@mui/icons-material";
+import { AddAPhoto, Dashboard, Headset, Logout, Menu as MenuIcon, Movie, Settings } from "@mui/icons-material";
 import packageJson from "../../../package.json";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { useAuthorization } from "../../contexts/Authorization.context";
 import { useAppEnvironment } from "../../contexts/AppEnvironment.context";
 import { AppEnvironment } from "../../types/app";
+import { CSInterfaceWrapper } from "@/business-logic/premire-api/CSInterface.wrapper";
+import { NodeWrapper } from "@/business-logic/node.wrapper";
 
 export const NavBar = () => {
   const { isAuthorized } = useAuthorization()
@@ -19,23 +21,35 @@ export const NavBar = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false)
   const [pageName, setPageName] = useState<string>("")
 
+  const cs = new CSInterfaceWrapper()
+  const node = new NodeWrapper
+
   const isWiderThan10Rem = useMediaQuery('(min-width:18rem')
 
   const pages = [
     {
       title: "Video Gallery",
       path: "video-gallery",
-      listItemIcon: <Movie sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+      listItemIcon: <Movie sx={{ fill: 'hsl(213, 98%, 68%)' }} />,
+      allowedPrograms: []
+    },
+    {
+      title: "Animation Templates",
+      path: "templates",
+      listItemIcon: <Dashboard sx={{ fill: 'hsl(213, 98%, 68%)' }} />,
+      allowedPrograms: ['AEFT']
     },
     {
       title: "Audio Gallery",
       path: "audio-gallery",
-      listItemIcon: <Headset sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+      listItemIcon: <Headset sx={{ fill: 'hsl(213, 98%, 68%)' }} />,
+      allowedPrograms: []
     },
     {
       title: "Settings",
       path: "settings",
-      listItemIcon: <Settings sx={{ fill: 'hsl(213, 98%, 68%)' }} />
+      listItemIcon: <Settings sx={{ fill: 'hsl(213, 98%, 68%)' }} />,
+      allowedPrograms: []
     }
   ]
 
@@ -43,9 +57,9 @@ export const NavBar = () => {
 
   useEffect(() => {
     pages.forEach(page => {
-      if(location.pathname.includes(page.path)) setPageName(page.title)
+      if (location.pathname.includes(page.path)) setPageName(page.title)
     })
-  },[location])
+  }, [location])
   return (
     <>
       <Box
@@ -141,17 +155,25 @@ export const NavBar = () => {
             </SignOutButton>
           </ListItem>
 
-          {isAuthorized && pages.map(({ title, path, listItemIcon }) => (
-            <ListItem key={title} disablePadding onClick={() => navigate(path)}
-              sx={{
-                backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
-              }}
-            >
-              <ListItemButton>
-                <ListItemIcon>{listItemIcon}</ListItemIcon>
-                <ListItemText>{title}</ListItemText>
-              </ListItemButton>
-            </ListItem>
+          {isAuthorized && pages.map(({ title, path, listItemIcon, allowedPrograms }) => (
+            <>
+              {(
+                allowedPrograms?.length === 0 ||
+                allowedPrograms?.some(program => program === cs.hostEnvironment?.appId) ||
+                !node.isNodeEnv
+              ) &&
+                <ListItem key={title} disablePadding onClick={() => navigate(path)}
+                  sx={{
+                    backgroundColor: location.pathname.includes(path) ? "hsl(213, 0%, 40%)" : null
+                  }}
+                >
+                  <ListItemButton>
+                    <ListItemIcon>{listItemIcon}</ListItemIcon>
+                    <ListItemText>{title}</ListItemText>
+                  </ListItemButton>
+                </ListItem>
+              }
+            </>
           ))}
 
 

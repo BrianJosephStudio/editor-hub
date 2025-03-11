@@ -55,6 +55,20 @@ export const fetchClickedFolderMetadata = async (
   return newMetadata
 };
 
+export const createFileTreeNodeFromPath = async (path: string, rootPath: string, fileTreeName?: FileTreeName, filtered: boolean = false, ) => {
+  const metadata = await apiClient.getMetadata(path)
+  const newFileTreeNode: FileTreeNode = {
+    name: metadata.name,
+    fileTreeName: fileTreeName,
+    tag: metadata[".tag"],
+    path:  getMetadataPath(rootPath, metadata.path_lower!),
+    filtered: filtered,
+    metadata,
+  };
+
+  return newFileTreeNode
+}
+
 export const resolveTreeStructure = (
   currentFileTreeNode: FileTreeNode,
   newMetadata: Metadata[],
@@ -104,8 +118,6 @@ export const resolveTreeStructure = (
 
               newFileTreeNode.tagList = tagList
             } catch (e) {
-              console.log(newFileTreeNode.name) //TODO: remove for production
-              console.log(newFileTreeNode.metadata!.property_groups![0].fields[0].value) //TODO: remove for production
               console.error(e) //TODO: remove for production
             }
           }
@@ -135,25 +147,25 @@ export const resolveTreeStructure = (
       if (a.tag !== b.tag) {
         return a.tag === "folder" ? -1 : 1;
       }
-    
+
       // 2. Extract number from name using regex /_(\d+)\.\d+$/
       const getNumber = (name: string) => {
         const match = name.match(/_(\d+)\.\d+$/);
         return match ? parseInt(match[1], 10) : null;
       };
-    
+
       const numA = getNumber(a.name);
       const numB = getNumber(b.name);
-    
+
       // 3. Sort by extracted number if both have a valid number
       if (numA !== null && numB !== null) {
         return numA - numB;
       }
-    
+
       // 4. If only one has a number, prioritize the one with a number
       if (numA !== null) return -1;
       if (numB !== null) return 1;
-    
+
       // 5. Sort alphabetically if no numbers are found
       return a.name.localeCompare(b.name);
     });
