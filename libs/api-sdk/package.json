@@ -18,5 +18,6 @@
     "@editor-hub/dropbox-types": "workspace:*",
     "@editor-hub/tag-system": "workspace:*",
     "axios": "^1.7.9"
-  }
+  },
+  "version": "1.1.0"
 }

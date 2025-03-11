@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express'
-import { GenericTags, AgentTags, MapTags, privateTags } from '../../resources/TagSystem';
+import { GenericTags, AgentTags, MapTags, privateTags } from '@editor-hub/tag-system';
 
 const router = express.Router();
 

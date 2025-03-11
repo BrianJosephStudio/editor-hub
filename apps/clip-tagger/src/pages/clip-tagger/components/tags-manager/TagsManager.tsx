@@ -21,7 +21,7 @@ export const TagsManager = () => {
     setLabeledTagReference({})
     setUndoTagHistory([])
     const getMetadata = async () => {
-      const unlabeledTagReference = await apiClient.getMetadata(targetClip);
+      const unlabeledTagReference = await apiClient.getLabeledTagReferenceFromMetadata(targetClip);
       const labeledTagReference = labelTagReference(unlabeledTagReference)
       if (Object.keys(labeledTagReference).length === 0) {
         await setStarterTags()
