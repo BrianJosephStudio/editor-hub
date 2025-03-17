@@ -98,4 +98,22 @@ export class Item {
       return null;
     }
   };
+
+  public readonly setSelected = async (selected: boolean): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      try {
+        csInterface.evalScript(
+          `_FootageItem_setSelected(${this.id}, ${selected})`,
+          (response) => {
+            const responseObject = parseResponseObject(response)
+            if (responseObject.success) return resolve();
+            throw (response) //todo: enhance?
+          }
+        )
+      } catch (e) {
+        console.error(e);
+        reject(e)
+      }
+    })
+  }
 }

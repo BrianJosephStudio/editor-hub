@@ -70,4 +70,26 @@ export class FolderItem extends Item {
 
     return itemObjectArray;
   };
+
+  public static readonly assertFolderItem = (item: any): item is FootageItem => {
+    return (
+      item &&
+      item.comment !== null &&
+      item.comment !== undefined &&
+      typeof item.comment === 'string' &&
+      item.id !== null &&
+      item.id !== undefined &&
+      typeof item.id === 'number' &&
+      item.label !== null &&
+      item.label !== undefined &&
+      typeof item.label === 'number' &&
+      item.name !== null &&
+      item.name !== undefined &&
+      typeof item.name === 'string' &&
+      item.typeName !== null &&
+      item.typeName !== undefined &&
+      typeof item.typeName === 'string' &&
+      item.typeName === 'Folder'
+    )
+  };
 }
