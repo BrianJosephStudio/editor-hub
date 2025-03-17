@@ -13,6 +13,9 @@ import { AuthorizationProvider } from "./contexts/Authorization.context";
 import { AppEnvironmentProvider } from "./contexts/AppEnvironment.context";
 import { SettingsPage } from "./pages/settings/Settings";
 import { SettingsProvider } from "./contexts/Settings.context";
+import { AnimationTemplates } from "./pages/animation-templates/AnimationTemplates";
+import { TemplatesProvider } from "./contexts/Templates.context";
+import { AEComponent } from "./components/context-specific-components/ContextSpecificComponents";
 
 function App() {
   return (
@@ -49,6 +52,16 @@ function App() {
                       <VideoGallery></VideoGallery>
                     </VideoGalleryProvider>
                   </ProtectedRoute>
+                } />
+
+                <Route path="templates" element={
+                  <AEComponent>
+                    <ProtectedRoute>
+                      <TemplatesProvider>
+                        <AnimationTemplates></AnimationTemplates>
+                      </TemplatesProvider>
+                    </ProtectedRoute>
+                  </AEComponent>
                 } />
 
                 <Route path="audio-gallery" element={

@@ -6,7 +6,7 @@ interface ResponseObject {
 export const parseResponseObject = (responseObject: string) => {
   try {
     const parsedResponse = JSON.parse(responseObject);
-    if (!parsedResponse.value || parsedResponse.success === null)
+    if (!parsedResponse.success)
       throw "ResponseObject does not match expected schema";
     return parsedResponse as ResponseObject;
   } catch (e) {

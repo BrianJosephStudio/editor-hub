@@ -168,3 +168,14 @@ function _CompItem_layers(parentCompId) {
     return _createResponseObject(e, false);
   }
 }
+
+function _FootageItem_setSelected(itemId, selected) {
+  try {
+    var item = getItemByID(itemId);
+    item.selected = selected
+    
+    return _createResponseObject(null, true);
+  } catch (e) {
+    return _createResponseObject(e, false);
+  }
+}

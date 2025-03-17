@@ -8,6 +8,7 @@ export class AppPaths{
     public sfxResources: string
     public videoResources: string
     public inGameFootage: string
+    public templates: string
     public licenses: string
 
     constructor() {
@@ -17,6 +18,7 @@ export class AppPaths{
         else homedir = window.name
         
         this.editorHub_documents = `${homedir}/Documents/Editor Hub`
+        this.templates = `${this.editorHub_documents}/templates`
         this.resources = `${this.editorHub_documents}/resources`
         this.videoResources = `${this.resources}/video`
         this.inGameFootage = `${this.videoResources}/ingameFootage`

@@ -109,60 +109,70 @@ export class ApiClient {
     }
   };
 
-  public getMetadata = async (path: string, templateId: string): Promise<PropertyGroup | null> => {
+  public getMetadata = async (path: string, templateId?: string): Promise<FileMetadata> => {
     const url = `${this.apiHost}/get_metadata`;
     const headers = { "Content-Type": "application/json" };
-  
-    const body = {
-      path,
+
+    const props = !templateId ? {} : {
       include_property_groups: {
         ".tag": "filter_some",
         filter_some: [templateId],
-      },
+      }
+    }
+
+    const body = {
+      path,
+      ...props
     };
-  
+    
+    delete body.include_property_groups
+
     const {
-      data: { property_groups },
+      data
     } = await axios.post<FileMetadata>(url, body, { headers });
 
-    if(!property_groups) return null
-  
+    return data;
+  };
+  public getPropertyGroups = async (path: string, templateId: string): Promise<PropertyGroup | null> => {
+    const { property_groups } = await this.getMetadata(path, templateId)
+    if (!property_groups) return null
+
     return property_groups.find((propertyGroup: any) => propertyGroup.template_id === templateId) || null;
   };
-  
+
   public getLabeledTagReferenceFromMetadata = async (path: string): Promise<UnlabeledTagReference> => {
-    const tagPropertyGroup = await this.getMetadata(path, this.tagTemplateId);
-  
+    const tagPropertyGroup = await this.getPropertyGroups(path, this.tagTemplateId);
+
     if (!tagPropertyGroup) {
       await this.addFilePropertyGroup(path, this.tagTemplateId);
       return {};
     }
-  
+
     const fieldName = "tagReference"
     const tagPropertyGroupField = tagPropertyGroup.fields.find((field: any) => field.name === fieldName);
-  
+
     if (!tagPropertyGroupField?.value) {
       return {};
     }
-  
+
     return JSON.parse(tagPropertyGroupField.value);
   };
 
   public getTrackLicenseFromMetadata = async (path: string): Promise<string | null> => {
-    const tagPropertyGroup = await this.getMetadata(path, this.trackLicenseTemplateId);
-  
+    const tagPropertyGroup = await this.getPropertyGroups(path, this.trackLicenseTemplateId);
+
     if (!tagPropertyGroup) {
       await this.addFilePropertyGroup(path, this.trackLicenseTemplateId);
       return null;
     }
-  
+
     const fieldName = "trackLicense";
     const tagPropertyGroupField = tagPropertyGroup.fields.find((field: any) => field.name === fieldName);
-  
+
     if (!tagPropertyGroupField?.value) {
       return null;
     }
-  
+
     return tagPropertyGroupField.value;
   };
 

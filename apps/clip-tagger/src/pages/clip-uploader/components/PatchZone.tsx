@@ -52,7 +52,7 @@ export const PatchZone = ({ parentFolder }: { parentFolder: string }) => {
                     <Stack direction={'row'}><Add />{agentZones.length === 0 && "Add Agents"}</Stack>
                 </Button>
                 {agentZones.map((agentZone) => (
-                    <AgentZone parentFolder={currentFolder} agentZone={agentZone} onDelete={onDelete}></AgentZone>
+                    <AgentZone key={agentZone} parentFolder={currentFolder} agentZone={agentZone} onDelete={onDelete}></AgentZone>
                 ))}
             </Stack>
         </>
@@ -85,8 +85,13 @@ const AgentDialog = ({ open, agentZones, onAdd, onClose }: { open: boolean; agen
         setActive(true)
         addToSelection(selection)
     }
-
-
+    
+    const onDoubleClick = (selection: string) => {
+        if (!selected.find(selected => selected === selection)) {
+            onAdd([selection], setSelected)
+            onClose()        
+        }
+    }
 
     return (
         <Dialog
@@ -102,6 +107,7 @@ const AgentDialog = ({ open, agentZones, onAdd, onClose }: { open: boolean; agen
                     <AgentDialogItem
                         displayName={agent}
                         onClick={onClick}
+                        onDoubleClick={onDoubleClick}
                     />
                 ))}
             </DialogContent>
@@ -115,20 +121,24 @@ const AgentDialog = ({ open, agentZones, onAdd, onClose }: { open: boolean; agen
 
 const AgentDialogItem = ({
     displayName,
-    onClick
+    onClick,
+    onDoubleClick
 }: {
     displayName: string;
     onClick: (
         displayName: string,
         setActive: React.Dispatch<React.SetStateAction<boolean>>
-    ) => void
+    ) => void;
+    onDoubleClick:  (selection: string) => void
 }
 ) => {
     const [active, setActive] = useState<boolean>(false)
 
     return (
         <Stack
+            component={'div'}
             onClick={() => onClick(displayName, setActive)}
+            onDoubleClick={() => onDoubleClick(displayName)}
             sx={{
                 backgroundColor: active ? 'hsl(0, 0.00%, 76.10%)' : 'transparent',
                 cursor: 'pointer',

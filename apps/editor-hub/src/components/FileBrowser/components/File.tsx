@@ -161,8 +161,12 @@ export const File = ({
                     fileTreeNode,
                     downloadLocation
                   );
-                  await resource.download();
-                  await resource.import();
+                  try{
+                    await resource.download();
+                    await resource.import();
+                  }catch(e){
+                    console.error(e)
+                  }
                   setIsLoading(false);
                 }}
                 fontSize="small"

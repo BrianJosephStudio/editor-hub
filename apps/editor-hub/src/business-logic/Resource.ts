@@ -9,7 +9,7 @@ import { AppPaths } from "./AppPaths";
 
 const { isNodeEnv, fsPromises } = new NodeWrapper();
 
-type ResourceType = 'in-game' | 'music' | 'sfx'
+type ResourceType = 'in-game' | 'music' | 'sfx' | 'template'
 
 export class Resource {
   public readonly fileTreeNode: FileTreeNode;
@@ -42,12 +42,16 @@ export class Resource {
 
     const buffer = Buffer.from(data);
     const uint8Array = new Uint8Array(buffer);
-    console.log("maybe", this.folderPath)
-    await fsPromises!.mkdir(this.folderPath, { recursive: true });
-    console.log("here")
+
     try {
-      await fsPromises!.access(this.uri, fsPromises!.constants.R_OK);
-    } catch {
+      await fsPromises!.access(this.folderPath, 0);
+    } catch (e: any) {
+      await fsPromises!.mkdir(this.folderPath, { recursive: true });
+    }
+
+    try {
+      await fsPromises!.access(this.uri, 0);
+    } catch (e: any) {
       await fsPromises!.writeFile(this.uri, uint8Array);
     }
   };
@@ -57,14 +61,14 @@ export class Resource {
 
     const { hostEnvironment: { appId } } = new CSInterfaceWrapper()
 
-    try{
+    try {
       if (appId === "PPRO") {
         this.premiereResource.import(this.uri, this.binPathArray)
       }
       if (appId === "AEFT") {
-        this.afterEffectsResource.import(this.uri, this.binPathArray)
+        this.afterEffectsResource.import(this.fileTreeNode.name, this.uri, this.binPathArray)
       }
-    }catch(e){
+    } catch (e) {
       console.error(e)
     }
   };
@@ -89,13 +93,14 @@ export class Resource {
   }
 
   public static getDirName = (path: string): string => {
-    return path.replace(/[/\\][^/\\]*$/, '');
+    return path.replace(/[/\\][^/\\]*$/, '') || path;
   }
 
   private static readonly getResourceType = (resourcePath: string): ResourceType => {
     if (resourcePath.includes('ingamefootage')) return 'in-game';
     if (resourcePath.includes('music')) return 'music';
     if (resourcePath.includes('sfx')) return 'sfx';
+    if (resourcePath.includes('template')) return 'template';
     throw 'resource type could not be identified'
   }
 
@@ -103,7 +108,7 @@ export class Resource {
     const appPaths = new AppPaths()
     const resourceType = this.getResourceType(fileTreeNode.metadata!.path_lower!)
     const projectPath = await this.getProjectPath()
-    let resourcePath: string 
+    let resourcePath: string
     let projectResourceFolder = `${projectPath}/Editor Hub Resources`
 
     switch (resourceType) {
@@ -119,12 +124,14 @@ export class Resource {
         resourcePath = appPaths.sfxResources
         projectResourceFolder += `/sfx`
         break;
+      case 'template':
+        resourcePath = appPaths.templates
+        projectResourceFolder += `/templates`
+        break;
       default:
         throw 'resource type could not be identified';
     }
 
-
-    console.log('projectPath', projectResourceFolder)
     if (downloadLocation === 'projectFolder' && projectPath !== null)
       return new Resource(fileTreeNode, projectResourceFolder);
 
