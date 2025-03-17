@@ -1,4 +1,5 @@
 import { FolderItem } from "../after-effects-api/FolderItem";
+import { FootageItem } from "../after-effects-api/FootageItem";
 import { Item } from "../after-effects-api/Item";
 import { Project } from "../after-effects-api/Project";
 import { FolderItemProps, ItemObjectProps, TypeName } from "../after-effects-api/types";
@@ -14,19 +15,30 @@ export class AfterEffectsResource {
     const project = await Project.getInstance()
 
     const projectFsName = await project.getProjectFsName()
-    if(projectFsName === null) return null;
+    if (projectFsName === null) return null;
     const projectPath = Resource.getDirName(projectFsName)
     return projectPath
   }
 
-  public readonly import = async (uri: string, binPathArray: string[]) => {
+  public readonly import = async (name: string, uri: string, binPathArray: string[]) => {
     try {
       const project = await Project.getInstance()
 
       const resourceParentFolder = await this.createBinRecursive(binPathArray)
 
+      const existingItem = await this.getItemByName(project, name, undefined, resourceParentFolder)
+      if (
+        existingItem &&
+        !FootageItem.assertFootageItem(existingItem) &&
+        !FolderItem.assertFolderItem(existingItem)
+      ) throw new Error("item is not of expected type");
+
+      if (existingItem) return existingItem.setSelected(true);
       const importedFile = await project.importFile(uri)
+      
       await importedFile.setParentFolder(resourceParentFolder)
+      await importedFile.setSelected(true)
+      return
     } catch (e) {
       console.error(e)
     }
@@ -63,19 +75,16 @@ export class AfterEffectsResource {
   }
 
   private readonly getItemByName = async (project: Project, name: string, typeName?: TypeName, parentFolder?: FolderItem): Promise<Item | undefined> => {
-    const startingFolder = !!parentFolder ? parentFolder : project.rootFolder
-
+    const startingFolder = parentFolder ?? project.rootFolder
     const childItems = await startingFolder.items()
-
     const foundItem = childItems.entries.find((entry) => {
       const item = entry as Item
-      if (item.name === name) {
+      if (item.name.toLowerCase() === name.toLowerCase()) {
         if (!typeName || typeName === item.typeName) return true
       }
       if (item.typeName === 'Folder') {
-        return this.getItemByName(project, name, typeName, entry as FolderItem)
+        return this.getItemByName(project, name, typeName, new FolderItem(entry as FolderItemProps))
       }
-
     })
 
     if (foundItem) return foundItem as Item
