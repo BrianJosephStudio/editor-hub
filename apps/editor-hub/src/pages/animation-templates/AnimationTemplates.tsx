@@ -53,8 +53,8 @@ export const AnimationTemplates = () => {
                         <Typography>
                             {template.name}
                             <Button id="import-template-button" onClick={(() => onDownload(fileTreeNode, setIsLoading))}>
-                                {isLoading && <CircularProgress />}
-                                {!isLoading && <Download></Download>}
+                                {isLoading && <CircularProgress size={20}/>}
+                                {!isLoading && <Download size={20}/>}
                             </Button>
                         </Typography>
                     )
