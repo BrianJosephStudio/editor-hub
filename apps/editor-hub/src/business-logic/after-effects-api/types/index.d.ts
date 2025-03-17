@@ -101,7 +101,7 @@ export interface AVItemProps extends ItemObjectProps {
 }
 
 export interface FootageItemProps extends AVItemProps {
-  file: File;
+  file: string;
   mainSource: FootageSource;
 }
 
